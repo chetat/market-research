@@ -5,6 +5,7 @@ from wtforms.fields import (
     PasswordField,
     StringField,
     SubmitField,
+    SelectField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -24,60 +25,52 @@ class AddQuestionForm(FlaskForm):
                                   Length(1, 64)])
     description = StringField(
         'description', validators=[InputRequired(),
-                                  Length(1, 140)])
+                                  Length(1, 90)])
     submit = SubmitField('Submit')
 
-class ChangeUserEmailForm(FlaskForm):
-    email = EmailField(
-        'New email', validators=[InputRequired(),
-                                 Length(1, 64),
-                                 Email()])
-    submit = SubmitField('Update email')
-
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
-
-
-class ChangeAccountTypeForm(FlaskForm):
-    role = QuerySelectField(
-        'New account type',
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=lambda: db.session.query(Role).order_by('permissions'))
-    submit = SubmitField('Update role')
-
-
-class InviteUserForm(FlaskForm):
-    role = QuerySelectField(
-        'Account type',
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=lambda: db.session.query(Role).order_by('permissions'))
-    first_name = StringField(
-        'First name', validators=[InputRequired(),
+class AddScreenerQuestionForm(FlaskForm):
+    title = StringField(
+        'Screener Question Title', validators=[InputRequired(),
                                   Length(1, 64)])
-    last_name = StringField(
-        'Last name', validators=[InputRequired(),
-                                 Length(1, 64)])
-    email = EmailField(
-        'Email', validators=[InputRequired(),
-                             Length(1, 64),
-                             Email()])
-    submit = SubmitField('Invite')
-
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
+    description = StringField(
+        'description', validators=[InputRequired(),
+                                  Length(1, 90)])
+    required_answer = SelectField(u'What is the required screener answer?', choices=[('Yes', 'Yes'), ('No', 'No')])
+    options = SelectField(u'Please choose either Yes or No', choices=[('Yes', 'Yes'), ('No', 'No')])
+    submit = SubmitField('Submit')
 
 
-class NewUserForm(InviteUserForm):
-    password = PasswordField(
-        'Password',
-        validators=[
-            InputRequired(),
-            EqualTo('password2', 'Passwords must match.')
-        ])
-    password2 = PasswordField('Confirm password', validators=[InputRequired()])
+class AddMultipleChoiceQuestionForm(FlaskForm):
+    title = StringField(
+        'Screener Question Title', validators=[InputRequired(),
+                                  Length(1, 64)])
+    description = StringField(
+        'description', validators=[InputRequired(),
+                                  Length(1, 90)])
+    submit = SubmitField('Submit')
 
-    submit = SubmitField('Create')
+class AddOptionForm(FlaskForm):
+     text = StringField(
+        'Add Text', validators=[InputRequired(),
+                                  Length(1, 64)])
+     submit = SubmitField('Submit')   
+
+
+class AddScaleQuestionForm(FlaskForm):
+    title = StringField(
+        'Screener Question Title', validators=[InputRequired(),
+                                  Length(1, 64)])
+    description = StringField(
+        'description', validators=[InputRequired(),
+                                  Length(1, 90)])
+    submit = SubmitField('Submit')
+    
+class AddScaleOptionForm(FlaskForm):
+    option = SelectField(u'Please choose either Yes or No', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
+                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
+                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
+                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
+                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
+                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
+    scale = SelectField(u'Please choose the scale for the question', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    submit = SubmitField('Submit')

@@ -1,7 +1,7 @@
 from app.models import *
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from wtforms import StringField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, SubmitField, SelectField, TextAreaField, IntegerField
 from wtforms.fields.html5 import EmailField, DateField
 from wtforms.validators import Length, Required, ValidationError, InputRequired, Email, Optional
 
@@ -10,6 +10,7 @@ from wtforms.validators import Length, Required, ValidationError, InputRequired,
 
 class OrganisationForm(FlaskForm):
     org_name = StringField('Organisation name', validators=[InputRequired(), Length(1, 64)])
+    mobile_phone = IntegerField('Phone Number', validators=[InputRequired()])
     #logo = FileField('Organisation Logo', validators=[FileAllowed(images, 'Images only!')])
     #logo = FileField('Organisation Logo', validators=[Required(), FileAllowed(images, 'Images only!')])
     org_industry = SelectField(u'Select Industry', choices=[('Accountants', 'Accountants'),
@@ -209,59 +210,7 @@ class OrganisationForm(FlaskForm):
                                                              'Regional Kidney Smart Educator')])
     org_website = StringField('Website', [Length(max=255)])
     org_city = StringField('City', [Length(max=255)])
-    org_state = SelectField(u'Select US State', choices=[
-        ('AL', 'Alabama'),
-        ('AL', 'Alabama'),
-        ('AK', 'Alaska'),
-        ('AZ', 'Arizona'),
-        ('AR', 'Arkansas'),
-        ('CA', 'California'),
-        ('CO', 'Colorado'),
-        ('CT', 'Connecticut'),
-        ('DE', 'Delaware'),
-        ('DC', 'District Of Columbia'),
-        ('FL', 'Florida'),
-        ('GA', 'Georgia'),
-        ('HI', 'Hawaii'),
-        ('ID', 'Idaho'),
-        ('IL', 'Illinois'),
-        ('IN', 'Indiana'),
-        ('IA', 'Iowa'),
-        ('KS', 'Kansas'),
-        ('KY', 'Kentucky'),
-        ('LA', 'Louisiana'),
-        ('ME', 'Maine'),
-        ('MD', 'Maryland'),
-        ('MA', 'Massachusetts'),
-        ('MI', 'Michigan'),
-        ('MN', 'Minnesota'),
-        ('MS', 'Mississippi'),
-        ('MO', 'Missouri'),
-        ('MT', 'Montana'),
-        ('NE', 'Nebraska'),
-        ('NV', 'Nevada'),
-        ('NH', 'New Hampshire'),
-        ('NJ', 'New Jersey'),
-        ('NM', 'New Mexico'),
-        ('NY', 'New York'),
-        ('NC', 'North Carolina'),
-        ('ND', 'North Dakota'),
-        ('OH', 'Ohio'),
-        ('OK', 'Oklahoma'),
-        ('OR', 'Oregon'),
-        ('PA', 'Pennsylvania'),
-        ('RI', 'Rhode Island'),
-        ('SC', 'South Carolina'),
-        ('SD', 'South Dakota'),
-        ('TN', 'Tennessee'),
-        ('TX', 'Texas'),
-        ('UT', 'Utah'),
-        ('VT', 'Vermont'),
-        ('VA', 'Virginia'),
-        ('WA', 'Washington'),
-        ('WV', 'West Virginia'),
-        ('WI', 'Wisconsin'),
-        ('WY', 'Wyoming')])
+    org_state = StringField('State', [Length(max=50)])
     org_country = SelectField(u'Select Country', choices=[
 
         ('Afganistan', 'Afghanistan'),

@@ -27,12 +27,12 @@
             <td>{{ org.org_name }}</td>
         </tr>
         <tr>
-            <td>Default Logo</td>
-            <td><img height="200" src="{{ org.get_photo() }}"></td>
+            <td>Mobile Phone Number</td>
+            <td>{{ org.mobile_phone }}</td>
         </tr>
         <tr>
             <td>Creator</td>
-            <td>{{ org.user.full_name }}</td>
+            <td>{{ org.user.full_name() }}</td>
         </tr>
         <tr>
             <td>City</td>
@@ -40,11 +40,11 @@
         </tr>
         <tr>
             <td>State</td>
-            <td>{{ org.org_country }}</td>
+            <td>{{ org.org_state }}</td>
         </tr>
         <tr>
             <td>Country</td>
-            <td>{{ org.name }}</td>
+            <td>{{ org.org_country }}</td>
         </tr>
         <tr>
             <td>Website</td>
@@ -76,18 +76,13 @@
             <h2 class="ui header">
                 Organization Dashboard : {{ org.org_name }}
                 <span class="right floated ui">
-                    <a href="{{ url_for('organisations.edit_org', org_id=org.id )}}">
-                        <i class="icon edit"></i>
+                    <a href="{# url_for('organisations.edit_org', org_id=org.id )#}">
+                        <!--<i class="icon edit"></i>-->
                     </a>
                 </span>
             </h2>
             {{ org_info(org) }}
-            <div class="ui two column stackable grid">
-                {{ dashboard_option(org, 'job adverts', 'organisations.list_positions',
-                                    description='Adverts created are viewable by all members within the network and outside.', icon='write square icon') }}
-                {{ dashboard_option(org, 'Your Staff', 'organisations.list_staff',
-                                    description='Send invites to your staffs to create their own accounts', icon='add user icon') }}
-            </div>
+
         </div>
     </div>
 {% endblock %}

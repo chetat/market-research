@@ -39,13 +39,10 @@ def create_org():
     form = OrganisationForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            image_filename = images.save(request.files['logo'])
-            image_url = images.url(image_filename)
             org = Organisation(
                 user_id=current_user.id,
-                image_filename=image_filename,
-                image_url=image_url,
                 org_name=form.org_name.data,
+                mobile_phone=form.mobile_phone.data,
                 org_industry=form.org_industry.data,
                 org_website=form.org_website.data,
                 org_city=form.org_city.data,
@@ -56,10 +53,6 @@ def create_org():
             db.session.add(org)
             db.session.commit()
             flash('Data added!', 'success')
-            logo = Organisation.query.filter(Organisation.logos).first()
-            if logo is None:
-                return redirect(url_for('organisations.logo_upload'))
-            return redirect(url_for('organisations.org_home'))
         else:
             flash('Error! Data was not added.', 'error')
     return render_template('organisations/create_org.html', form=form)
@@ -73,17 +66,13 @@ def edit_org(org_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             org.org_name = form.org_name.data,
+            org.mobile_phone = form.mobile_phone.data,
             org.org_industry = form.org_industry.data,
             org.org_website = form.org_website.data,
             org.org_city = form.org_city.data,
             org.org_state = form.org_state.data,
             org.org_country = form.org_country.data,
             org.org_description = form.org_description.data
-            if request.files['logo']:
-                image_filename = images.save(request.files['logo'])
-                image_url = images.url(image_filename)
-                org.image_filename = image_filename
-                org.image_url = image_url
             db.session.add(org)
             db.session.commit()
             flash('Data edited!', 'success')

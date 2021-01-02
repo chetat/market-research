@@ -14,7 +14,14 @@ class Question(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     name = db.Column(db.String(64), index=True)
     description = db.Column(db.String(64), index=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
+    
+    @property
+    def org_name(self):
+        return Organisation.get(self.organisation_id).org_name
 
+    def __repr__(self):
+        return u'<{self.__class__.__name__}: {self.id}>'.format(self=self)
 
 class ScreenerQuestion(db.Model):
     __tablename__ = 'screener_questions'
