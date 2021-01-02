@@ -74,7 +74,15 @@ def create_app(config):
     from .account import account as account_blueprint
     app.register_blueprint(account_blueprint, url_prefix='/account')
 
+    from .question import question as question_blueprint
+    app.register_blueprint(question_blueprint, url_prefix='/question')
+
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
+    from .organisations import organisations as organisations_blueprint
+    app.register_blueprint(organisations_blueprint, url_prefix='/organisations')
+
+
 
     return app

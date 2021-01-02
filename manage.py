@@ -43,6 +43,14 @@ def recreate_db():
     db.create_all()
     db.session.commit()
 
+@manager.command
+def create_tables():
+    """
+    Recreates only missing tables. 
+    production.
+    """
+    db.create_all()
+    db.session.commit()
 
 @manager.option(
     '-n',

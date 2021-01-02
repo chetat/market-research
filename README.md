@@ -65,7 +65,7 @@ $ venv\Scripts\activate.bat
 
 Unix/MacOS:
 ```
-$ python3 -m venv venv
+$ python3 -m venv venv or virtualenv venv
 $ source venv/bin/activate
 ```
 Learn more in [the documentation](https://docs.python.org/3/library/venv.html#creating-virtual-environments).
