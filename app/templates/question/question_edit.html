@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
 {% block page_title %}{{ appt.name or '(No Title)' }} - {{ appt.description|default('') }}{% endblock %}
 {% block custom_head_tags %}
     <meta name="description"
@@ -52,10 +53,112 @@
                     <hr>
                     <h4>Description</h4><!---I took out |default('')|markdown here---->
                     {{ appt.description }}
-
                     <hr>
+            {% set flashes = {
+                'error':   get_flashed_messages(category_filter=['form-error']),
+                'warning': get_flashed_messages(category_filter=['form-check-email']),
+                'info':    get_flashed_messages(category_filter=['form-info']),
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } %}
+
+            {{ f.begin_form(question_form, flashes) }}
+				<div class="ui inverted segment">
+				  <div class="ui inverted form">
+					<div class="two fields">
+					  <div class="field">
+						{{ f.render_form_field(question_form.name) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(question_form.description) }}
+					  </div>
+					</div>
+
+            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+            {{ f.form_message(flashes['info'], header='Information', class='info') }}
+            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+            {% for field in question_form | selectattr('type', 'equalto', 'SubmitField') %}
+                {{ f.render_form_field(field) }}
+            {% endfor %}
+
+            {{ f.end_form() }}
                 </div>
             </div>
+            <hr>
+            {% set flashes = {
+                'error':   get_flashed_messages(category_filter=['form-error']),
+                'warning': get_flashed_messages(category_filter=['form-check-email']),
+                'info':    get_flashed_messages(category_filter=['form-info']),
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } %}
+
+            {{ f.begin_form(screener_question_form, flashes) }}
+				<div class="ui inverted segment">
+				  <div class="ui inverted form">
+					<div class="two fields">
+					  <div class="field">
+						{{ f.render_form_field(screener_question_form.title) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(screener_question_form.description) }}
+					  </div>
+					</div>
+					<div class="two fields">
+					  <div class="field">
+						{{ f.render_form_field(screener_question_form.required_answer) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(screener_question_form.options) }}
+					  </div>
+					</div>
+					<div class="inline field">
+						<label>*Respondents will only answer the remaining questions based on the required screener answer options you select here.</label>
+					</div>
+            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+            {{ f.form_message(flashes['info'], header='Information', class='info') }}
+            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+            {% for field in screener_question_form | selectattr('type', 'equalto', 'SubmitField') %}
+                {{ f.render_form_field(field) }}
+            {% endfor %}
+
+            {{ f.end_form() }}
+                </div>
+            </div>	
+            <hr>
+            {% set flashes = {
+                'error':   get_flashed_messages(category_filter=['form-error']),
+                'warning': get_flashed_messages(category_filter=['form-check-email']),
+                'info':    get_flashed_messages(category_filter=['form-info']),
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } %}
+
+            {{ f.begin_form(multiple_choice_question_form, flashes) }}
+				<div class="ui inverted segment">
+				  <div class="ui inverted form">
+					<div class="two fields">
+					  <div class="field">
+						{{ f.render_form_field(multiple_choice_question_form.title) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(multiple_choice_question_form.description) }}
+					  </div>
+					</div>
+
+            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+            {{ f.form_message(flashes['info'], header='Information', class='info') }}
+            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+            {% for field in multiple_choice_question_form | selectattr('type', 'equalto', 'SubmitField') %}
+                {{ f.render_form_field(field) }}
+            {% endfor %}
+
+            {{ f.end_form() }}
+                </div>
+            </div>				
             <div class="row edit-controls" align="center">
                 <h3>
                     {# if appt.creator != current_user #}
@@ -178,35 +281,4 @@
     </style>
 {% endblock %}
 {% block scripts %}
-    <script>
-        jQuery(function ($) {
-            $('form[data-async] #emailSaveBtn').click(function (event) {
-                var $form = $(this);
-                var $target = $($form.attr('data-target'));
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/some-endpoint',
-                    data: {
-                        email: $('#email').val(),
-                        url: '{{ url_for('promos.promo_details',promo_id=appt.id, name=appt.name,promo_city=appt.promo_city,promo_state=appt.promo_state, promo_country=appt.promo_country,_external=True) }}',
-                        title: '{{appt.course_title}} in {{appt.city}}',
-                    },
-
-                    success: function (data, status) {
-                        console.log("success");
-                        $('#share-email-modal').modal('hide');
-                        $('#share-email-modal').modal('hide');
-                    }
-
-                });
-                $('#share-email-modal').modal('hide');
-
-                event.preventDefault();
-            });
-        });
-        $('#share-email-modal').on('hidden.bs.modal', function (e) {
-            $('#share-email-modal').modal('hide');
-        })
-    </script>
 {% endblock %}

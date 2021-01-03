@@ -28,6 +28,15 @@ class AddQuestionForm(FlaskForm):
                                   Length(1, 90)])
     submit = SubmitField('Submit')
 
+class EditQuestionForm(FlaskForm):
+    name = StringField(
+        'Project Name', validators=[InputRequired(),
+                                  Length(1, 64)])
+    description = StringField(
+        'description', validators=[InputRequired(),
+                                  Length(1, 90)])
+    submit = SubmitField('Submit')
+    
 class AddScreenerQuestionForm(FlaskForm):
     title = StringField(
         'Screener Question Title', validators=[InputRequired(),
@@ -42,7 +51,7 @@ class AddScreenerQuestionForm(FlaskForm):
 
 class AddMultipleChoiceQuestionForm(FlaskForm):
     title = StringField(
-        'Screener Question Title', validators=[InputRequired(),
+        'Question', validators=[InputRequired(),
                                   Length(1, 64)])
     description = StringField(
         'description', validators=[InputRequired(),

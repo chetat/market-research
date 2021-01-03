@@ -12,6 +12,7 @@ class Question(db.Model):
     __tablename__ = 'question'
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
     name = db.Column(db.String(64), index=True)
     description = db.Column(db.String(64), index=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)

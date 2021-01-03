@@ -51,7 +51,7 @@
                         <tr onclick="window.location.href = '{{ url_for('admin.user_info', user_id=u.id) }}';">
 
                             <td>{{ u.org_name }}</td>
-                            <td>{{ u.user.full_name }}</td>
+                            <td>{{ u.user.full_name() }}</td>
                             <td>{{ u.org_city }}</td>
                             <td>{{ u.org_state }}</td>
                             <td>{{ u.org_country }}</td>
