@@ -27,28 +27,38 @@ class Question(db.Model):
 class ScreenerQuestion(db.Model):
     __tablename__ = 'screener_questions'
     id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     title = db.Column(db.String(64), index=True)
     description = db.Column(db.String(64), index=True)
     required_answer = db.Column(db.String(64), index=True)
     options = db.Column(db.String(64), index=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     question = db.relationship('Question', backref='screener')
 
 
 class MultipleChoiceQuestion(db.Model):
     __tablename__ = 'multiple_choice_questions'
     id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     title = db.Column(db.String(64), index=True)
     description = db.Column(db.String(64), index=True)
+    option_one = db.Column(db.String(64), index=True)
+    option_two = db.Column(db.String(64), index=True)
+    option_three = db.Column(db.String(64), index=True)
+    option_four = db.Column(db.String(64), index=True)
+    option_five = db.Column(db.String(64), index=True)
     question = db.relationship('Question', backref='multichoice')
-    options = db.relationship('Option', backref='options')
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
+
 
 class Option(db.Model):
     __tablename__ = 'options'
     id = db.Column(db.Integer, primary_key=True)
     multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
-    text = db.Column(db.String(64), index=True)
+    option_one = db.Column(db.String(64), index=True)
+    option_two = db.Column(db.String(64), index=True)
+    option_three = db.Column(db.String(64), index=True)
+    option_four = db.Column(db.String(64), index=True)
+    option_five = db.Column(db.String(64), index=True)
+    multichoice = db.relationship('MultipleChoiceQuestion', backref='options')
 
 class ScaleQuestion(db.Model):
     __tablename__ = 'scale_questions'
@@ -56,6 +66,18 @@ class ScaleQuestion(db.Model):
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     title = db.Column(db.String(64), index=True)
     description = db.Column(db.String(64), index=True)
+    
+    option_one = db.Column(db.String(64), index=True)
+    option_two = db.Column(db.String(64), index=True)
+    option_three = db.Column(db.String(64), index=True)
+    option_four = db.Column(db.String(64), index=True)
+    option_five = db.Column(db.String(64), index=True)
+    
+    option_one_scale = db.Column(db.String(64), index=True)
+    option_two_scale = db.Column(db.String(64), index=True)
+    option_three_scale = db.Column(db.String(64), index=True)
+    option_four_scale = db.Column(db.String(64), index=True)
+    option_five_scale = db.Column(db.String(64), index=True)
     question = db.relationship('Question', backref='scale')
 
 class ScaleOption(db.Model):
@@ -64,3 +86,4 @@ class ScaleOption(db.Model):
     scale_questions_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
     option = db.Column(db.String(64), index=True)
     scale = db.Column(db.Integer, index=True)
+    scale_question = db.relationship('ScaleQuestion', backref='scale_options')

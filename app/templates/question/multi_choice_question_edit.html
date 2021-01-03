@@ -54,92 +54,30 @@
                 'success': get_flashed_messages(category_filter=['form-success'])
             } %}
 
-            {{ f.begin_form(question_form, flashes) }}
-				<div class="ui inverted segment">
-				  <div class="ui inverted form">
-					<div class="two fields">
-					  <div class="field">
-						{{ f.render_form_field(question_form.name) }}
-					  </div>
-					  <div class="field">
-					{{ f.render_form_field(question_form.description) }}
-					  </div>
-					</div>
-
-            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-            {{ f.form_message(flashes['info'], header='Information', class='info') }}
-            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-            {% for field in question_form | selectattr('type', 'equalto', 'SubmitField') %}
-                {{ f.render_form_field(field) }}
-            {% endfor %}
-
-            {{ f.end_form() }}
-                </div>
-            </div>
-            <hr>
-            {% set flashes = {
-                'error':   get_flashed_messages(category_filter=['form-error']),
-                'warning': get_flashed_messages(category_filter=['form-check-email']),
-                'info':    get_flashed_messages(category_filter=['form-info']),
-                'success': get_flashed_messages(category_filter=['form-success'])
-            } %}
-
-            {{ f.begin_form(screener_question_form, flashes) }}
-				<div class="ui inverted segment">
-				  <div class="ui inverted form">
-					<div class="two fields">
-					  <div class="field">
-						{{ f.render_form_field(screener_question_form.title) }}
-					  </div>
-					  <div class="field">
-					{{ f.render_form_field(screener_question_form.description) }}
-					  </div>
-					</div>
-					<div class="two fields">
-					  <div class="field">
-						{{ f.render_form_field(screener_question_form.required_answer) }}
-					  </div>
-					  <div class="field">
-					{{ f.render_form_field(screener_question_form.options) }}
-					  </div>
-					</div>
-					<div class="inline field">
-						<label>*Respondents will only answer the remaining questions based on the required screener answer options you select here.</label>
-					</div>
-            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-            {{ f.form_message(flashes['info'], header='Information', class='info') }}
-            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-            {% for field in screener_question_form | selectattr('type', 'equalto', 'SubmitField') %}
-                {{ f.render_form_field(field) }}
-            {% endfor %}
-
-            {{ f.end_form() }}
-                </div>
-            </div>	
-            <hr>
-            {% set flashes = {
-                'error':   get_flashed_messages(category_filter=['form-error']),
-                'warning': get_flashed_messages(category_filter=['form-check-email']),
-                'info':    get_flashed_messages(category_filter=['form-info']),
-                'success': get_flashed_messages(category_filter=['form-success'])
-            } %}
-
             {{ f.begin_form(multiple_choice_question_form, flashes) }}
 				<div class="ui inverted segment">
 				  <div class="ui inverted form">
-					<div class="two fields">
 					  <div class="field">
 						{{ f.render_form_field(multiple_choice_question_form.title) }}
 					  </div>
 					  <div class="field">
 					{{ f.render_form_field(multiple_choice_question_form.description) }}
 					  </div>
-					</div>
-
+					  <div class="field">
+					{{ f.render_form_field(multiple_choice_question_form.option_one) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(multiple_choice_question_form.option_two) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(multiple_choice_question_form.option_three) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(multiple_choice_question_form.option_four) }}
+					  </div>
+					  <div class="field">
+					{{ f.render_form_field(multiple_choice_question_form.option_five) }}
+					  </div>
             {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
             {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
             {{ f.form_message(flashes['info'], header='Information', class='info') }}
@@ -151,7 +89,7 @@
 
             {{ f.end_form() }}
                 </div>
-            </div>				
+            </div>	
             <div class="row edit-controls" align="center">
                 <h3>
                     {# if appt.creator != current_user #}

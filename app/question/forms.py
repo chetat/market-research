@@ -56,13 +56,21 @@ class AddMultipleChoiceQuestionForm(FlaskForm):
     description = StringField(
         'description', validators=[InputRequired(),
                                   Length(1, 90)])
-    submit = SubmitField('Submit')
-
-class AddOptionForm(FlaskForm):
-     text = StringField(
-        'Add Text', validators=[InputRequired(),
+    option_one = StringField(
+        'Option One', validators=[InputRequired(),
                                   Length(1, 64)])
-     submit = SubmitField('Submit')   
+
+    option_two = StringField(
+        'Option Two', validators=[InputRequired(),
+                                  Length(1, 64)])
+    option_three = StringField(
+        'Option Three')
+    option_four = StringField(
+        'Option Four')
+    option_five = StringField(
+        'Option Five')
+    submit = SubmitField('Submit')
+      
 
 
 class AddScaleQuestionForm(FlaskForm):
@@ -72,14 +80,39 @@ class AddScaleQuestionForm(FlaskForm):
     description = StringField(
         'description', validators=[InputRequired(),
                                   Length(1, 90)])
-    submit = SubmitField('Submit')
-    
-class AddScaleOptionForm(FlaskForm):
-    option = SelectField(u'Please choose either Yes or No', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
+    option_one = SelectField(u'Please choose either Yes or No', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
                                                                      ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
                                                                      ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
                                                                      ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
                                                                      ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
                                                                      ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
-    scale = SelectField(u'Please choose the scale for the question', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    option_one_scale = SelectField(u'Please choose the scale for option one', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    option_two = SelectField(u'Please choose either Yes or No', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
+                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
+                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
+                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
+                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
+                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
+    option_two_scale = SelectField(u'Please choose the scale for option two', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    option_three = SelectField(u'Please choose either Yes or No', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
+                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
+                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
+                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
+                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
+                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
+    option_three_scale = SelectField(u'Please choose the scale for option three', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    option_four = SelectField(u'Please choose either Yes or No', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
+                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
+                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
+                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
+                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
+                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
+    option_four_scale = SelectField(u'Please choose the scale for option four', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    option_five = SelectField(u'Please choose either Yes or No', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
+                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
+                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
+                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
+                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
+                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
+    option_five_scale = SelectField(u'Please choose the scale for option five', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
     submit = SubmitField('Submit')

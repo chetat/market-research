@@ -23,7 +23,11 @@ question = Blueprint('question', __name__)
 @login_required
 def index():
     """Question dashboard page."""
-    return render_template('question/index.html')
+    orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
+        filter(OrgStaff.user_id == current_user.id).all()
+    questions = db.session.query(Question).filter_by(creator_id=current_user.id).first()
+    return render_template('question/question_dashboard.html', orgs=orgs, questions=questions)
+
 
 
 @question.route('/<org_id>/create/', methods=['Get', 'POST'])
@@ -125,6 +129,36 @@ def edit_question(question_id, name):
                            multiple_choice_question_form=multiple_choice_question_form
                            )
 
+
+@question.route('/<int:multiple_choice_question_id>/<int:question_id>/<name>', methods=['Get', 'POST'])
+@login_required
+def edit_multiple_choice_question(multiple_choice_question_id, question_id, name):
+    question_instance = Question.query.filter_by(id=question_id).first()
+    if not question_instance:
+        abort(404)
+    multiple_choice_question_instance = MultipleChoiceQuestion.query.filter_by(question_id=question_id).first()
+    multiple_choice_question_form = AddMultipleChoiceQuestionForm(obj=multiple_choice_question_instance)
+    if multiple_choice_question_form.validate_on_submit():
+        multiple_choice = MultipleChoiceQuestion(
+            question_id=question_id,
+            title=multiple_choice_question_form.title.data,
+            description=multiple_choice_question_form.description.data,
+            option_one=multiple_choice_question_form.option_one.data,
+            option_two=multiple_choice_question_form.option_two.data,
+            option_three = multiple_choice_question_form.option_three.data,
+            option_four = multiple_choice_question_form.option_four.data,
+            option_five = multiple_choice_question_form.option_five.data
+            )
+        db.session.add(multiple_choice)
+        db.session.commit()
+    appts = Question.query.filter(Question.id == question_id).first_or_404()
+    org_users = User.query.all()
+    #orgs = Organisation.query.filter(Organisation.user_id == User.id).all()
+    orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
+        filter(OrgStaff.user_id == current_user.id).all()
+    return render_template('question/multi_choice_question_edit.html', appt=appts, orgs=orgs, org_users=org_users,
+                           multiple_choice_question_form=multiple_choice_question_form
+                           )
 
 @question.route('/<org_id>/list', methods=['Get', 'POST'])
 @login_required
