@@ -20,21 +20,43 @@ from app.models import Role, User
 
 
 class AddQuestionForm(FlaskForm):
-    name = StringField(
-        'Project Name', validators=[InputRequired(),
+    question = StringField(
+        'Question title', validators=[InputRequired(),
                                   Length(1, 64)])
     description = StringField(
         'description', validators=[InputRequired(),
                                   Length(1, 90)])
+    option_one = StringField(
+        'Option One', validators=[InputRequired(),
+                                  Length(1, 64)])
+
+    option_two = StringField(
+        'Option Two', validators=[InputRequired(),
+                                  Length(1, 64)])
+    option_three = StringField(
+        'Option Three')
+    option_four = StringField(
+        'Option Four')
+    option_five = StringField(
+        'Option Five')
     submit = SubmitField('Submit')
 
 class EditQuestionForm(FlaskForm):
-    name = StringField(
-        'Project Name', validators=[InputRequired(),
-                                  Length(1, 64)])
+    question = StringField(
+        'Question Title')
     description = StringField(
-        'description', validators=[InputRequired(),
-                                  Length(1, 90)])
+        'description')
+    option_one = StringField(
+        'Option One')
+
+    option_two = StringField(
+        'Option Two')
+    option_three = StringField(
+        'Option Three')
+    option_four = StringField(
+        'Option Four')
+    option_five = StringField(
+        'Option Five')
     submit = SubmitField('Submit')
     
 class AddScreenerQuestionForm(FlaskForm):
