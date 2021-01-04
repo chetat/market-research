@@ -4,14 +4,31 @@ from .. import db
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True)
-    questions = db.relationship("Question")
+    projects = db.relationship("Project")
     decision = db.Column(db.Boolean, default=False)
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
+
+
+class Project(db.Model):
+    __tablename__ = 'project'
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
+    name = db.Column(db.String(64), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
+    questions = db.relationship("Question")
+    
+    @property
+    def org_name(self):
+        from app.models import Organisation
+        return Organisation.get(self.organisation_id).org_name
+    def __repr__(self):
+        return u'<{self.__class__.__name__}: {self.id}>'.format(self=self)
+
 
 class Question(db.Model):
     __tablename__ = 'question'
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
     question = db.Column(db.String(64), index=True)
     description = db.Column(db.String(64), index=True)
@@ -21,6 +38,7 @@ class Question(db.Model):
     option_four = db.Column(db.String(64), index=True)
     option_five = db.Column(db.String(64), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
     #multiple_choice_questions_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id', ondelete="CASCADE"), nullable=False)
     #multiple_choice_question = db.relationship('MultipleChoiceQuestion', backref='questions', cascade='all, delete')

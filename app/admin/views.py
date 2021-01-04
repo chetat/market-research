@@ -19,8 +19,7 @@ from app.admin.forms import (
 )
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User
-
+from app.models import *
 admin = Blueprint('admin', __name__)
 
 
@@ -95,6 +94,14 @@ def registered_users():
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
 
+@admin.route('/questions')
+@login_required
+@admin_required
+def questions():
+    """View all submitted questions."""
+    questions = Question.query.all()
+    return render_template(
+        'admin/questions.html', questions=questions)
 
 @admin.route('/user/<int:user_id>')
 @admin.route('/user/<int:user_id>/info')

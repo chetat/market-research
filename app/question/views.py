@@ -24,24 +24,25 @@ question = Blueprint('question', __name__)
 @login_required
 def index():
     """Question dashboard page."""
+   
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).first_or_404()
     orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
         filter(OrgStaff.user_id == current_user.id).all()
-    question = db.session.query(Question).filter_by(user_id=current_user.id).all()
+    question = db.session.query(Question).filter_by(user_id=current_user.id).all() 
     count = db.session.query(func.count(Question.id)).filter_by(user_id=current_user.id).scalar()
     return render_template('question/question_dashboard.html', orgs=orgs, question=question, org=org, count=count)
 
 
 
-@question.route('/<org_id>/create/', methods=['Get', 'POST'])
+@question.route('/<org_id>/<project_id>/create/', methods=['Get', 'POST'])
 @login_required
-def new_question(org_id):
+def new_question(org_id, project_id):
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
     form = AddQuestionForm()
     if form.validate_on_submit():
-        order_id = db.session.query(Organisation).filter_by(user_id=current_user.id).first()
+        order_id = db.session.query(Project).filter_by(user_id=current_user.id).first()
         appt = Question(
-            order_id=order_id.id,
+            project_id = project_id,
             question=form.question.data,
             description=form.description.data,
             option_one = form.option_one.data,

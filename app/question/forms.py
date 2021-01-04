@@ -19,6 +19,12 @@ from app import db
 from app.models import Role, User
 
 
+class AddProjectForm(FlaskForm):
+    name = StringField(
+        'Project Name', validators=[InputRequired(),
+                                  Length(1, 64)])
+    submit = SubmitField('Submit')
+
 class AddQuestionForm(FlaskForm):
     question = StringField(
         'Question title', validators=[InputRequired(),

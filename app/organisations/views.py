@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, flash, redirect, request
+from flask import Blueprint, render_template, abort, flash, redirect, request, url_for
 from flask_login import current_user, login_required
 
 from app.decorators import admin_required
@@ -20,6 +20,7 @@ def allowed_file(filename):
 def org_home():
     orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
         filter(OrgStaff.user_id == current_user.id).all()
+
     return render_template('organisations/org_dashboard.html', orgs=orgs)
 
 
@@ -28,7 +29,7 @@ def org_home():
 def select_org(org_id):
     org = Organisation.query.filter_by(id=org_id).first_or_404()
     print(current_user.id, org.user_id)
-    if current_user.id != org.user_id and current_user not in org.get_staff():
+    if current_user.id != org.user_id:
         abort(404)
     return render_template('organisations/org_operations.html', op='home', org=org)
 
@@ -52,6 +53,7 @@ def create_org():
             )
             db.session.add(org)
             db.session.commit()
+            return redirect(url_for('organisations.org_home'))
             flash('Data added!', 'success')
         else:
             flash('Error! Data was not added.', 'error')
@@ -96,7 +98,7 @@ def org_view(org_id):
 
 
     elif org_detail == None:
-        return redirect(url_for('main.create_org'))
+        return redirect(url_for('organisations.create_org'))
 
     else:
         abort(404)
