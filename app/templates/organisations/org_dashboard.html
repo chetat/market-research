@@ -26,10 +26,10 @@
             <h2 class="ui header">
                 Your Organizations
                 <div class="sub header">
-                   **Please click the button to add the details of your organization before you can proceed with creating a questions.
-				   **Once you have created an organization, click on the "view details" button to view the details you created.
-				   **One Organization can have multiple projects under the same organization. You can create a seperate Organization to seperate projects between Organizations.
-				   **Each project can only create 10 questions per project. 
+                   <p>**Please click the button to add the details of your organization before you can proceed with creating a questions.
+				   **Once you have created an organization, click on the "view details" button to view the details you created.</p>
+				   <p>**One Organization can have multiple projects under the same organization. You can create a seperate Organization to seperate projects between Organizations.
+				  **Each project can only create 10 questions per project. To create a project, click on "Project Dashboard" </p>
                 </div>
             </h2>
             <div class="ui header" style="width: 100%; height: 50px">
@@ -63,7 +63,7 @@
                                 <a class="ui primary button" href="{{ url_for('organisations.select_org', org_id=u.id) }}">View Details</a>
                             </td>
 							<td>
-                                <a class="ui teal button" href="{{ url_for('Project.new_project', org_id=u.id) }}">Create Projects</a>
+                                <a class="ui teal button" href="{{ url_for('project.index') }}">Project Dashboard</a>
                             </td>
                         </tr>
                     {% endfor %}

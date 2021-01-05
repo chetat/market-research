@@ -60,7 +60,10 @@
                                 <!---<a class="ui red left floated button" style="margin-top: 1px"
                                    href="{# url_for('project.delete_project', project_id=u.id) #}" onclick="return confirmDeleteProject('{{ project.id }}');" data-content="{{ project.id }}">Delete</a>--->						
                             </td>
+							{% if u.project_id >= 10 %}
+							{% else %}
                             <td><a class="ui teal right floated button" href="{{ url_for('question.new_question', org_id=org.id, project_id=u.id) }}">Create New Question</a></td>
+							{% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>

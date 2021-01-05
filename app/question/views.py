@@ -55,7 +55,7 @@ def new_question(org_id, project_id):
         db.session.add(appt)
         db.session.commit()
         flash('Successfully created'.format(appt.question), 'form-success')
-        return redirect(url_for('question.index'))
+        return redirect(url_for('project.index'))
 
         #return redirect(url_for('question.question_details',
                                 #question_id=appt.id, name=appt.name))
