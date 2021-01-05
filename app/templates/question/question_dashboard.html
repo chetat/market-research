@@ -41,7 +41,8 @@
                     <thead>
                     <tr>
 
-                        <th>Project ID.</th>
+                        <th>Project Id.</th>
+                        <th>Question No.</th>
                         <th>Question Title</th>
                         <th>Description</th>
                         <th>Option One</th>
@@ -56,6 +57,7 @@
                     {% for u in question %}
                         <tr>
                             <td>{{ u.project_id }}</td>
+                            <td>{{ u.id }}</td>
                             <td>{{ u.question }}</td>
                             <td>{{ u.description }}</td>
                             <td>{{ u.option_one }}</td>

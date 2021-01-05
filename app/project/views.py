@@ -28,8 +28,9 @@ def index():
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).first_or_404()
     orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
         filter(OrgStaff.user_id == current_user.id).all()
-    project = db.session.query(Project).filter_by(user_id=current_user.id).all() 
-    return render_template('project/project_dashboard.html', orgs=orgs, project=project, org=org)
+    project = db.session.query(Project).filter_by(user_id=current_user.id).all()
+    question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
+    return render_template('project/project_dashboard.html', orgs=orgs, project=project, org=org, question=question)
 
 
 
@@ -60,28 +61,28 @@ def new_project(org_id):
 
 @project.route('/<int:project_id>/details/<name>/')
 def project_details(project_id, name):
-    appts = project.query.filter(project.id == project_id).first_or_404()
-    org_users = User.query.all()
-    #orgs = Organisation.query.filter(Organisation.user_id == User.id).all()
-    orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
-        filter(OrgStaff.user_id == current_user.id).all()
-    return render_template('project/project_details.html', appt=appts, orgs=orgs, org_users=org_users)
+    question = Question.query.filter(Question.project_id == project_id).all()
+    #org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
+    #count = question = Question.query.filter(Question.project_id == project_id).count()
+    #question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
+    prject_id=project_id 
+    return render_template('project/project_details.html', question=question, project_id=project_id)
 
 
 @project.route('/<int:project_id>/<name>/edit', methods=['Get', 'POST'])
 @login_required
 def edit_project(project_id, name):
 
-    project = project.query.filter_by(user_id=current_user.id).filter_by(id=project_id).first_or_404()
+    project = Project.query.filter_by(user_id=current_user.id).filter_by(id=project_id).first_or_404()
     if not project:
         abort(404)
     if current_user.id != project.user_id:
         abort(404)
         
-    form = EditProjectForm(obj=project)
+    form = AddProjectForm(obj=project)
     if form.validate_on_submit():
         #order_id = db.session.query(Organisation).filter_by(user_id=current_user.id).first()
-        project.project = form.project.data
+        project.name = form.name.data
         db.session.add(project)
         db.session.commit()
         flash("Edited.", 'success')

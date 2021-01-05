@@ -1,212 +1,109 @@
 {% extends 'layouts/base.html' %}
-{% block page_title %}{{ appt.name or '(No Title)' }} - {{ appt.description|default('') }}{% endblock %}
-{% block custom_head_tags %}
-    <meta name="description"
-          content="{{ appt.description }}">
-    <meta name="author" content="{{ config.APP_NAME }}">
-    <meta name="og:title" content="{{ appt.name or '(No Title)' }}, {{ config.APP_NAME }} "/>
-    <meta name="og:type" content="website"/>
-    <meta name="og:url" content="https://www.{{ config.APP_NAME }}.com"/>
-    <meta name="og:image" content="{{ url_for('static', filename='images/home/slider/hill.png') }}"/>
-    <meta name="og:site_name" content="{{ config.APP_NAME }}"/>
-    <meta name="og:description"
-          content="{{ appt.description }}"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:site" content="@marketresearchnigeria"/>
-    <meta name="twitter:creator" content="@anioko1"/>
-{% endblock %}
-{% block content %}
-    <div class="ui sixteen column centered grid">
-        <div class="row edit-controls" align="center">
-        </div>
-        <div class="ui sixteen wide column created_promo">
-            <h1>{{ appt.name or '(No Title)' }}</h1>
-                <h3>
-                    {# if appt.creator != current_user #}
-                        <a href="{# url_for('promos.promo_apply', promo_id=appt.id, name=appt.name) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i> Participate in this promo
-                            </button>
-                        </a>
-                    {# else #}
-                        <a href="{# url_for('organisations.view_applicants', id=appt.id) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i>See Submissions
-                            </button>
-                        </a>
-                    {# endif #}
-                </h3>
-            </h3>
-            {% for org in orgs %}
-                <h3><i class="building outkine icon"></i> Created by: {{ org.org_name }}</h3>
-            {% endfor %}
 
-
-            {% for user in org_users %}
-                {% for organisation in user.user_organisations_created %}
-                    {{ organisation.org_name }}
-                {% endfor %}
-            {% endfor %}
-            <div class="ui two column centered grid">
-                <div class="column">
-                    <hr>
-                    <h4>Description</h4><!---I took out |default('')|markdown here---->
-                    {{ appt.description }}
-
-                    <hr>
+{% macro dashboard_option(title, endpoint, description=None, icon=None) %}
+    <a class="column" href="{{ url_for(endpoint) }}">
+        <div class="ui padded segment">
+            <h3 class="ui header">
+                {% if icon is not none %}
+                    <i class="{{ icon }}"></i>
+                {% endif %}
+                <div class="content">
+                    {{ title }}
+                    {% if description is not none %}
+                        <div class="sub header">
+                            {{ description }}
+                        </div>
+                    {% endif %}
                 </div>
-            </div>
-            <div class="row edit-controls" align="center">
-                <h3>
-                    {# if appt.creator != current_user #}
-                        <a href="{# url_for('promos.promo_apply', promo_id=appt.id, name=appt.name) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i> Participate in this promo
-                            </button>
-                        </a>
-                    {# else #}
-                        <a href="{# url_for('organisations.view_applicants', id=appt.id) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i>See Submissions
-                            </button>
-                        </a>
-                    {# endif #}
-                </h3>
+            </h3>
+        </div>
+    </a>
+{% endmacro %}
+
+{% block content %}
+    <div class="ui stackable grid container">
+        <div class="sixteen wide tablet twelve wide computer centered column">
+            <a class="ui basic compact button" href="{{ url_for('organisations.org_home') }}">
+                <i class="caret left icon"></i>
+                Back to project dashboard
+            </a>
+            <h2 class="ui header">
+                Projects
+                <div class="sub header">
+                    View and manage your questions for this project.
+                </div>
+            </h2>
+            <div class="ui header" style="width: 100%; height: 50px">
+                <a class="ui teal left floated button" href="{{ url_for('project.index') }}">Create New Project</a>
+				<td><a class="ui teal right floated button" href="{{ url_for('question.new_question', project_id=project_id) }}">Add Question</a></td>
+
+			</div>
+            {# Use overflow-x: scroll so that mobile views don't freak out
+             # when the table is too wide #}
+
+            <div style="overflow-x: scroll;"> 
+                <table class="ui searchable sortable unstackable selectable celled table">
+                    <thead>
+                    <tr>
+
+                        <th>Project Id</th>
+                        <th>Question</th>
+                        <th>Description</th>
+                        <th>Option 1</th>
+                        <th>Option 2</th>
+                        <th>Option 3</th>
+                        <th>Option 4</th>
+                        <th>Option 5</th>
+                        <th>Edit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for u in question %}
+                        <tr>
+                            <td>{{ u.project_id }}</td>
+                            <td>{{ u.question }}</td>
+							<td>{{ u.description }}</td>
+							<td>{{ u.option_one }}</td>
+							<td>{{ u.option_two }}</td>
+							<td>{{ u.option_three }}</td>
+							<td>{{ u.option_four }}</td>
+							<td>{{ u.option_five }}</td>
+                            <td>
+                                <a class="ui blue left floated button" href="{{ url_for('project.edit_project', project_id=u.id, name=u.question) }}">Edit</a>            
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
+        <form method="POST" action="{{ url_for('project.delete_project', project_id=0) }}" id="delete-questin-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        </form>
     </div>
-
-    <div class="ui two column centered grid">
-    </div>
-    </div>
-    </div>
-
-
-    <style>
-        body {
-
-            font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 15px;
-            line-height: 1.42857;
-        }
-
-        .applicants table {
-            font-size: 1.2em;
-            color: #1C3766;
-        }
-
-        .created_promo {
-            font-family: 'Lato', sans-serif;
-            color: #1C3766;
-        }
-
-        .created_promo h1 {
-            font-size: 4em;
-            font-weight: 600;
-        }
-
-        .created_promo h2 {
-            font-size: 2.5em;
-            font-weight: 400;
-        }
-
-        .created_promo h3 {
-            font-size: 1.6em;
-            margin: 10px 0 15px 0;
-            font-weight: 500;
-        }
-
-        .created_promo h4 {
-            font-size: 1.6em;
-            font-weight: bold;
-        }
-
-        .created_promo p,
-        .created_promo li {
-            font-size: 1.3em;
-        }
-
-        .created_promo a {
-            color: #5B6C7E;
-            text-decoration: none;
-            -webkit-transition: color .3s;
-            -o-transition: color .3s;
-            transition: color .3s;
-            font-weight: 500;
-            border-bottom: 2px solid;
-        }
-
-        .created_promo a:hover {
-            color: #EC5805;
-            text-decoration: none;
-        }
-
-        .created_promo h1,
-        .created_promo h2,
-        .created_promo h3 {
-            text-align: center;
-        }
-
-        .created_promo .requirements ul li {
-            promo: relative;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .organisation_details {
-            padding: 60px 15px 10px 15px;
-        }
-
-        .share {
-            padding-bottom: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .created_promo h1 {
-                font-size: 2.7em;
-            }
-
-            .created_promo h2 {
-                font-size: 2em;
-            }
-
-            .created_promo h3 {
-                font-size: 1.4em;
-            }
-        }
-
-    </style>
 {% endblock %}
 {% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script>
-        jQuery(function ($) {
-            $('form[data-async] #emailSaveBtn').click(function (event) {
-                var $form = $(this);
-                var $target = $($form.attr('data-target'));
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/some-endpoint',
-                    data: {
-                        email: $('#email').val(),
-                        url: '{{ url_for('promos.promo_details',promo_id=appt.id, name=appt.name,promo_city=appt.promo_city,promo_state=appt.promo_state, promo_country=appt.promo_country,_external=True) }}',
-                        title: '{{appt.course_title}} in {{appt.city}}',
-                    },
-
-                    success: function (data, status) {
-                        console.log("success");
-                        $('#share-email-modal').modal('hide');
-                        $('#share-email-modal').modal('hide');
+        function confirmDeleteProject(project_id){
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this project",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        let form = $("#delete-project-form");
+                        form.attr('action', "{{ url_for('project.delete_project', project_id=0) }}".replace('0',project_id));
+                        form.submit();
+                    } else {
+                        return false;
                     }
-
                 });
-                $('#share-email-modal').modal('hide');
-
-                event.preventDefault();
-            });
-        });
-        $('#share-email-modal').on('hidden.bs.modal', function (e) {
-            $('#share-email-modal').modal('hide');
-        })
+            return false;
+        }
     </script>
+
 {% endblock %}

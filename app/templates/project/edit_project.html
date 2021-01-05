@@ -28,25 +28,7 @@
             {{ f.begin_form(form, flashes) }}
 
             <div class="field">
-                {{ f.render_form_field(form.question) }}
-            </div>
-            <div class="field">
-                {{ f.render_form_field(form.description) }}
-            </div>
-            <div class="field">
-                {{ f.render_form_field(form.option_one) }}
-            </div>
-            <div class="field">
-                {{ f.render_form_field(form.option_two) }}
-            </div>
-            <div class="field">
-                {{ f.render_form_field(form.option_three) }}
-            </div>
-            <div class="field">
-                {{ f.render_form_field(form.option_four) }}
-            </div>
-            <div class="field">
-                {{ f.render_form_field(form.option_five) }}
+                {{ f.render_form_field(form.name) }}
             </div>
             {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
             {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}

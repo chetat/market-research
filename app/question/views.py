@@ -34,10 +34,10 @@ def index():
 
 
 
-@question.route('/<org_id>/<project_id>/create/', methods=['Get', 'POST'])
+@question.route('/<project_id>/create/', methods=['Get', 'POST'])
 @login_required
-def new_question(org_id, project_id):
-    org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
+def new_question(project_id):
+    #org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
     form = AddQuestionForm()
     if form.validate_on_submit():
         order_id = db.session.query(Project).filter_by(user_id=current_user.id).first()
@@ -55,13 +55,13 @@ def new_question(org_id, project_id):
         db.session.add(appt)
         db.session.commit()
         flash('Successfully created'.format(appt.question), 'form-success')
-        return redirect(url_for('project.index'))
+        return redirect(url_for('project.project_details', project_id=appt.project_id, name=appt.question))
 
         #return redirect(url_for('question.question_details',
                                 #question_id=appt.id, name=appt.name))
     else:
         flash('ERROR! Data was not added.', 'error')
-    return render_template('question/create_question.html', form=form, org=org)
+    return render_template('question/create_question.html', form=form)
 
 
 
