@@ -9,6 +9,10 @@ from flask_rq import RQ
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_uploads import UploadSet, configure_uploads, IMAGES
+from flask_share import Share
+from flask_ckeditor import CKEditor
+
+
 
 from app.assets import app_css, app_js, vendor_css, vendor_js
 from config import config as Config
@@ -21,6 +25,7 @@ csrf = CSRFProtect()
 compress = Compress()
 images = UploadSet('images', IMAGES)
 docs = UploadSet('docs', ('rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'pdf'))
+share = Share()
 
 # Set up Flask-Login
 login_manager = LoginManager()
@@ -50,6 +55,8 @@ def create_app(config):
     RQ(app)
     configure_uploads(app, images)
     configure_uploads(app, docs)
+    CKEditor(app)
+    share.init_app(app)
     
     # Register Jinja template functions
     from .utils import register_template_utils
@@ -93,6 +100,9 @@ def create_app(config):
 
     from .organisations import organisations as organisations_blueprint
     app.register_blueprint(organisations_blueprint, url_prefix='/organisations')
+
+    from .blog import blog
+    app.register_blueprint(blog, url_prefix='/blog')
 
 
 

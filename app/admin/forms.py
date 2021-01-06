@@ -1,22 +1,23 @@
+from flask_ckeditor import CKEditorField
+from flask_uploads import UploadSet, IMAGES
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms import ValidationError
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from wtforms.fields import (
-    PasswordField,
-    StringField,
-    SubmitField,
-)
+from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
+from wtforms.fields import PasswordField, StringField, SubmitField, BooleanField, IntegerField, FloatField, \
+    MultipleFileField, TextAreaField, SelectField, FileField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import (
-    Email,
-    EqualTo,
-    InputRequired,
-    Length,
-)
+from wtforms.validators import Email, EqualTo, InputRequired, Length
+from wtforms_alchemy import Unique, ModelForm, model_form_factory
 
 from app import db
-from app.models import Role, User
+from app.models import *
 
+images = UploadSet('images', IMAGES)
+BaseModelForm = model_form_factory(FlaskForm)
+
+images = UploadSet('images', IMAGES)
+BaseModelForm = model_form_factory(FlaskForm)
 
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField(
@@ -72,3 +73,53 @@ class NewUserForm(InviteUserForm):
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
 
     submit = SubmitField('Create')
+
+class MCategoryForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired()])
+    image = FileField('Image', validators=[InputRequired(), FileAllowed(images, 'Images only!')])
+    order = IntegerField('Order', validators=[InputRequired()])
+    is_featured = BooleanField("Is Featured ?")
+    parent = QuerySelectField(
+        'Parent Category',
+        get_label='name',
+        allow_blank=True,
+        blank_text="No Parent",
+        query_factory=lambda: db.session.query(MCategory).filter_by(parent_id=None).order_by('name'))
+    submit = SubmitField('Submit')
+
+
+class BlogCategoryForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired()])
+    order = IntegerField('Order', validators=[InputRequired()])
+    is_featured = BooleanField("Is Featured ?")
+    submit = SubmitField('Submit')
+
+
+class BlogTagForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired()])
+    submit = SubmitField('Submit')
+
+
+class BlogNewsLetterForm(BaseModelForm):
+    email = EmailField('Email', validators=[InputRequired(), Length(1, 64), Email(), Unique(BlogNewsLetter.email)])
+    submit = SubmitField('Submit')
+
+
+class BlogPostForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired()])
+    text = CKEditorField('Body', validators=[InputRequired()])
+    image = FileField('Image', validators=[InputRequired(), FileAllowed(images, 'Images only!')])
+    categories = QuerySelectMultipleField(
+        'Categories',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=lambda: db.session.query(BlogCategory).order_by('order'))
+    tags = QuerySelectMultipleField(
+        'Tags',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=lambda: db.session.query(BlogTag).order_by('created_at'))
+    newsletter = BooleanField('Send Announcement To Subscribers.')
+    all_users = BooleanField('Send Announcement To All Users.')
+
+    submit = SubmitField('Submit')
