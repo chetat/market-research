@@ -67,6 +67,16 @@ class Config:
     RQ_DEFAULT_PASSWORD = url.password
     RQ_DEFAULT_DB = 0
 
+    UPLOADED_IMAGES_DEST = '../market-research/app/static/images/' if \
+        not os.environ.get('UPLOADED_IMAGES_DEST') else os.path.dirname(os.path.realpath(__file__)) + os.environ.get(
+        'UPLOADED_IMAGES_DEST')
+    UPLOADED_DOCS_DEST = '../market-research/app/static/docs/' if \
+        not os.environ.get('UPLOADED_DOCS_DEST') else os.path.dirname(os.path.realpath(__file__)) + os.environ.get(
+        'UPLOADED_DOCS_DEST')
+    docs = UPLOADED_DOCS_DEST
+    UPLOADED_PATH = os.path.join(basedir, 'uploads')
+
+
     @staticmethod
     def init_app(app):
         pass

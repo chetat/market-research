@@ -8,6 +8,7 @@ from flask_mail import Mail
 from flask_rq import RQ
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 
 from app.assets import app_css, app_js, vendor_css, vendor_js
 from config import config as Config
@@ -18,6 +19,8 @@ mail = Mail()
 db = SQLAlchemy()
 csrf = CSRFProtect()
 compress = Compress()
+images = UploadSet('images', IMAGES)
+docs = UploadSet('docs', ('rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'pdf'))
 
 # Set up Flask-Login
 login_manager = LoginManager()
@@ -45,7 +48,9 @@ def create_app(config):
     csrf.init_app(app)
     compress.init_app(app)
     RQ(app)
-
+    configure_uploads(app, images)
+    configure_uploads(app, docs)
+    
     # Register Jinja template functions
     from .utils import register_template_utils
     register_template_utils(app)
@@ -71,6 +76,9 @@ def create_app(config):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
+    from .public import public as public_blueprint
+    app.register_blueprint(public_blueprint)
+    
     from .account import account as account_blueprint
     app.register_blueprint(account_blueprint, url_prefix='/account')
 

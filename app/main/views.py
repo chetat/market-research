@@ -1,14 +1,26 @@
-from flask import Blueprint, render_template
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 
 from app.models import EditableHTML
 
 main = Blueprint('main', __name__)
 
 
-@main.route('/')
+@main.route('/test')
 def index():
-    return render_template('main/index.html')
+    return render_template(
+        'main/test.html')
 
+@main.route('/')
+def test():
+    return redirect(url_for('public.home'))
 
 @main.route('/about')
 def about():
