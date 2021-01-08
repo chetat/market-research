@@ -22,7 +22,7 @@
                                     <br>
                                     {{ post.text[:200] | striptags }}
                                     <ul class="blog-info-link">
-                                        <li><a href="{{ url_for('main.user_detail', user_id=post.creator.id) }}"><i class="far fa-user"></i> {{ post.creator.full_name }}</a></li>
+
                                         <li><a href="#"><i class="far fa-comments"></i> {{ post.comments.count() }} comments</a></li>
                                     </ul>
                                 </div>

@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="img/favicon.png" type="image/png">
-    <title>Mediville Blog</title>
+    <title>{{config.APP_NAME}}</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='blog/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='blog/css/themify-icons.css') }}">
@@ -81,7 +81,7 @@
                         <li class="nav-item {% if request.endpoint == 'blog.index' %} active {% endif %}"><a class="nav-link" href="{{ url_for('blog.index') }}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.blog_categories') }}">Categories</a></li>
                         <li class="nav-item {% if request.endpoint == 'public.contact' %} active {% endif %}"><a class="nav-link" href="{{ url_for('public.contact') }}">Contact Us</a></li>
-                        <li class="nav-item {% if request.endpoint == 'home.index' %} active {% endif %}"><a class="nav-link" href="{{ url_for('main.index') }}">Mediville Home</a></li>
+                        <li class="nav-item {% if request.endpoint == 'home.index' %} active {% endif %}"><a class="nav-link" href="{{ url_for('organisations.org_home') }}">Site Home</a></li>
                     </ul>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                     <h2>Blog</h2>
                 </div>
                 <div class="page_link">
-                    <a href="{{ url_for('main.index') }}">Home</a>
+                    <a href="{{ url_for('organisations.org_home') }}">Home</a>
                     <a href="{{ url_for('blog.index') }}">Blog</a>
                     {% block extra_link %}{% endblock %}
                 </div>
@@ -123,14 +123,14 @@
                 <h4>Important Link</h4>
                 <ul>
                     <li><a href="{{ url_for('blog.index') }}">Blog Home</a></li>
-                    <li><a href="{{ url_for('main.index') }}">Mediville Home</a></li>
+                    <li><a href="{{ url_for('organisations.org_home') }}">Site Home</a></li>
                     <li><a href="{{ url_for('public.about') }}">About Us</a></li>
                     <li><a href="{{ url_for('public.contact') }}">Contact Us</a></li>
                 </ul>
             </div>
             <div class="col-xl-5 col-lg-5 col-sm-6 col-md-6 mb-4 mb-xl-0 single-footer-widget">
                 <h4>Newsletter</h4>
-                <p>Subscribe To receive updates for Mediville's blog new posts.</p>
+                <p>Subscribe To receive updates for {{ config.APP_NAME}}'s blog new posts.</p>
                 <div class="form-wrap">
                     <form  action="{{ url_for('blog.subscribe') }}" method="POST" id="footer-sub">
                         <div class="input-group">
@@ -152,7 +152,7 @@
         </div>
         <div class="footer-bottom row align-items-center text-center text-lg-left no-gutters">
             <p class="footer-text m-0 col-lg-8 col-md-12">
-                Copyright &copy; Mediville <script>document.write(new Date().getFullYear());</script> | All rights reserved...
+                Copyright &copy; {{ config.APP_NAME}} <script>document.write(new Date().getFullYear());</script> | All rights reserved...
             </p>
             <div class="col-lg-4 col-md-12 text-center text-lg-right footer-social">
                 <a target="_blank" href="https://www.facebook.com/medivillenetwork"><i class="ti-facebook"></i></a>
