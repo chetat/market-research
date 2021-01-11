@@ -18,9 +18,9 @@ def index():
     return render_template(
         'main/test.html')
 
-@main.route('/')
-def test():
-    return redirect(url_for('public.home'))
+#@main.route('/')
+#def test():
+    #return redirect(url_for('public.home'))
 
 @main.route('/about')
 def about():
