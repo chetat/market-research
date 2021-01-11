@@ -127,22 +127,20 @@
         <div class="row content">
           <div class="col-lg-6">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
+              We are localised and international team with core expertise in the delivery of various research and technology projects.Here are some of our key strengths:
             </p>
             <ul>
-              <li><i class="ri-check-double-line"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>
-              <li><i class="ri-check-double-line"></i> Duis aute irure dolor in reprehenderit in voluptate velit</li>
-              <li><i class="ri-check-double-line"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>
+              <li><i class="ri-check-double-line"></i> Qualitative and Quantitative research expertise</li>
+              <li><i class="ri-check-double-line"></i> Data Analysis and Business Intellgience</li>
+              <li><i class="ri-check-double-line"></i> Preditive Analysis and Modelling</li>
+              <li><i class="ri-check-double-line"></i> Data mining and Machine learning</li>
             </ul>
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0">
             <p>
-              Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-              culpa qui officia deserunt mollit anim id est laborum.
+              Our aproach is to deliver top quality results and to ensure that our deliveries are fit for purpose.We are passionate in what we do.
             </p>
-            <a href="#" class="btn-learn-more">Learn More</a>
+            <a href="<a href="{{ url_for('public.about') }}" class="btn-learn-more">Learn More</a>
           </div>
         </div>
 
@@ -324,31 +322,85 @@
 
       </div>
     </section><!-- End Team Section -->
-
     <!-- ======= Pricing Section ======= -->
     <section id="pricing" class="pricing">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>Pricing</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <h2>Naira Pricing </h2>
         </div>
 
         <div class="row">
 
           <div class="col-lg-4 col-md-6" data-aos="zoom-im" data-aos-delay="100">
             <div class="box">
-              <h3>Free</h3>
-              <h4><sup>$</sup>0<span> / month</span></h4>
+              <h3>Silver</h3>
+              <h4><sup>₦</sup>660.00<span> / response</span></h4>
               <ul>
-                <li>Aida dere</li>
-                <li>Nec feugiat nisl</li>
-                <li>Nulla at volutpat dola</li>
-                <li class="na">Pharetra massa</li>
-                <li class="na">Massa ultricies mi</li>
+                <li>Min. order 500 responses</li>
+                <li>Max. order 2500 responses </li>
+                <li>Delivered as raw data in Excelsheet</li>
+                <li>10 questions per project</li>
               </ul>
               <div class="btn-wrap">
-                <a href="#" class="btn-buy">Buy Now</a>
+                <a href="{{ url_for('account.register') }}" class="btn-buy">Start Project</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-im" data-aos-delay="100">
+            <div class="box">
+              <h3>Gold</h3>
+              <h4><sup>₦</sup>900<span> / response</span></h4>
+              <ul>
+                <li>Min. order 500 responses</li>
+                <li>Max. order 2500 responses </li>
+                <li>Delivered as analyzed data in Charts & Raw data</li>
+                <li>10 questions per project</li>
+              </ul>
+              <div class="btn-wrap">
+                <a href="{{ url_for('account.register') }}" class="btn-buy">Start Project</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="100">
+            <div class="box featured">
+              <h3>Platinum</h3>
+              <h4><sup>₦</sup>1200<span> / response</span></h4>
+              <ul>
+                <li>Min. order 250 responses</li>
+                <li>Max. order 2500 responses </li>
+                <li>Delivered as analyzed data in a report, raw rata, infographic</li>
+                <li>10 questions per project</li>
+              </ul>
+              <div class="btn-wrap">
+                <a href="{{ url_for('account.register') }}" class="btn-buy">Start Project</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Pricing Section -->
+    <!-- ======= Pricing Section ======= -->
+    <section id="pricing" class="pricing">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>USD Pricing</h2>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-6" data-aos="zoom-im" data-aos-delay="100">
+            <div class="box">
+              <h3>Free</h3>
+              <h4><sup>$</sup>2.00<span> / response</span></h4>
+              <ul>
+                <li>Min. order 500 responses</li>
+                <li>Max. order 2500 responses </li>
+                <li>Delivered as raw data in Excelsheet</li>
+                <li>10 questions per project</li>
+              </ul>
+              <div class="btn-wrap">
+                <a href="{{ url_for('account.register') }}" class="btn-buy">Start Project</a>
               </div>
             </div>
           </div>
@@ -356,16 +408,15 @@
           <div class="col-lg-4 col-md-6 mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="100">
             <div class="box featured">
               <h3>Business</h3>
-              <h4><sup>$</sup>19<span> / month</span></h4>
+              <h4><sup>$</sup>2.50<span> / response</span></h4>
               <ul>
-                <li>Aida dere</li>
-                <li>Nec feugiat nisl</li>
-                <li>Nulla at volutpat dola</li>
-                <li>Pharetra massa</li>
-                <li class="na">Massa ultricies mi</li>
+                <li>Min. order 500 responses</li>
+                <li>Max. order 2500 responses </li>
+                <li>Delivered as analyzed data in Charts & Raw data</li>
+                <li>10 questions per project</li>
               </ul>
               <div class="btn-wrap">
-                <a href="#" class="btn-buy">Buy Now</a>
+                <a href="{{ url_for('account.register') }}" class="btn-buy">Start Project</a>
               </div>
             </div>
           </div>
@@ -373,16 +424,15 @@
           <div class="col-lg-4 col-md-6 mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="100">
             <div class="box">
               <h3>Developer</h3>
-              <h4><sup>$</sup>29<span> / month</span></h4>
+              <h4><sup>$</sup>3.00<span> / response</span></h4>
               <ul>
-                <li>Aida dere</li>
-                <li>Nec feugiat nisl</li>
-                <li>Nulla at volutpat dola</li>
-                <li>Pharetra massa</li>
-                <li>Massa ultricies mi</li>
+                <li>Min. order 250 responses</li>
+                <li>Max. order 2500 responses </li>
+                <li>Delivered as analyzed data in a report, raw rata, infographic</li>
+                <li>10 questions per project</li>
               </ul>
               <div class="btn-wrap">
-                <a href="#" class="btn-buy">Buy Now</a>
+                <a href="{{ url_for('account.register') }}" class="btn-buy">Start Project</a>
               </div>
             </div>
           </div>
@@ -391,6 +441,7 @@
 
       </div>
     </section><!-- End Pricing Section -->
+	
 
     <!-- ======= Frequently Asked Questions Section ======= -->
     <section id="faq" class="faq section-bg">
@@ -528,26 +579,31 @@
     <div class="footer-top">
       <div class="container">
         <div class="row">
-          <div class="col-lg-3 col-md-6 footer-contact">
+          <div class="col-lg-3 col-md-6 footer-links">
             <h3>{{ config.APP_NAME }}</h3>
-            <p>
-              Coverage Areas: <br>
-              South West - Nigeria<br>
-              South East - Nigeria
-			  South South - Nigeria	<br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> office@marketresearch.com.ng<br>
-            </p>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Calabar/">Calabar</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Uyo/">Uyo</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Port Harcourt/">Port Harcourt</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Awka/">Awka</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Aba/">Aba</a></li>
+            </ul>
           </div>
           <div class="col-lg-2 col-md-6 footer-links">
-            <!---<h4>Useful Links</h4>
-            <!---<ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-            </ul>---->
+            <h4>Cities Nigeria</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Adamawa/">Adamawa</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Bauchi/">Bauchi</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Gombe/">Gombe</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Jalingo/">Jalingo</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Lagos/">Lagos</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Ibadan/">Ibadan</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Enugu/">Enugu</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Nsukka/">Nuskka</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Okigwe/">Okigwe</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Orlu/">Orlu</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/Abakaliki/">Abakaliki</a></li>
+            </ul>
           </div>
           <div class="col-lg-2 col-md-6 footer-links">
             <h4>Useful Links</h4>
@@ -567,7 +623,6 @@
 			  <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
               <input type="email" name="email"><input type="submit" value="Subscribe">
             </form>
-
 
         </div>
       </div>
