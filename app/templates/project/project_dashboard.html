@@ -34,7 +34,7 @@
                 </div>
             </h2>
             <div class="ui header" style="width: 100%; height: 50px">
-                <a class="ui teal right floated button" href="{{ url_for('project.new_project', org_id=org.id) }}">Create New Project</a>
+                <a class="ui teal left floated button" href="{{ url_for('project.new_project', org_id=org.id) }}">Create New Project</a>
 			</div>
             {# Use overflow-x: scroll so that mobile views don't freak out
              # when the table is too wide #}
@@ -47,6 +47,7 @@
                         <th>Project No.</th>
                         <th>Project Name</th>
                         <th>Edit</th>
+                        <th>View </th>
                         <th>Create Questions</th>
                     </tr>
                     </thead>
@@ -56,11 +57,12 @@
                             <td>{{ u.id }}</td>
                             <td>{{ u.name }}</td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('project.edit_project', project_id=u.id, name=u.name) }}">Edit details</a>
+                                <a class="ui blue left floated button" href="{{ url_for('project.edit_project', project_id=u.id, name=u.name) }}">Edit project name</a>
                                 <!---<a class="ui red left floated button" style="margin-top: 1px"
                                    href="{# url_for('project.delete_project', project_id=u.id) #}" onclick="return confirmDeleteProject('{{ project.id }}');" data-content="{{ project.id }}">Delete</a>--->						
                             </td>
-                            <td><a class="ui teal right floated button" href="{{ url_for('project.project_details', project_id=u.id, name=u.name) }}">View details</a></td>
+                            <td><a class="ui teal right floated button" href="{{ url_for('project.project_details', org_id=u.organisation_id, project_id=u.id, name=u.name) }}">View project name</a></td>
+							<td><a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=u.id, org_id=u.organisation_id) }}">Create Screener Question</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

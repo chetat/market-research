@@ -27,10 +27,10 @@ class AddProjectForm(FlaskForm):
 
 class AddQuestionForm(FlaskForm):
     question = StringField(
-        'Question title', validators=[InputRequired(),
+        'Question Title e.g "What is the your favourite color"', validators=[InputRequired(),
                                   Length(1, 64)])
     description = StringField(
-        'description', validators=[InputRequired(),
+        'Descriptions of the question e.g " This question is required so we can determine what colors you like" ', validators=[InputRequired(),
                                   Length(1, 90)])
     option_one = StringField(
         'Option One', validators=[InputRequired(),
@@ -49,9 +49,9 @@ class AddQuestionForm(FlaskForm):
 
 class EditQuestionForm(FlaskForm):
     question = StringField(
-        'Question Title')
+        'Question Title e.g "What is the your favourite color"')
     description = StringField(
-        'description')
+        'Descriptions of the question e.g " This question is required so we can determine what colors you like" ')
     option_one = StringField(
         'Option One')
 
@@ -66,14 +66,15 @@ class EditQuestionForm(FlaskForm):
     submit = SubmitField('Submit')
     
 class AddScreenerQuestionForm(FlaskForm):
-    title = StringField(
-        'Screener Question Title', validators=[InputRequired(),
+    question = StringField(
+        'Screener Question Title E.g Do you eat pancakes?', validators=[InputRequired(),
                                   Length(1, 64)])
     description = StringField(
-        'description', validators=[InputRequired(),
+        'Description', validators=[InputRequired(),
                                   Length(1, 90)])
-    required_answer = SelectField(u'What is the required screener answer?', choices=[('Yes', 'Yes'), ('No', 'No')])
-    options = SelectField(u'Please choose either Yes or No', choices=[('Yes', 'Yes'), ('No', 'No')])
+    required_answer = SelectField(u'What is the required screener answer option? I.e if a respondent choses that option, we should or should not proceed with the rest of the questions. If you choose e.g "yes", we will only ask the rest of the question to respondents who answered yes to this screener question.',
+                                  choices=[('Yes', 'Yes'), ('No', 'No'), ('Maybe', 'Maybe')])
+    #options = SelectField(u'Please choose either Yes or No options', choices=[('Yes', 'Yes'), ('No', 'No')])
     submit = SubmitField('Submit')
 
 

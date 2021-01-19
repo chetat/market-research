@@ -22,16 +22,23 @@
 {% macro header_items(current_user) %}
     {% set endpoints = [
       ('public.home', config.APP_NAME, 'home'),
-      ('main.about', 'About', 'info'),
+      ('main.about', 'About', 'info')
+    ]%}
+    {% set signedin = [] %}
+    {% if current_user.is_authenticated %}
+    {% set signedin = [
 	  ('organisations.org_home', 'Organization Dashboard', 'building'),
 	  ('project.index', 'Project Dashboard', 'folder open'),
 	  ('question.index', 'Question Dashboard', 'tasks')
     ]%}
+	{% else %}
+    {% endif %} 
+	
     {% set user = [] %}
     {% if current_user.is_authenticated and current_user.role.is_admin %}
       {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
     {% endif %} 
-    {{ render_menu_items( endpoints +  user ) }}
+    {{ render_menu_items( endpoints +  user + signedin ) }}
 {% endmacro %}
 
 {# This renders the right hand side of the navigation bar. If the user is logged in, it links to 

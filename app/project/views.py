@@ -42,7 +42,7 @@ def new_project(org_id):
     if form.validate_on_submit():
         order = db.session.query(Project).filter_by(user_id=current_user.id).count()
         appt = Project(
-            order_id=1,
+            organisation_id=org.id,
             name=form.name.data,
             user_id=current_user.id
             )
@@ -59,14 +59,15 @@ def new_project(org_id):
 
 
 
-@project.route('/<int:project_id>/details/<name>/')
-def project_details(project_id, name):
-    question = Question.query.filter(Question.project_id == project_id).all()
-    #org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
+@project.route('/<org_id>/<int:project_id>/details/<name>/')
+def project_details(org_id, project_id, name):
+    question = ScreenerQuestion.query.filter(ScreenerQuestion.project_id == project_id).all()
+    org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
     #count = question = Question.query.filter(Question.project_id == project_id).count()
     #question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
-    prject_id=project_id 
-    return render_template('project/project_details.html', question=question, project_id=project_id)
+    project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).all()
+    project_id=project_id 
+    return render_template('project/project_details.html', question=question, project_id=project_id, org=org, project=project)
 
 
 @project.route('/<int:project_id>/<name>/edit', methods=['Get', 'POST'])
