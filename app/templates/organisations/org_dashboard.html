@@ -63,7 +63,7 @@
                                 <a class="ui primary button" href="{{ url_for('organisations.select_org', org_id=u.id) }}">View Details</a>
                             </td>
 							<td>
-                                <a class="ui teal button" href="{{ url_for('project.index') }}">Project Dashboard</a>
+                                <a class="ui teal button" href="{{ url_for('project.new_project', org_id=u.id) }}">Create Research Project</a>
                             </td>
                         </tr>
                     {% endfor %}

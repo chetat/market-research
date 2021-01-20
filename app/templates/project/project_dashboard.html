@@ -46,9 +46,10 @@
 
                         <th>Project No.</th>
                         <th>Project Name</th>
-                        <th>Edit</th>
-                        <th>View </th>
-                        <th>Create Questions</th>
+                        <th>Edit Project Name</th>
+                        <th>Create Screener Questions</th>
+                        <th>Create Scale Questions</th>
+                        <th>Create Multiple Choice Questions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -57,12 +58,13 @@
                             <td>{{ u.id }}</td>
                             <td>{{ u.name }}</td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('project.edit_project', project_id=u.id, name=u.name) }}">Edit project name</a>
+                                <a class="ui blue left floated button" href="{{ url_for('project.edit_project', project_id=u.id, name=u.name) }}">Edit name</a>
                                 <!---<a class="ui red left floated button" style="margin-top: 1px"
                                    href="{# url_for('project.delete_project', project_id=u.id) #}" onclick="return confirmDeleteProject('{{ project.id }}');" data-content="{{ project.id }}">Delete</a>--->						
                             </td>
-                            <td><a class="ui teal right floated button" href="{{ url_for('project.project_details', org_id=u.organisation_id, project_id=u.id, name=u.name) }}">View project name</a></td>
-							<td><a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=u.id, org_id=u.organisation_id) }}">Create Screener Question</a></td>
+							<td><a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=u.id, org_id=u.organisation_id) }}">Add Screener </a></td>
+							<td><a class="ui teal right floated button" href="{{ url_for('question.new_scale_question', project_id=u.id, org_id=u.organisation_id) }}">Add Scaled </a></td>
+							<td><a class="ui teal right floated button" href="{{ url_for('question.new_multiple_choice_question', project_id=u.id, org_id=u.organisation_id) }}">Add Multiple Choice</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

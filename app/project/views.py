@@ -24,10 +24,14 @@ project = Blueprint('project', __name__)
 @login_required
 def index():
     """project dashboard page."""
-   
+    check_point = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).first()
+    if check_point is None :
+        flash(' You now need to add details of your organization.', 'error')
+        return redirect(url_for('organisations.org_home'))   
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).first_or_404()
     orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
         filter(OrgStaff.user_id == current_user.id).all()
+    
     project = db.session.query(Project).filter_by(user_id=current_user.id).all()
     question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
     return render_template('project/project_dashboard.html', orgs=orgs, project=project, org=org, question=question)
@@ -61,13 +65,22 @@ def new_project(org_id):
 
 @project.route('/<org_id>/<int:project_id>/details/<name>/')
 def project_details(org_id, project_id, name):
-    question = ScreenerQuestion.query.filter(ScreenerQuestion.project_id == project_id).all()
+    screener_question = ScreenerQuestion.query.filter(ScreenerQuestion.project_id == project_id).all()
+    scale_question = ScaleQuestion.query.filter(ScaleQuestion.project_id == project_id).all()
+    multiple_choice_question = MultipleChoiceQuestion.query.filter(MultipleChoiceQuestion.project_id == project_id).all()
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
     #count = question = Question.query.filter(Question.project_id == project_id).count()
     #question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
     project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).all()
+    check_point = ScreenerQuestion.query.filter_by(user_id=current_user.id).filter_by(project_id=project_id).count()
+    if check_point is None :
+        flash(' You now need to add one screener question.', 'success')
+        return redirect(url_for('question.new_screener_question',org_id=org.id, project_id=project.id))
     project_id=project_id 
-    return render_template('project/project_details.html', question=question, project_id=project_id, org=org, project=project)
+    return render_template('project/project_details.html', screener_question=screener_question, project_id=project_id,
+                           org=org, project=project,
+                           scale_question=scale_question,
+                           multiple_choice_question=multiple_choice_question)
 
 
 @project.route('/<int:project_id>/<name>/edit', methods=['Get', 'POST'])
