@@ -23,7 +23,7 @@
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
-            <a class="ui basic compact button" href="{{ url_for('organisations.org_home') }}">
+            <a class="ui basic compact button" href="{{ url_for('project.index') }}">
                 <i class="caret left icon"></i>
                 Back to project dashboard
             </a>
@@ -35,14 +35,15 @@
             </h2>
             <div class="ui header" style="width: 100%; height: 50px">
                 <a class="ui teal left floated button" href="{{ url_for('project.index') }}">Create New Project</a>
+				{% if count_screener_questions >= 1 %} <!----limit to only 10 questions per project --->
+							{% else %}
 				<a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=project_id, org_id=org.id) }}">Create Screener Question</a>
+				{% endif %}
 
 				<a class="ui teal right floated button" href="{{ url_for('question.new_scale_question', project_id=project_id, org_id=org.id) }}">Create Scale Question</a>
 				
-				{% if screener_question.id | length > 10 %} <!----limit to only 10 questions per project --->
-				{% else %}
-				<td><a class="ui teal right floated button" href="{{ url_for('question.new_question', project_id=project_id) }}">Add Question</a></td>
-                {% endif %}
+				<td><a class="ui teal right floated button" href="{{ url_for('question.new_multiple_choice_question', project_id=project_id, org_id=org.id) }}">Add Multi Choice Question</a></td>
+
 			</div>
             {# Use overflow-x: scroll so that mobile views don't freak out
              # when the table is too wide #}

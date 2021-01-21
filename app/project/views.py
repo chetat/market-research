@@ -34,7 +34,12 @@ def index():
     
     project = db.session.query(Project).filter_by(user_id=current_user.id).all()
     question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
-    return render_template('project/project_dashboard.html', orgs=orgs, project=project, org=org, question=question)
+    count_screener_questions = db.session.query(func.count(ScreenerQuestion.id)).filter(ScreenerQuestion.project_id == Project.id).scalar()
+    count_scale_questions = db.session.query(func.count(ScaleQuestion.id)).filter(ScaleQuestion.project_id == Project.id).scalar()
+    count_multiple_choice_questions = db.session.query(func.count(MultipleChoiceQuestion.id)).filter(MultipleChoiceQuestion.project_id == Project.id).scalar()
+    return render_template('project/project_dashboard.html', orgs=orgs, project=project, org=org, question=question,
+                           count_screener_questions=count_screener_questions, count_scale_questions=count_scale_questions,
+                           count_multiple_choice_questions=count_multiple_choice_questions)
 
 
 
@@ -76,11 +81,13 @@ def project_details(org_id, project_id, name):
     if check_point is None :
         flash(' You now need to add one screener question.', 'success')
         return redirect(url_for('question.new_screener_question',org_id=org.id, project_id=project.id))
-    project_id=project_id 
+    project_id=project_id
+    count_screener_questions = db.session.query(func.count(ScreenerQuestion.id)).filter(ScreenerQuestion.project_id == project_id).scalar()
     return render_template('project/project_details.html', screener_question=screener_question, project_id=project_id,
                            org=org, project=project,
                            scale_question=scale_question,
-                           multiple_choice_question=multiple_choice_question)
+                           multiple_choice_question=multiple_choice_question,
+                           count_screener_questions=count_screener_questions)
 
 
 @project.route('/<int:project_id>/<name>/edit', methods=['Get', 'POST'])
