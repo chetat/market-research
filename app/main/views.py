@@ -5,23 +5,95 @@ from flask import (
     redirect,
     render_template,
     request,
-    url_for,
+    url_for, 
+    jsonify,
+    current_app,
+    send_from_directory
 )
 
 from app.models import EditableHTML
+import stripe
+import os
 
 main = Blueprint('main', __name__)
 
 
-@main.route('/test')
+STRIPE_PUBLISHABLE_KEY="pk_test_oqKtiHQipsUaIuR81LYSiDW2"
+STRIPE_SECRET_KEY="sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr"
+#STRIPE_ENDPOINT_SECRET="whsec_429KA0GICAAwyH3mVix0HYDLDZk9jybp"
+
+# This is your real test secret API key.
+stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
+
+#app = Flask(__name__,
+            #static_url_path='',
+            #static_folder='.')
+
+
+
+
+
+@main.route('/pay')
 def index():
+
     return render_template(
-        'main/test.html')
+        'main/index.html')
 
-#@main.route('/')
-#def test():
-    #return redirect(url_for('public.home'))
+@main.route('/stripe_pay')
+def stripe_pay():
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price': 'price_1IC7MsHVpMGbwApFC7BjUL9G',
+            'quantity': 1000,
+        }],
+        mode='payment',
+        success_url=url_for('main.thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url=url_for('main.index', _external=True),
+    )
+    return {
+        'checkout_session_id': session['id'], 
+        'checkout_public_key': "pk_test_oqKtiHQipsUaIuR81LYSiDW2"
+    }
 
+@main.route('/thanks')
+def thanks():
+    return render_template('main/thanks.html')
+
+@main.route('/stripe_webhook', methods=['POST'])
+def stripe_webhook():
+    print('WEBHOOK CALLED')
+
+    if request.content_length > 1024 * 1024:
+        print('REQUEST TOO BIG')
+        abort(400)
+    payload = request.get_data()
+    sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
+    endpoint_secret = 'whsec_429KA0GICAAwyH3mVix0HYDLDZk9jybp'
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        print('INVALID PAYLOAD')
+        return {}, 400
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        print('INVALID SIGNATURE')
+        return {}, 400
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        print(session)
+        line_items = stripe.checkout.Session.list_line_items(session['id'], limit=1)
+        print(line_items['data'][0]['description'])
+
+    return {}
+    
 @main.route('/about')
 def about():
     editable_html_obj = EditableHTML.get_editable_html('about')

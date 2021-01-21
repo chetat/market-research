@@ -50,6 +50,9 @@ class Config:
     EMAIL_SENDER = '{app_name} Admin <{email}>'.format(
         app_name=APP_NAME, email=MAIL_USERNAME)
 
+    STRIPE_PUBLISHABLE_KEY="pk_test_oqKtiHQipsUaIuR81LYSiDW2"
+    STRIPE_SECRET_KEY="sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr"
+
     REDIS_URL = os.getenv('REDISTOGO_URL', 'http://localhost:6379')
 
     RAYGUN_APIKEY = os.environ.get('RAYGUN_APIKEY')

@@ -6,6 +6,8 @@ from flask import (
     render_template,
     request,
     url_for,
+    jsonify,
+    send_from_directory
 )
 from flask_login import current_user, login_required
 from flask_rq import get_queue
@@ -17,8 +19,49 @@ from app.email import send_email
 from app.models import *
 from sqlalchemy import func
 
+import stripe
+#from dotenv import load_dotenv, find_dotenv
+
+stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
+
 question = Blueprint('question', __name__)
 
+
+
+YOUR_DOMAIN = 'http://localhost:5000'
+
+@question.route('/test', methods=['GET'])
+def get_pay():
+    return render_template('question/checkout.html')
+
+
+@question.route('/create-checkout-session', methods=['POST'])
+@login_required
+def create_checkout_session():
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'usd',
+                        'unit_amount': 2000,
+                        'product_data': {
+                            'name': 'Stubborn Attachments',
+                            'images': ['https://i.imgur.com/EHyR2nP.png'],
+                        },
+                    },
+                    'quantity': 1000,
+                },
+            ],
+            mode='payment',
+            success_url=render_template('question/success.html'),
+            cancel_url=render_template('question/cancel.html'),
+            
+        )
+        return jsonify({'id': checkout_session.id})
+    except Exception as e:
+        return jsonify(error=str(e)), 403
 
 @question.route('/')
 @login_required
