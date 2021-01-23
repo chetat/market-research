@@ -125,6 +125,10 @@
             {{ field }}
             {{ field.label }}
         </div>
+ {% elif field.widget.input_type == 'submit' %}
+        <div class="ui button" id="buy_now_btn">
+		    {{ field }}
+		 </div>		
     {% elif field.type == 'RadioField' %}
         {{ field.label }}
         {% for item in field %}
@@ -134,7 +138,11 @@
             </div>
         {% endfor %}
     {% elif field.type == 'SubmitField' %}
-        {{ field(class='ui button') }}
+        {{ field(class="ui button",id="buy_now_btn") }}
+
+	{% elif fieldtype == 'StripeField' %}
+        {{ field(class="ui button",id="buy_now_btn") }}
+
     {% elif field.type == 'FormField' %}
         {{ render_form(field) }}
     {% elif field.type == 'CustomSelectField' %}

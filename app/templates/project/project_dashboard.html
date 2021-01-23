@@ -47,9 +47,10 @@
                         <th>Project No.</th>
                         <th>Project Name</th>
                         <th>Edit Project Name</th>
-                        <th>{{ count_screener_questions }} Screener Questions</th>
-                        <th>{{ count_screener_questions }} Scale Questions</th>
+                        <th> Screener Questions</th>
+                        <th> Scale Questions</th>
                         <th> {{ count_multiple_choice_questions }} Multi Choice Questions</th>
+                        <th> View All Questions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,8 +70,17 @@
 							<a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=u.id, org_id=u.organisation_id) }}">Add Screener </a>
 							{% endif %}
 							</td>
-							<td><a class="ui teal right floated button" href="{{ url_for('question.new_scale_question', project_id=u.id, org_id=u.organisation_id) }}">Add Scaled </a></td>
+							{% if count_questions >= 10 %} <!----limit to only 10 questions per project --->
+								<td>{{ count_questions }} questions limit.</td>
+									{% else %}
+							<td><a class="ui teal right floated button" href="{{ url_for('question.new_scale_question', project_id=u.id, org_id=u.organisation_id) }}">Add Question </a></td>
+								  {% endif %}
+							{% if count_questions >= 10 %} <!----limit to only 10 questions per project --->
+								<td>{{ count_questions }} questions limit.</td>
+									{% else %}
 							<td><a class="ui teal right floated button" href="{{ url_for('question.new_multiple_choice_question', project_id=u.id, org_id=u.organisation_id) }}">Add Multiple Choice</a></td>
+							 {% endif %}
+							<td><a class="ui teal right floated button" href="{{ url_for('question.question_details', project_id=u.id, org_id=u.organisation_id, name=u.name) }}">View Questions</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

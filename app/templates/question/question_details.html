@@ -1,212 +1,71 @@
 {% extends 'layouts/base.html' %}
-{% block page_title %}{{ appt.name or '(No Title)' }} - {{ appt.description|default('') }}{% endblock %}
-{% block custom_head_tags %}
-    <meta name="description"
-          content="{{ appt.description }}">
-    <meta name="author" content="{{ config.APP_NAME }}">
-    <meta name="og:title" content="{{ appt.name or '(No Title)' }}, {{ config.APP_NAME }} "/>
-    <meta name="og:type" content="website"/>
-    <meta name="og:url" content="https://www.{{ config.APP_NAME }}.com"/>
-    <meta name="og:image" content="{{ url_for('static', filename='images/home/slider/hill.png') }}"/>
-    <meta name="og:site_name" content="{{ config.APP_NAME }}"/>
-    <meta name="og:description"
-          content="{{ appt.description }}"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:site" content="@marketresearchnigeria"/>
-    <meta name="twitter:creator" content="@anioko1"/>
-{% endblock %}
-{% block content %}
-    <div class="ui sixteen column centered grid">
-        <div class="row edit-controls" align="center">
-        </div>
-        <div class="ui sixteen wide column created_promo">
-            <h1>{{ appt.name or '(No Title)' }}</h1>
-                <h3>
-                    {# if appt.creator != current_user #}
-                        <a href="{# url_for('promos.promo_apply', promo_id=appt.id, name=appt.name) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i> Participate in this promo
-                            </button>
-                        </a>
-                    {# else #}
-                        <a href="{# url_for('organisations.view_applicants', id=appt.id) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i>See Submissions
-                            </button>
-                        </a>
-                    {# endif #}
-                </h3>
-            </h3>
-            {% for org in orgs %}
-                <h3><i class="building outkine icon"></i> Created by: {{ org.org_name }}</h3>
-            {% endfor %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
 
 
-            {% for user in org_users %}
-                {% for organisation in user.user_organisations_created %}
-                    {{ organisation.org_name }}
-                {% endfor %}
-            {% endfor %}
-            <div class="ui two column centered grid">
-                <div class="column">
-                    <hr>
-                    <h4>Description</h4><!---I took out |default('')|markdown here---->
-                    {{ appt.description }}
-
-                    <hr>
-                </div>
-            </div>
-            <div class="row edit-controls" align="center">
-                <h3>
-                    {# if appt.creator != current_user #}
-                        <a href="{# url_for('promos.promo_apply', promo_id=appt.id, name=appt.name) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i> Participate in this promo
-                            </button>
-                        </a>
-                    {# else #}
-                        <a href="{# url_for('organisations.view_applicants', id=appt.id) #}">
-                            <button style="margin-bottom: 20px;margin-right: 0;" type="button"
-                                    class="big ui teal button"></i>See Submissions
-                            </button>
-                        </a>
-                    {# endif #}
-                </h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="ui two column centered grid">
-    </div>
-    </div>
-    </div>
-
-
-    <style>
-        body {
-
-            font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 15px;
-            line-height: 1.42857;
-        }
-
-        .applicants table {
-            font-size: 1.2em;
-            color: #1C3766;
-        }
-
-        .created_promo {
-            font-family: 'Lato', sans-serif;
-            color: #1C3766;
-        }
-
-        .created_promo h1 {
-            font-size: 4em;
-            font-weight: 600;
-        }
-
-        .created_promo h2 {
-            font-size: 2.5em;
-            font-weight: 400;
-        }
-
-        .created_promo h3 {
-            font-size: 1.6em;
-            margin: 10px 0 15px 0;
-            font-weight: 500;
-        }
-
-        .created_promo h4 {
-            font-size: 1.6em;
-            font-weight: bold;
-        }
-
-        .created_promo p,
-        .created_promo li {
-            font-size: 1.3em;
-        }
-
-        .created_promo a {
-            color: #5B6C7E;
-            text-decoration: none;
-            -webkit-transition: color .3s;
-            -o-transition: color .3s;
-            transition: color .3s;
-            font-weight: 500;
-            border-bottom: 2px solid;
-        }
-
-        .created_promo a:hover {
-            color: #EC5805;
-            text-decoration: none;
-        }
-
-        .created_promo h1,
-        .created_promo h2,
-        .created_promo h3 {
-            text-align: center;
-        }
-
-        .created_promo .requirements ul li {
-            promo: relative;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .organisation_details {
-            padding: 60px 15px 10px 15px;
-        }
-
-        .share {
-            padding-bottom: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .created_promo h1 {
-                font-size: 2.7em;
-            }
-
-            .created_promo h2 {
-                font-size: 2em;
-            }
-
-            .created_promo h3 {
-                font-size: 1.4em;
-            }
-        }
-
-    </style>
-{% endblock %}
 {% block scripts %}
-    <script>
-        jQuery(function ($) {
-            $('form[data-async] #emailSaveBtn').click(function (event) {
-                var $form = $(this);
-                var $target = $($form.attr('data-target'));
+{% endblock %}
 
-                $.ajax({
-                    type: 'POST',
-                    url: '/some-endpoint',
-                    data: {
-                        email: $('#email').val(),
-                        url: '{{ url_for('promos.promo_details',promo_id=appt.id, name=appt.name,promo_city=appt.promo_city,promo_state=appt.promo_state, promo_country=appt.promo_country,_external=True) }}',
-                        title: '{{appt.course_title}} in {{appt.city}}',
-                    },
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+                <a class="ui basic compact button" href="{{ url_for('project.index') }}">
+                <i class="caret left icon"></i>
+                Back to Project Dashboard
+            </a>
+            <h2 class="ui header">
+                Edit
+                <div class="sub header">Edit question</div>
+            </h2>
 
-                    success: function (data, status) {
-                        console.log("success");
-                        $('#share-email-modal').modal('hide');
-                        $('#share-email-modal').modal('hide');
-                    }
+            {% set flashes = {
+                'error':   get_flashed_messages(category_filter=['form-error']),
+                'warning': get_flashed_messages(category_filter=['form-check-email']),
+                'info':    get_flashed_messages(category_filter=['form-info']),
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } %}
 
-                });
-                $('#share-email-modal').modal('hide');
+            {{ f.begin_form(screener_question_form, flashes) }}
 
-                event.preventDefault();
-            });
-        });
-        $('#share-email-modal').on('hidden.bs.modal', function (e) {
-            $('#share-email-modal').modal('hide');
-        })
-    </script>
+			{% if screener_question %}
+
+			<div class="ui segment">
+				<div class="ui right floated horizontal list">
+				  <a class="item" href="{{ url_for('question.edit_screener_question', question_id=screener_question.id, question=screener_question.question) }}"><i class="edit outline icon"></i></a>
+				  <a class="item" href="{{ url_for('question.delete_screener_question', question_id=screener_question.id, question=screener_question.question) }}"><i class="trash alternate outline icon"></i></a> 
+				</div>
+			  <h3 class="ui left floated header">Screener Question : {{screener_question.question }}</h3>
+			  <div class="ui clearing divider"></div>
+			  <h5 class="ui header">{{screener_question.description }}</h5>
+			  <p></p>
+			</div>
+			{% endif %}
+
+			{% for item in question %}
+			<div class="ui segment">
+				<div class="ui right floated horizontal list">
+				  <!---<a class="item" href="#"><i class="edit outline icon"></i></a>
+				  <a class="item" href="#"><i class="plus square outline icon"></i></a>---->
+				</div>
+			  <h3 class="ui left floated header">{{ item.title }}</h3>
+			  <div class="ui clearing divider"></div>
+			  <h5 class="ui header"></h5>
+			  <p>{{ item.description }}</p>
+			</div>
+			
+			{% endfor %}			
+		
+            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+            {{ f.form_message(flashes['info'], header='Information', class='info') }}
+            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+            {% for field in screener_question_form | selectattr('type', 'equalto', 'SubmitField') %}
+                {{ f.render_form_field(field) }}
+            {% endfor %}
+
+            {{ f.end_form() }}
+
+        </div>
+    </div>
 {% endblock %}

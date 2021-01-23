@@ -10,8 +10,10 @@ from flask import (
     current_app,
     send_from_directory
 )
-
-from app.models import EditableHTML
+from flask_login import current_user, login_required
+from app import db
+from app.models import EditableHTML, Project, Organisation, Order, User
+from app.main.forms import AddOrderForm
 import stripe
 import os
 
@@ -25,19 +27,40 @@ STRIPE_SECRET_KEY="sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr"
 # This is your real test secret API key.
 stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
 
-#app = Flask(__name__,
-            #static_url_path='',
-            #static_folder='.')
 
 
 
+@main.route('/order/<org_id>/<project_id>/form/', methods=['Get', 'POST'])
+def index(org_id, project_id):
+    org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first()
+    project = Project.query.filter(Project.id == project_id).first()
+    order = Order.query.filter(Order.project_id == project_id).first()
+    
+    form = AddOrderForm(request.form)
+    if request.method == 'POST' and form.validate():
+        #order_quantity=request.form['order_quantity']
+        #service_type=request.form['service_type']
+        #currency=request.form['currency']
+        appt = Order(
+           project_id = project.id,
+           organisation_id = org.id,
+           order_quantity=form.order_quantity.data,
+           service_type=form.service_type.data,
+           currency=form.currency.data)
+        db.session.add(appt)
+        db.session.commit()
+        flash('Successfully added service order details for '.format(project.name), 'form-success')
+        return redirect(url_for('main.stripe_pay'))
+    else:
+        flash('ERROR! Data was not added.', 'error')
+        
+    return render_template('main/index.html', org_id=org.id, project_id=project.id,
+                           project=project, org=org, order=order, form=form)
 
+@main.route('/cancel')
+def cancel():
+    return render_template('main/cancel.html')
 
-@main.route('/pay')
-def index():
-
-    return render_template(
-        'main/index.html')
 
 @main.route('/stripe_pay')
 def stripe_pay():
@@ -49,7 +72,7 @@ def stripe_pay():
         }],
         mode='payment',
         success_url=url_for('main.thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url=url_for('main.index', _external=True),
+        cancel_url=url_for('main.cancel', _external=True),
     )
     return {
         'checkout_session_id': session['id'], 

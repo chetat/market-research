@@ -1,52 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+{% extends 'layouts/base.html' %}
 
-    <title>Store</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+{% block scripts %}
+{% endblock %}
 
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='narrow-jumbotron.css') }}" rel="stylesheet">
-  </head>
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+                <a class="ui basic compact button" href="{{ url_for('project.index') }}">
+                <i class="caret left icon"></i>
+                Back to Project Dashboard
+            </a>
+            <h2 class="ui header">
+                Service Order Details
+                <div class="sub header">Please indicate the following details and proceed to make payment</div>
+            </h2>
 
-  <body>
+            {% set flashes = {
+                'error':   get_flashed_messages(category_filter=['form-error']),
+                'warning': get_flashed_messages(category_filter=['form-check-email']),
+                'info':    get_flashed_messages(category_filter=['form-info']),
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } %}
 
-    <div class="container">
-      <div class="header clearfix">
-        <nav>
-          <ul class="nav nav-pills float-right">
-            <li class="nav-item">
-              <a class="nav-link active" href="{{ url_for('main.index') }}">Home <span class="sr-only">(current)</span></a>
-            </li>
-          </ul>
-        </nav>
-        <h3 class="text-muted">Store</h3>
-      </div>
+            {{ f.begin_form(form, flashes) }}
 
-      <div class="jumbotron">
-        <h1 class="display-3">The Product</h1>
-        <p class="lead">Purchase The Product for only $99.</p>
-        <a href="#" id="buy_now_btn" class="btn btn-primary">Buy Now</a>
-      </div>
 
-      <footer class="footer">
-        <p>&copy; Store 2017</p>
-      </footer>
+            <div class="two fields">
+                {{ f.render_form_field(form.order_quantity ) }}
+                {{ f.render_form_field(form.service_type) }}
+            </div>
+            <div class="field">
+                {{ f.render_form_field(form.currency) }}
+            </div>
+			<button class="ui button" id="buy_now_btn" name="submit" type="Submit" value="Submit"><a href="#" >Go to Payment Area</a></button>
+			
+            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+            {{ f.form_message(flashes['info'], header='Information', class='info') }}
+            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+
+
+            {{ f.end_form() }}
+
+        </div>
+    </div>
       <script src="https://js.stripe.com/v3/"></script>
       {#
-      <script>
+      <script type="text/javascript">
         const checkout_public_key = '{{checkout_public_key}}';
         const checkout_session_id = '{{checkout_session_id}}';
       </script>
       #}
-      <script src="{{ url_for('static', filename='script-ajax.js') }}"></script>
+	  <script>
+		$('select.dropdown')
+			.dropdown()
+		;
+	  </script>
+	  <script>
+			const button = document.querySelector('#buy_now_btn');
 
-    </div> <!-- /container -->
-  </body>
-</html>
+			button.addEventListener('click', event => {
+				fetch('/stripe_pay')
+				.then((result) => { return result.json(); })
+				.then((data) => {
+					var stripe = Stripe(data.checkout_public_key);
+					stripe.redirectToCheckout({
+						// Make the id field from the Checkout Session creation API response
+						// available to this file, so you can provide it as parameter here
+						// instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+						sessionId: data.checkout_session_id
+					}).then(function (result) {
+						// If `redirectToCheckout` fails due to a browser or network
+						// error, display the localized error message to your customer
+						// using `result.error.message`.
+					});
+				})
+			});
+	  </script>
+      <!---<script src="{{ url_for('static', filename='script-ajax.js') }}"></script>--->
+{% endblock %}

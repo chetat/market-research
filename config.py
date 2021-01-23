@@ -88,8 +88,9 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL',
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite'))
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:postgres@localhost:5432/marketresearch'
+    #os.environ.get('DEV_DATABASE_URL',
+        #'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite'))
 
     @classmethod
     def init_app(cls, app):
