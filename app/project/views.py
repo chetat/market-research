@@ -40,9 +40,8 @@ def index():
     project = db.session.query(Project).filter_by(user_id=current_user.id).all()
     question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
     count_screener_questions = db.session.query(func.count(ScreenerQuestion.id)).filter(ScreenerQuestion.project_id == Project.id).scalar()
-    count_questions = db.session.query(func.count(Question.id)).filter(Question.project_id == Project.id).scalar()
     return render_template('project/project_dashboard.html', project=project, org=org, question=question,
-                           count_screener_questions=count_screener_questions, count_questions=count_questions)
+                           count_screener_questions=count_screener_questions)
 
 
 

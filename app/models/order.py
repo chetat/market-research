@@ -25,7 +25,7 @@ class Project(db.Model):
     currency = db.Column(db.String(150))
     order_status = db.Column(db.String(64), index=True)
     session = db.Column(db.String(255), index=True)
-    questions = db.relationship('Question', backref='project', lazy='dynamic')
+    questions = db.relationship('Question', backref='project', lazy="joined", join_depth=1)
     screener_questions = db.relationship("ScreenerQuestion")
     multi_choice_questions = db.relationship("MultipleChoiceQuestion")
     scale_questions = db.relationship("ScaleQuestion")

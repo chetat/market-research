@@ -36,11 +36,11 @@ stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
 def index():
 
 
-    projects = Project.query.filter_by(user_id=current_user.id).first()
-    #project = projects.organisation_id
+    project = Project.query.filter_by(user_id=current_user.id).first()
+    p = Organisation.query.filter_by(user_id=current_user.id).first()
     #order = Order.query.filter_by(Order.project_id == project.id).first()
     
-    return render_template('main/index.html', projects=projects, user=current_user)
+    return render_template('main/index.html')
 
 @main.route('/cancel')
 def cancel():
@@ -49,28 +49,28 @@ def cancel():
 
 @main.route('/stripe_pay')
 def stripe_pay():
-
+    project = Project.query.filter_by(user_id=current_user.id).first()
     quantity = project.order_quantity
     service_type = project.service_type 
     currency = project.currency
     if currency == "NGN" and service_type == "Silver":
-        unit_amount = 660
+        unit_amount = 66000
     elif currency == "NGN" and service_type == "Gold":
-        unit_amount = 900
+        unit_amount = 90000
     elif currency == "NGN" and service_type == "Platinum":
-        unit_amount = 1200
+        unit_amount = 120000
     elif currency == "USD" and service_type == "Silver":
-        unit_amount = 2000
+        unit_amount = 200
     elif currency == "USD" and service_type == "Gold":
-        unit_amount = 2500
+        unit_amount = 250
     elif currency == "USD" and service_type == "Platinum":
-        unit_amount = 3000
+        unit_amount = 300
     elif currency == "GBP" and service_type == "Silver":
-        unit_amount = 2000
+        unit_amount = 200
     elif currency == "GBP" and service_type == "Gold":
-        unit_amount = 2500
+        unit_amount = 250
     elif currency == "GBP" and service_type == "Platinum":
-        unit_amount = 3000
+        unit_amount = 300
     else:
         unit_amount = 2500
         
@@ -79,7 +79,7 @@ def stripe_pay():
         payment_method_types=['card'],
         line_items=[{
           'price_data': {
-            'currency': 'usd',
+            'currency': currency,
             'product_data': {
               'name': name,
             },
