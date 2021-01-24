@@ -125,7 +125,7 @@
             {{ field }}
             {{ field.label }}
         </div>
- {% elif field.widget.input_type == 'submit' %}
+ {% elif field.widget.input_type == 'Submit' %}
         <div class="ui button" id="buy_now_btn">
 		    {{ field }}
 		 </div>		
@@ -138,10 +138,7 @@
             </div>
         {% endfor %}
     {% elif field.type == 'SubmitField' %}
-        {{ field(class="ui button",id="buy_now_btn") }}
-
-	{% elif fieldtype == 'StripeField' %}
-        {{ field(class="ui button",id="buy_now_btn") }}
+        {{ field(class="ui button") }}
 
     {% elif field.type == 'FormField' %}
         {{ render_form(field) }}

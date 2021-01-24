@@ -15,6 +15,7 @@ class Organisation(db.Model):
     org_description = db.Column(db.Text)
     user = db.relationship('User', backref='organisations', cascade='all, delete')
     order = db.relationship('Order')
+    projects = db.relationship('Project')
 
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)

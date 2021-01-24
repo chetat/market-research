@@ -20,8 +20,10 @@ class Project(db.Model):
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
     name = db.Column(db.String(64), index=True)
-    order_status = db.Column(db.String(64), index=True)
     order_quantity = db.Column(db.Integer)
+    service_type = db.Column(db.String(150))
+    currency = db.Column(db.String(150))
+    order_status = db.Column(db.String(64), index=True)
     session = db.Column(db.String(255), index=True)
     questions = db.relationship('Question', backref='project', lazy='dynamic')
     screener_questions = db.relationship("ScreenerQuestion")
@@ -39,7 +41,7 @@ class Project(db.Model):
 class ScreenerQuestion(db.Model):
     __tablename__ = 'screener_questions'
     id = db.Column(db.Integer, primary_key=True)
-    question = db.Column(db.String(64), index=True)
+    question = db.Column(db.String(90), index=True)
     description = db.Column(db.String)
     required_answer = db.Column(db.String(64), index=True)
     
@@ -51,7 +53,7 @@ class ScreenerQuestion(db.Model):
 class MultipleChoiceQuestion(db.Model):
     __tablename__ = 'multiple_choice_questions'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), index=True)
+    title = db.Column(db.String(90), index=True)
     description = db.Column(db.String)
     multiple_choice_option_one = db.Column(db.String(64), index=True)
     multiple_choice_option_two = db.Column(db.String(64), index=True)
@@ -70,7 +72,7 @@ class ScaleQuestion(db.Model):
     __tablename__ = 'scale_questions'
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
-    title = db.Column(db.String(64), index=True)
+    title = db.Column(db.String(90), index=True)
     description = db.Column(db.String)
     
     option_one = db.Column(db.String(64), index=True)

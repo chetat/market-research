@@ -30,32 +30,17 @@ stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
 
 
 
-@main.route('/order/<org_id>/<project_id>/form/', methods=['Get', 'POST'])
-def index(org_id, project_id):
-    org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first()
-    project = Project.query.filter(Project.id == project_id).first()
-    order = Order.query.filter(Order.project_id == project_id).first()
+#@main.route('/order/<int:org_id>/<int:project_id>/')
+#def index(org_id, project_id):
+@main.route('/pay')
+def index():
+
+
+    projects = Project.query.filter_by(user_id=current_user.id).first()
+    #project = projects.organisation_id
+    #order = Order.query.filter_by(Order.project_id == project.id).first()
     
-    form = AddOrderForm(request.form)
-    if request.method == 'POST' and form.validate():
-        #order_quantity=request.form['order_quantity']
-        #service_type=request.form['service_type']
-        #currency=request.form['currency']
-        appt = Order(
-           project_id = project.id,
-           organisation_id = org.id,
-           order_quantity=form.order_quantity.data,
-           service_type=form.service_type.data,
-           currency=form.currency.data)
-        db.session.add(appt)
-        db.session.commit()
-        flash('Successfully added service order details for '.format(project.name), 'form-success')
-        return redirect(url_for('main.stripe_pay'))
-    else:
-        flash('ERROR! Data was not added.', 'error')
-        
-    return render_template('main/index.html', org_id=org.id, project_id=project.id,
-                           project=project, org=org, order=order, form=form)
+    return render_template('main/index.html', projects=projects, user=current_user)
 
 @main.route('/cancel')
 def cancel():
@@ -64,11 +49,43 @@ def cancel():
 
 @main.route('/stripe_pay')
 def stripe_pay():
+
+    quantity = project.order_quantity
+    service_type = project.service_type 
+    currency = project.currency
+    if currency == "NGN" and service_type == "Silver":
+        unit_amount = 660
+    elif currency == "NGN" and service_type == "Gold":
+        unit_amount = 900
+    elif currency == "NGN" and service_type == "Platinum":
+        unit_amount = 1200
+    elif currency == "USD" and service_type == "Silver":
+        unit_amount = 2000
+    elif currency == "USD" and service_type == "Gold":
+        unit_amount = 2500
+    elif currency == "USD" and service_type == "Platinum":
+        unit_amount = 3000
+    elif currency == "GBP" and service_type == "Silver":
+        unit_amount = 2000
+    elif currency == "GBP" and service_type == "Gold":
+        unit_amount = 2500
+    elif currency == "GBP" and service_type == "Platinum":
+        unit_amount = 3000
+    else:
+        unit_amount = 2500
+        
+    name = project.name
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         line_items=[{
-            'price': 'price_1IC7MsHVpMGbwApFC7BjUL9G',
-            'quantity': 1000,
+          'price_data': {
+            'currency': 'usd',
+            'product_data': {
+              'name': name,
+            },
+            'unit_amount': unit_amount,
+          },
+          'quantity': quantity,
         }],
         mode='payment',
         success_url=url_for('main.thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',

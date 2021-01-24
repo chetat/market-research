@@ -23,6 +23,7 @@
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
+			<div class="ui padded segment">
             <h2 class="ui header">
                 Your Organizations
                 <div class="sub header">
@@ -32,6 +33,8 @@
 				  **Each project can only create 10 questions per project. To create a project, click on "Project Dashboard" </p>
                 </div>
             </h2>
+			</div>
+
             <div class="ui header" style="width: 100%; height: 50px">
                 <a class="ui teal right floated button" href="{{ url_for('organisations.create_org') }}">Create New Organization</a>
             </div>
@@ -46,12 +49,13 @@
                         <th>City</th>
                         <th>State</th>
                         <th>Country</th>
-                        <th>Actions</th>
+                        <th>View</th>
+                        <th>View Project</th>
                         <th>Project</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for u in orgs | sort(attribute='org_name') %}
+                    {% for u in org | sort(attribute='org_name') %}
                         <tr onclick="window.location.href = '{{ url_for('admin.user_info', user_id=u.id) }}';">
 
                             <td>{{ u.org_name }}</td>
@@ -60,7 +64,10 @@
                             <td>{{ u.org_state }}</td>
                             <td>{{ u.org_country }}</td>
                             <td>
-                                <a class="ui primary button" href="{{ url_for('organisations.select_org', org_id=u.id) }}">View Details</a>
+                                <a class="ui primary button" href="{{ url_for('organisations.select_org', org_id=u.id) }}">View Org Details</a>
+                            </td>
+                            <td>
+                                <a class="ui primary button" href="{{ url_for('project.index') }}">View Project Details</a>
                             </td>
 							<td>
                                 <a class="ui teal button" href="{{ url_for('project.new_project', org_id=u.id) }}">Create Research Project</a>

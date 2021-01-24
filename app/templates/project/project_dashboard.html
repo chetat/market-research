@@ -43,44 +43,31 @@
                 <table class="ui searchable sortable unstackable selectable celled table">
                     <thead>
                     <tr>
-
-                        <th>Project No.</th>
                         <th>Project Name</th>
-                        <th>Edit Project Name</th>
-                        <th> Screener Questions</th>
-                        <th> Scale Questions</th>
-                        <th> {{ count_multiple_choice_questions }} Multi Choice Questions</th>
-                        <th> View All Questions</th>
+                        <th>Qty of responses required</th>
+                        <th>Service Category</th>
+                        <th>Service Currency</th>
+                        <th>Edit Project Details</th>
+                        <th>Research Details</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for u in project %}
                         <tr>
-                            <td>{{ u.id }}</td>
                             <td>{{ u.name }}</td>
+                            <td>{{ u.order_quantity }}</td>
+                            <td>{{ u.service_type }}</td>
+                            <td>{{ u.currency }}</td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('project.edit_project', project_id=u.id, name=u.name) }}">Edit name</a>
+                                <a class="ui blue left floated button" href="{{ url_for('project.edit_project', org_id=org.id, project_id=u.id, name=u.name) }}">Edit Details</a>
                                 <!---<a class="ui red left floated button" style="margin-top: 1px"
                                    href="{# url_for('project.delete_project', project_id=u.id) #}" onclick="return confirmDeleteProject('{{ project.id }}');" data-content="{{ project.id }}">Delete</a>--->						
                             </td>
-							<td>
-								{% if count_screener_questions >= 1 %} <!----limit to only 10 questions per project --->
-								One screener question limit.
-									{% else %}
-							<a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=u.id, org_id=u.organisation_id) }}">Add Screener </a>
-							{% endif %}
-							</td>
-							{% if count_questions >= 10 %} <!----limit to only 10 questions per project --->
-								<td>{{ count_questions }} questions limit.</td>
-									{% else %}
-							<td><a class="ui teal right floated button" href="{{ url_for('question.new_scale_question', project_id=u.id, org_id=u.organisation_id) }}">Add Question </a></td>
-								  {% endif %}
-							{% if count_questions >= 10 %} <!----limit to only 10 questions per project --->
-								<td>{{ count_questions }} questions limit.</td>
-									{% else %}
-							<td><a class="ui teal right floated button" href="{{ url_for('question.new_multiple_choice_question', project_id=u.id, org_id=u.organisation_id) }}">Add Multiple Choice</a></td>
-							 {% endif %}
-							<td><a class="ui teal right floated button" href="{{ url_for('question.question_details', project_id=u.id, org_id=u.organisation_id, name=u.name) }}">View Questions</a></td>
+                            <td>
+                                <a class="ui blue left floated button" href="{{ url_for('project.project_details', org_id=org.id, project_id=u.id, name=u.name) }}">Enter</a>
+                                <!---<a class="ui red left floated button" style="margin-top: 1px"
+                                   href="{# url_for('project.delete_project', project_id=u.id) #}" onclick="return confirmDeleteProject('{{ project.id }}');" data-content="{{ project.id }}">Delete</a>--->						
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

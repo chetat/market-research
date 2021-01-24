@@ -20,8 +20,16 @@ def allowed_file(filename):
 def org_home():
     orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
         filter(OrgStaff.user_id == current_user.id).all()
+    org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).all()
 
-    return render_template('organisations/org_dashboard.html', orgs=orgs)
+    
+    """If user has not created an organisation."""
+    check_point = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).first()
+    if check_point is None :
+        flash(' You now need to add details of your organization.', 'error')
+        return redirect(url_for('organisations.create_org'))  
+
+    return render_template('organisations/org_dashboard.html', orgs=orgs, org=org)
 
 
 @organisations.route('/org/<org_id>')

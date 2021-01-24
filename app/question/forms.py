@@ -28,7 +28,7 @@ class AddProjectForm(FlaskForm):
 class AddQuestionForm(FlaskForm):
     title = StringField(
         'Question Title', validators=[InputRequired(),
-                                  Length(1, 64)])
+                                  Length(1, 90)])
     description = StringField(
         'Description', validators=[InputRequired(),
                                   Length(1, 90)])
@@ -103,7 +103,7 @@ class EditQuestionForm(FlaskForm):
 class AddScreenerQuestionForm(FlaskForm):
     question = StringField(
         'Screener Question Title E.g Do you eat pancakes?', validators=[InputRequired(),
-                                  Length(1, 64)])
+                                  Length(1, 90)])
     description = StringField(
         'Description', validators=[InputRequired(),
                                   Length(1, 90)])
@@ -116,7 +116,7 @@ class AddScreenerQuestionForm(FlaskForm):
 class AddMultipleChoiceQuestionForm(FlaskForm):
     title = StringField(
         'Question', validators=[InputRequired(),
-                                  Length(1, 64)])
+                                  Length(1, 90)])
     description = StringField(
         'Description', validators=[InputRequired(),
                                   Length(1, 90)])
@@ -140,7 +140,7 @@ class AddMultipleChoiceQuestionForm(FlaskForm):
 class AddScaleQuestionForm(FlaskForm):
     title = StringField(
         'Scale-based Question Title', validators=[InputRequired(),
-                                  Length(1, 64)])
+                                  Length(1, 90)])
     description = StringField(
         'Description', validators=[InputRequired(),
                                   Length(1, 90)])

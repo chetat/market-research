@@ -30,20 +30,23 @@
             <h2 class="ui header">
                 Projects
                 <div class="sub header">
-                    View and manage your questions for this project.
+                    View and manage your questions for this project.  
+					{% if count_questions >= 10 %} Note you can only add {{ count_questions }} questions per project {% endif %}
                 </div>
             </h2>
             <div class="ui header" style="width: 100%; height: 50px">
                 <a class="ui teal left floated button" href="{{ url_for('project.index') }}">Create New Project</a>
-				{% if count_screener_questions >= 1 %} <!----limit to only 10 questions per project --->
+				{% if count_screener_questions %} <!----limit to only 10 questions per project --->
 							{% else %}
 				<a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=project_id, org_id=org.id) }}">Create Screener Question</a>
 				{% endif %}
-
+		       {% if count_questions >= 10 %}
+				<a class="ui teal right floated button" href="{{ url_for('main.index', project_id=project_id, org_id=org.id) }}">Submit Questions</a>
+			   {% else %}
 				<a class="ui teal right floated button" href="{{ url_for('question.new_scale_question', project_id=project_id, org_id=org.id) }}">Create Scale Question</a>
 				
-				<td><a class="ui teal right floated button" href="{{ url_for('question.new_multiple_choice_question', project_id=project_id, org_id=org.id) }}">Add Multi Choice Question</a></td>
-
+				<a class="ui teal right floated button" href="{{ url_for('question.new_multiple_choice_question', project_id=project_id, org_id=org.id) }}">Add Multi Choice Question</a>
+                {% endif %}
 			</div>
             {# Use overflow-x: scroll so that mobile views don't freak out
              # when the table is too wide #}
@@ -73,7 +76,7 @@
 							<td></td>
 							<td></td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('question.edit_screener_question', question_id=u.id, question=u.question) }}">Edit</a>            
+                                <a class="ui blue left floated button" href="{{ url_for('question.edit_screener_question', question_id=u.id, question=u.question, project_id=u.project_id, org_id=org.id) }}">Edit</a>            
                             </td>
                         </tr>
                     {% endfor %}
@@ -88,7 +91,7 @@
 							<td>{{ u.option_four }}</td>
 							<td>{{ u.option_five }}</td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('question.edit_scale_question', question_id=u.id, question=u.title) }}">Edit</a>            
+                                <a class="ui blue left floated button" href="{{ url_for('question.edit_scale_question', question_id=u.id, question=u.title, project_id=u.project_id, org_id=org.id) }}">Edit</a>            
                             </td>
                         </tr>
                     {% endfor %}
@@ -102,7 +105,7 @@
 							<td>{{ u.multiple_choice_option_four }}</td>
 							<td>{{ u.multiple_choice_option_five }}</td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('question.edit_multiple_choice_question', question_id=u.id, question=u.title) }}">Edit</a>            
+                                <a class="ui blue left floated button" href="{{ url_for('question.edit_multiple_choice_question', question_id=u.id, question=u.title, project_id=u.project_id, org_id=org.id) }}">Edit</a>            
                             </td>
                         </tr>
                     {% endfor %}

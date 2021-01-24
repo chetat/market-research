@@ -12,37 +12,14 @@
                 Back to Project Dashboard
             </a>
             <h2 class="ui header">
-                Service Order Details
+                Service Order Details  {{projects.questions}} {{project_id}} {{user.first_name}}
                 <div class="sub header">Please indicate the following details and proceed to make payment</div>
             </h2>
-
-            {% set flashes = {
-                'error':   get_flashed_messages(category_filter=['form-error']),
-                'warning': get_flashed_messages(category_filter=['form-check-email']),
-                'info':    get_flashed_messages(category_filter=['form-info']),
-                'success': get_flashed_messages(category_filter=['form-success'])
-            } %}
-
-            {{ f.begin_form(form, flashes) }}
-
-
-            <div class="two fields">
-                {{ f.render_form_field(form.order_quantity ) }}
-                {{ f.render_form_field(form.service_type) }}
-            </div>
-            <div class="field">
-                {{ f.render_form_field(form.currency) }}
-            </div>
-			<button class="ui button" id="buy_now_btn" name="submit" type="Submit" value="Submit"><a href="#" >Go to Payment Area</a></button>
-			
-            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-            {{ f.form_message(flashes['info'], header='Information', class='info') }}
-            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-
-
-            {{ f.end_form() }}
+      <div class="jumbotron">
+        <h1 class="display-3">The Product</h1>
+        <p class="lead">Purchase The Product for only $99.</p>
+        <a href="#" id="buy_now_btn" class="btn btn-primary">Buy Now</a>
+      </div>
 
         </div>
     </div>

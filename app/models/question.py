@@ -11,17 +11,17 @@ class Question(db.Model):
     description = db.Column(db.String)
     question_type = db.Column(db.String(64), index=True)
 
-    multiple_choice_option_one = db.Column(db.String(64), index=True)
-    multiple_choice_option_two = db.Column(db.String(64), index=True)
-    multiple_choice_option_three = db.Column(db.String(64), index=True)
-    multiple_choice_option_four = db.Column(db.String(64), index=True)
-    multiple_choice_option_five = db.Column(db.String(64), index=True)
+    multiple_choice_option_one = db.Column(db.String(64))
+    multiple_choice_option_two = db.Column(db.String(64))
+    multiple_choice_option_three = db.Column(db.String(64))
+    multiple_choice_option_four = db.Column(db.String(64))
+    multiple_choice_option_five = db.Column(db.String(64))
 
-    option_one = db.Column(db.String(64), index=True)
-    option_two = db.Column(db.String(64), index=True)
-    option_three = db.Column(db.String(64), index=True)
-    option_four = db.Column(db.String(64), index=True)
-    option_five = db.Column(db.String(64), index=True)
+    option_one = db.Column(db.String(64))
+    option_two = db.Column(db.String(64))
+    option_three = db.Column(db.String(64))
+    option_four = db.Column(db.String(64))
+    option_five = db.Column(db.String(64))
     
     option_one_scale = db.Column(db.Integer)
     option_two_scale = db.Column(db.Integer)
@@ -31,7 +31,7 @@ class Question(db.Model):
     
     timestamp = db.Column(db.DateTime, index=True, default=db.func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
 
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
