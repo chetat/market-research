@@ -235,6 +235,25 @@ def delete_question(question_id):
     flash('Successfully deleted question.', 'success')
     return redirect(url_for('admin.questions'))
 
+@admin.route('/projects', defaults={'page': 1}, methods=['GET'])
+@admin.route('/projects/<int:page>', methods=['GET'])
+@login_required
+@admin_required
+def projects(page):
+    projects_result = Project.query.paginate(page, per_page=100)
+    return render_template('admin/projects/browse.html', projects=projects_result)
+
+
+@admin.route('/project/<int:project_id>/_delete',  methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_project(project_id):
+    project = Project.query.filter_by(id=project_id).first()
+    db.session.delete(project)
+    db.session.commit()
+    flash('Successfully deleted project.', 'success')
+    return redirect(url_for('admin.projects'))
+
 
 @admin.route('/user/<int:user_id>/_delete')
 @login_required

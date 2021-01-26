@@ -48,11 +48,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for question in questions.items | sort(attribute='created_at') %}
+                    {% for question in questions.items %}
                         <tr>
 
-                            <td>{{ question.title[:50] }}...</td>
-                            <td>{{ question.project.name }}</td>
+                            <td>{{ question.id }}...</td>
+                            <td>{{ question.title }}</td>
                             <td>
                                 <a class="ui red left floated button" style="margin-top: 1px"
                                    href="{{ url_for('admin.delete_multiple_choice_questions', question_id=question.id) }}" onclick="return confirmDeleteQuestion('{{ question.id | tojson }}');" data-content="{{ question.id }}">Delete</a>

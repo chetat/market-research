@@ -11,9 +11,9 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                All scaled questions
+                All questions
                 <div class="sub header">
-                    View and manage users' questions.
+                    View and manage users' projects.
                 </div>
             </h2>
 
@@ -24,7 +24,7 @@
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item" data-value="">All question types</div>
+                        <div class="item" data-value="">All project types</div>
 
                     </div>
                 </div>
@@ -42,20 +42,20 @@
                 <table class="ui searchable sortable unstackable selectable celled table">
                     <thead>
                     <tr>
-                        <th>Question Title</th>
+                        <th>Project Id</th>
                         <th>Asked By</th>
-                        <th>Actions</th>
+                        <th class="sorted ascending">Created At</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for question in questions.items  %}
+                    {% for project in projects.items %}
                         <tr>
 
-                            <td>{{ question.id }}</td>
-                            <td>{{ question.title }}</td>
-                            <td>
+                            <td>{{ project.id }}</td>
+                            <td>{{ project.name }}</td>
+                            <td> 
                                 <a class="ui red left floated button" style="margin-top: 1px"
-                                   href="{{ url_for('admin.delete_scale_questions', question_id=question.id) }}" onclick="return confirmDeleteQuestion('{{ question.id | tojson }}');" data-content="{{ question.id }}">Delete</a>
+                                   href="{{ url_for('admin.delete_project', project_id=project.id) }}" onclick="return confirmDeleteProject('{{ project.id | tojson }}');" data-content="{{ project.id }}">Delete</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -68,10 +68,10 @@
             <br>
             <div class="ui centered grid ">
                 <div class="ui pagination menu">
-                    {% for page in questions.iter_pages() %}
+                    {% for page in projects.iter_pages() %}
                         {% if page %}
-                            {% if page != questions.page %}
-                                <a class="item" href="{{ url_for('admin.scale_questions', page=page) }}">
+                            {% if page != projects.page %}
+                                <a class="item" href="{{ url_for('admin.projects', page=page) }}">
                                     {{ page }}
                                 </a>
                             {% else %}
@@ -90,7 +90,7 @@
 
 
         </div>
-        <form method="POST" action="{{ url_for('admin.delete_scale_questions', question_id=0) }}" id="delete-question-form">
+        <form method="POST" action="{{ url_for('admin.delete_project', project_id=0) }}" id="delete-project-form">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
     </div>
@@ -100,18 +100,18 @@
 {% block scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script>
-        function confirmDeleteQuestion(question_id){
+        function confirmDeleteProject(project_id){
             swal({
                 title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this question",
+                text: "Once deleted, you will not be able to recover this project",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                        let form = $("#delete-question-form");
-                        form.attr('action', "{{ url_for('admin.delete_scale_questions', question_id=0) }}".replace('0',question_id));
+                        let form = $("#delete-project-form");
+                        form.attr('action', "{{ url_for('admin.delete_project', project_id=0) }}".replace('0',project_id));
                         form.submit();
                     } else {
                         return false;
