@@ -66,7 +66,7 @@
                             <td>{{ u.option_four }}</td>
                             <td>{{ u.option_five}}</td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('question.edit_scale_question', question_id=u.id, question=u.question) }}">Edit</a>
+                                <a class="ui blue left floated button" href="{{ url_for('question.edit_scale_question', question_id=u.id, question=u.title, project_id=u.project_id, org_id=org.id) }}">Edit</a>
                                 <!---<a class="ui red left floated button" style="margin-top: 1px"
                                    href="{# url_for('question.delete_question', question_id=u.id) #}" onclick="return confirmDeleteQuestion('{{ question.id }}');" data-content="{{ question.id }}">Delete</a>--->						
                             </td>

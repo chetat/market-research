@@ -24,7 +24,10 @@ class Project(db.Model):
     service_type = db.Column(db.String(150))
     currency = db.Column(db.String(150))
     order_status = db.Column(db.String(64), index=True)
-
+    questions = db.relationship('Question', backref='project', lazy='dynamic')
+    multiple_choice_questions = db.relationship('MultipleChoiceQuestion', backref='project', lazy='dynamic')
+    scale_questions = db.relationship('ScaleQuestion', backref='project', lazy='dynamic')
+    screener_questions = db.relationship('ScreenerQuestion', backref='project', lazy='dynamic')
     
     @property
     def org_name(self):

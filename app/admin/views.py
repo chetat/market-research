@@ -94,14 +94,6 @@ def registered_users():
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
 
-@admin.route('/questions')
-@login_required
-@admin_required
-def questions():
-    """View all submitted questions."""
-    questions = Question.query.all()
-    return render_template(
-        'admin/questions.html', questions=questions)
 
 @admin.route('/user/<int:user_id>')
 @admin.route('/user/<int:user_id>/info')
@@ -167,6 +159,82 @@ def delete_user_request(user_id):
         abort(404)
     return render_template('admin/manage_user.html', user=user)
 
+@admin.route('/scale_questions', defaults={'page': 1}, methods=['GET'])
+@admin.route('/scale_questions/<int:page>', methods=['GET'])
+@login_required
+@admin_required
+def scale_questions(page):
+    questions_result = ScaleQuestion.query.paginate(page, per_page=100)
+    return render_template('admin/scale_questions/browse.html', questions=questions_result)
+
+
+@admin.route('/scl/<int:question_id>/_delete',  methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_scale_questions(questions_id):
+    question = ScaleQuestion.query.filter_by(id=question_id).first()
+    db.session.delete(question)
+    db.session.commit()
+    flash('Successfully deleted a scaled question.', 'success')
+    return redirect(url_for('admin.scale_questions'))
+
+@admin.route('/scq', defaults={'page': 1}, methods=['GET'])
+@admin.route('/scq/<int:page>', methods=['GET'])
+@login_required
+@admin_required
+def screener_questions(page):
+    questions_result = ScreenerQuestion.query.paginate(page, per_page=100)
+    return render_template('admin/screener_questions/browse.html', questions=questions_result)
+
+
+@admin.route('/scl/<int:question_id>/_delete',  methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_screener_questions(questions_id):
+    question = ScreenerQuestion.query.filter_by(id=question_id).first()
+    db.session.delete(question)
+    db.session.commit()
+    flash('Successfully deleted a multi choice question.', 'success')
+    return redirect(url_for('admin.screener_questions'))
+
+@admin.route('/mcq', defaults={'page': 1}, methods=['GET'])
+@admin.route('/mcq/<int:page>', methods=['GET'])
+@login_required
+@admin_required
+def multiple_choice_questions(page):
+    questions_result = MultipleChoiceQuestion.query.paginate(page, per_page=100)
+    return render_template('admin/multiple_choice_questions/browse.html', questions=questions_result)
+
+
+@admin.route('/scl/<int:question_id>/_delete',  methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_multiple_choice_questions(questions_id):
+    question = MultipleChoiceQuestion.query.filter_by(id=question_id).first()
+    db.session.delete(question)
+    db.session.commit()
+    flash('Successfully deleted a multi choice question.', 'success')
+    return redirect(url_for('admin.multiple_choice_questions'))
+
+@admin.route('/questions', defaults={'page': 1}, methods=['GET'])
+@admin.route('/questions/<int:page>', methods=['GET'])
+@login_required
+@admin_required
+def questions(page):
+    questions_result = Question.query.paginate(page, per_page=100)
+    return render_template('admin/questions/browse.html', questions=questions_result)
+
+
+@admin.route('/question/<int:question_id>/_delete',  methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_question(question_id):
+    question = Question.query.filter_by(id=question_id).first()
+    db.session.delete(question)
+    db.session.commit()
+    flash('Successfully deleted question.', 'success')
+    return redirect(url_for('admin.questions'))
+
 
 @admin.route('/user/<int:user_id>/_delete')
 @login_required
@@ -183,6 +251,38 @@ def delete_user(user_id):
         flash('Successfully deleted user %s.' % user.full_name(), 'success')
     return redirect(url_for('admin.registered_users'))
 
+
+@admin.route('/text/<text_type>', methods=['GET'])
+@login_required
+@admin_required
+def text(text_type):
+    editable_html_obj = EditableHTML.get_editable_html(text_type)
+    return jsonify({
+        'status': 1,
+        'editable_html_obj': editable_html_obj.serialize
+    })
+
+
+@admin.route('/texts', methods=['POST', 'GET'])
+@login_required
+@admin_required
+def texts():
+    editable_html_obj = EditableHTML.get_editable_html('contact')
+    if request.method == 'POST':
+        edit_data = request.form.get('edit_data')
+        editor_name = request.form.get('editor_name')
+
+        editor_contents = EditableHTML.query.filter_by(
+            editor_name=editor_name).first()
+        if editor_contents is None:
+            editor_contents = EditableHTML(editor_name=editor_name)
+        editor_contents.value = edit_data
+
+        db.session.add(editor_contents)
+        db.session.commit()
+        flash('Successfully updated text.', 'success')
+        return redirect(url_for('admin.texts'))
+    return render_template('admin/texts/index.html', editable_html_obj=editable_html_obj)
 
 @admin.route('/_update_editor_contents', methods=['POST'])
 @login_required
