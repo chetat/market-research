@@ -34,20 +34,8 @@ stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
 #@main.route('/order/<int:org_id>/<int:project_id>/')
 #def index(org_id, project_id):
 @main.route('/pay')
-def index():
-
-
-    project = Project.query.filter_by(user_id=current_user.id).all()
-    p = Organisation.query.filter_by(user_id=current_user.id).first()
-    #order = Order.query.filter_by(Order.project_id == project.id).first()
-    question = Question.query.filter_by(user_id=current_user.id).first()
-    questions_total = db.session.query(Project.name, Project.id).join(ScaleQuestion).group_by(Project.name, Project.id).all()
-    no_of_questions = db.session.query(Project.name, (func.count(Question.project_id).label("nos of questions"))).join(Question).group_by(Project.name).order_by(desc("nos of questions")).all()
-    order_item = Order()
-    order = order_item.project 
-
-                            
-    return render_template('main/index.html', question=question, no_of_questions=no_of_questions, order=order, project=project)
+def index():                      
+    return render_template('main/index.html')
 
 @main.route('/cancel')
 def cancel():
