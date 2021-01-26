@@ -40,8 +40,9 @@ def index():
     project = db.session.query(Project).filter_by(user_id=current_user.id).all()
     question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
     count_screener_questions = db.session.query(func.count(ScreenerQuestion.id)).filter(ScreenerQuestion.project_id == Project.id).scalar()
+    count_questions = Question.query.filter_by(user_id=current_user.id).filter(Question.project_id == Project.id).count()
     return render_template('project/project_dashboard.html', project=project, org=org, question=question,
-                           count_screener_questions=count_screener_questions)
+                           count_screener_questions=count_screener_questions, count_questions=count_questions)
 
 
 
@@ -70,6 +71,8 @@ def new_project(org_id):
                                 #project_id=appt.id, name=appt.name))
     else:
         flash('ERROR! Data was not added.', 'error')
+
+    
     return render_template('project/create_project.html', form=form, org=org)
 
 
@@ -88,13 +91,61 @@ def project_details(org_id, project_id, name):
     scale_question = ScaleQuestion.query.filter_by(user_id=current_user.id).filter(project_id == project_id).all()
     multiple_choice_question = MultipleChoiceQuestion.query.filter_by(user_id=current_user.id).filter(project_id ==project_id).all()
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
-    #count = question = Question.query.filter(Question.project_id == project_id).count()
-    #question = db.session.query(Question).filter_by(user_id=current_user.id).filter(Question.project_id==Project.id).all()
+
+
     project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).all()
+
     project_id=project_id
     count_screener_questions = ScreenerQuestion.query.filter_by(user_id=current_user.id).filter(project_id==project_id).first()
 
-    count_questions = Question.query.filter_by(user_id=current_user.id).filter(project_id ==project_id).count()
+
+
+    count_questions = Question.query.filter_by(user_id=current_user.id).filter(project_id == project_id).count()
+
+    
+    ## prepare line items
+    project_item = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
+    ## calculate currency
+    currency = project_item.currency
+    if currency == "NGN" and project_item.service_type == "Silver":
+        unit_amount = 66000
+    elif currency == "NGN" and project_item.service_type == "Gold":
+        unit_amount = 90000
+    elif currency == "NGN" and project_item.service_type == "Platinum":
+        unit_amount = 120000
+    elif currency == "USD" and project_item.service_type == "Silver":
+        unit_amount = 200
+    elif currency == "USD" and project_item.service_type == "Gold":
+        unit_amount = 250
+    elif currency == "USD" and project_item.service_type == "Platinum":
+        unit_amount = 300
+    elif currency == "GBP" and project_item.service_type == "Silver":
+        unit_amount = 200
+    elif currency == "GBP" and project_item.service_type == "Gold":
+        unit_amount = 250
+    elif currency == "GBP" and project_item.service_type == "Platinum":
+        unit_amount = 300
+    else:
+        unit_amount = 2500
+        
+
+    if count_questions >= 10:
+         # Organisations are restricted to ask only 10 questions then they proceed to make paymemt. This calculates line items required for payment
+        question_item = db.session.query(Question).filter_by(user_id=current_user.id).filter(project_id == project_id).first()
+        scale_question_item = db.session.query(ScaleQuestion).filter_by(user_id=current_user.id).filter(project_id == project_id).first()
+        multiple_choice_question_item = db.session.query(MultipleChoiceQuestion).filter_by(user_id=current_user.id).filter(project_id ==project_id).first()
+        lineitems_1 = LineItem(project_id=project_item.id, quantity=project_item.order_quantity, question_id=question_item.id, scale_questions_id=scale_question_item.id,
+                               multiple_choice_questions_id = multiple_choice_question_item.id, currency=project_item.currency, service_type=project_item.service_type,
+                               unit_amount=unit_amount, name=project_item.name)
+        ##setting up orders
+        order_item = Order()
+        order_item.project ## related object
+        order_item.org ## related object
+        db.session.add(order_item)
+        ## associate order with line items
+        order_item.line_items.append(lineitems_1)
+        db.session.commit()
+    
     return render_template('project/project_details.html', screener_question=screener_question, project_id=project_id,
                            org=org, project=project,
                            scale_question=scale_question,

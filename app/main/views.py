@@ -12,10 +12,11 @@ from flask import (
 )
 from flask_login import current_user, login_required
 from app import db
-from app.models import EditableHTML, Project, Organisation, Order, User
+from app.models import EditableHTML, Project, Organisation, Order, User, Question, ScaleQuestion, LineItem
 from app.main.forms import AddOrderForm
 import stripe
 import os
+from sqlalchemy import func, desc
 
 main = Blueprint('main', __name__)
 
@@ -36,11 +37,17 @@ stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
 def index():
 
 
-    project = Project.query.filter_by(user_id=current_user.id).first()
+    project = Project.query.filter_by(user_id=current_user.id).all()
     p = Organisation.query.filter_by(user_id=current_user.id).first()
     #order = Order.query.filter_by(Order.project_id == project.id).first()
-    
-    return render_template('main/index.html')
+    question = Question.query.filter_by(user_id=current_user.id).first()
+    questions_total = db.session.query(Project.name, Project.id).join(ScaleQuestion).group_by(Project.name, Project.id).all()
+    no_of_questions = db.session.query(Project.name, (func.count(Question.project_id).label("nos of questions"))).join(Question).group_by(Project.name).order_by(desc("nos of questions")).all()
+    order_item = Order()
+    order = order_item.project 
+
+                            
+    return render_template('main/index.html', question=question, no_of_questions=no_of_questions, order=order, project=project)
 
 @main.route('/cancel')
 def cancel():
@@ -49,10 +56,14 @@ def cancel():
 
 @main.route('/stripe_pay')
 def stripe_pay():
-    project = Project.query.filter_by(user_id=current_user.id).first()
-    quantity = project.order_quantity
-    service_type = project.service_type 
-    currency = project.currency
+    projects = Project.query.filter_by(user_id=current_user.id).all()
+    for project in projects:
+        project_id = project.id
+    lineitem = LineItem.query.filter_by(project_id = project_id).first()
+
+    quantity = lineitem.quantity
+    service_type = lineitem.service_type 
+    currency = lineitem.currency
     if currency == "NGN" and service_type == "Silver":
         unit_amount = 66000
     elif currency == "NGN" and service_type == "Gold":
@@ -74,7 +85,7 @@ def stripe_pay():
     else:
         unit_amount = 2500
         
-    name = project.name
+    name = lineitem.name
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         line_items=[{

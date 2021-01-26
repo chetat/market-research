@@ -4,14 +4,14 @@ from .. import db
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True)
-    decision = db.Column(db.Boolean, default=False)
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-    order_quantity = db.Column(db.Integer)
-    service_type = db.Column(db.String(150))
-    currency = db.Column(db.String(150))
-    order_status = db.Column(db.String(64), index=True)
-    session = db.Column(db.String(255))
+    delivered = db.Column(db.Boolean(), default=False)
+    project = db.relationship("Project", backref=db.backref('orders', order_by=id))
+    org = db.relationship("Organisation", backref=db.backref('orders', order_by=id))
+    def __repr__(self):
+        return "Order(project_id={self.project_id}, " \
+                      "delivered={self.delivered})".format(self=self)
 
 
 class Project(db.Model):
@@ -24,11 +24,7 @@ class Project(db.Model):
     service_type = db.Column(db.String(150))
     currency = db.Column(db.String(150))
     order_status = db.Column(db.String(64), index=True)
-    session = db.Column(db.String(255), index=True)
-    questions = db.relationship('Question', backref='project', lazy="joined", join_depth=1)
-    screener_questions = db.relationship("ScreenerQuestion")
-    multi_choice_questions = db.relationship("MultipleChoiceQuestion")
-    scale_questions = db.relationship("ScaleQuestion")
+
     
     @property
     def org_name(self):
@@ -36,6 +32,27 @@ class Project(db.Model):
         return Organisation.get(self.organisation_id).org_name
     def __repr__(self):
         return u'<{self.__class__.__name__}: {self.id}>'.format(self=self)
+
+class LineItem(db.Model):
+     __tablename__= 'line_items'
+     line_item_id = db.Column(db.Integer, primary_key=True)
+     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+     question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
+     scale_questions_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
+     multiple_choice_questions_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
+     quantity = db.Column(db.Integer)
+     currency = db.Column(db.String(3))
+     service_type = db.Column(db.String(10))
+     unit_amount = db.Column(db.Float(12, 2))
+     name = db.Column(db.String(64), index=True)
+     order = db.relationship("Order", backref=db.backref('line_items',
+                         order_by=line_item_id))
+     project = db.relationship("Project", backref=db.backref('line_items',
+                         order_by=line_item_id))
+     question = db.relationship("Question", uselist=False, order_by=line_item_id)
+     scale_question = db.relationship("ScaleQuestion", uselist=False, order_by=line_item_id)
+     multiple_choice_question = db.relationship("MultipleChoiceQuestion", uselist=False, order_by=line_item_id)
 
 
 class ScreenerQuestion(db.Model):

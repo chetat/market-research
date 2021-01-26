@@ -35,9 +35,9 @@ class Question(db.Model):
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
 
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
-    screener_question = db.relationship("ScreenerQuestion")
-    scale_question = db.relationship("ScaleQuestion")
-    multiple_choice_question = db.relationship("MultipleChoiceQuestion")
+    screener_question = db.relationship("ScreenerQuestion", backref=db.backref('questions'))
+    scale_question = db.relationship("ScaleQuestion", backref=db.backref('questions'))
+    multiple_choice_question = db.relationship("MultipleChoiceQuestion", backref=db.backref('questions'))
 
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())

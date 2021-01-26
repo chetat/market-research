@@ -28,5 +28,5 @@ class AddOrderForm(FlaskForm):
                                     choices=[('Silver', 'Silver'), ('Gold', 'Gold'), ('Platinum', 'Platinum')])
 
     currency = SelectField(u'Please choose pricing currency e.g USD',
-                                    choices=[('USD', 'USD'), ('NAIRA', 'NAIRA')])
+                                    choices=[('USD', 'USD'), ('NGN', 'NGN'), ('GBP', 'GBP') ])
     submit = SubmitField('Submit')

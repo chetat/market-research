@@ -14,7 +14,7 @@ class Organisation(db.Model):
     mobile_phone = db.Column(db.BigInteger, unique=True, index=True)
     org_description = db.Column(db.Text)
     user = db.relationship('User', backref='organisations', cascade='all, delete')
-    order = db.relationship('Order', lazy="joined", join_depth=1)
+    #order = db.relationship('Order', lazy="joined", join_depth=1)
     projects = db.relationship('Project', lazy="joined", join_depth=1)
 
     created_at = db.Column(db.DateTime, default=datetime.now)
