@@ -10,3 +10,4 @@ from .organisation import *  # noqa
 from .public import *  # noqa
 from .blog import *  # noqa
 from .question import *  # noqa
+from .admin import *  # noqa

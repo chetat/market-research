@@ -139,8 +139,8 @@ class AddMultipleChoiceQuestionForm(FlaskForm):
 
 class AddScaleQuestionForm(FlaskForm):
     title = StringField(
-        'Scale-based Question Title', validators=[InputRequired(),
-                                  Length(1, 90)])
+        'Scale-based Question Title . 60 words max, keep it short please.', validators=[InputRequired(),
+                                  Length(1, 140)])
     description = StringField(
         'Description', validators=[InputRequired(),
                                   Length(1, 90)])

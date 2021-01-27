@@ -27,7 +27,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='web/css/style.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='web/css/responsive.css')}}">
 
-    {% block styles %}{% endblock %}
+    {% block styles %}
+    {% for script in tracking_script %}
+    {{ script.script | safe }}
+    {% endfor %}
+
+     {% endblock %}
 
 </head>
 <body>

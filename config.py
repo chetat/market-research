@@ -54,6 +54,10 @@ class Config:
     STRIPE_SECRET_KEY="sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr"
 
     REDIS_URL = os.getenv('REDISTOGO_URL', 'http://localhost:6379')
+    CKEDITOR_FILE_UPLOADER = os.environ.get('CKEDITOR_FILE_UPLOADER') or 'main.upload'
+    CKEDITOR_SERVE_LOCAL = os.environ.get('CKEDITOR_SERVE_LOCAL') or True
+    CKEDITOR_HEIGHT = os.environ.get('CKEDITOR_HEIGHT') or 400
+    CKEDITOR_ENABLE_CSRF = os.environ.get('CKEDITOR_ENABLE_CSRF') or True
 
     RAYGUN_APIKEY = os.environ.get('RAYGUN_APIKEY')
 

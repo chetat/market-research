@@ -35,7 +35,10 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
-  
+
+    {% for script in tracking_script %}
+    {{ script.script | safe }}
+    {% endfor %}
 </head>
 
 

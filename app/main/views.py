@@ -33,9 +33,14 @@ stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
 
 #@main.route('/order/<int:org_id>/<int:project_id>/')
 #def index(org_id, project_id):
-@main.route('/pay')
-def index():                      
-    return render_template('main/index.html')
+@main.route('/index')
+def index():
+    if current_user.is_authenticated:
+        return render_template('main/index.html')
+    else:
+        
+        return redirect(url_for('public.home'))
+        
 
 @main.route('/cancel')
 def cancel():
@@ -133,8 +138,12 @@ def stripe_webhook():
 
     return {}
     
-@main.route('/about')
-def about():
-    editable_html_obj = EditableHTML.get_editable_html('about')
-    return render_template(
-        'main/about.html', editable_html_obj=editable_html_obj)
+
+@main.route('/upload', methods=['POST'])
+def upload():
+    f = request.files.get('upload')
+    image_filename = images.save(f)
+    url = url_for('_uploads.uploaded_file', setname='images',
+                  filename=image_filename, _external=True)
+    return upload_success(url=url)
+

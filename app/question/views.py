@@ -28,6 +28,7 @@ question = Blueprint('question', __name__)
 @login_required
 def index():
     """Question dashboard page."""
+    return redirect(url_for('project.index'))
    
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).first_or_404()
     orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \

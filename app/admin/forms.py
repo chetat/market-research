@@ -7,7 +7,7 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleF
 from wtforms.fields import PasswordField, StringField, SubmitField, BooleanField, IntegerField, FloatField, \
     MultipleFileField, TextAreaField, SelectField, FileField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import Email, EqualTo, InputRequired, Length
+from wtforms.validators import Email, EqualTo, InputRequired, Length, DataRequired
 from wtforms_alchemy import Unique, ModelForm, model_form_factory
 
 from app import db
@@ -123,3 +123,10 @@ class BlogPostForm(FlaskForm):
     all_users = BooleanField('Send Announcement To All Users.')
 
     submit = SubmitField('Submit')
+
+
+class TrackingScriptForm(FlaskForm):
+    name = StringField("Script Name e.g Hotjar or Google Analytics", validators=[DataRequired(), Length(min=2, max=25)])
+    script = TextAreaField("Paste the raw script")
+    submit = SubmitField('Submit')
+    

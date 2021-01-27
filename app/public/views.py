@@ -15,7 +15,9 @@ public = Blueprint('public', __name__)
 @public.route('/')
 def home():
 
-    return render_template("public/temp.html")
+    tracking_script = TrackingScript.query.all()
+
+    return render_template("public/temp.html" , tracking_script=tracking_script)
 
 #@public.route("/", methods=["GET", "POST"])
 #def home():

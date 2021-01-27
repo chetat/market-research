@@ -5,22 +5,48 @@
 {% endblock %}
 
 {% block content %}
-    <div class="ui stackable centered grid container">
+    <div class="ui container">
         <div class="twelve wide column">
-                <a class="ui basic compact button" href="{{ url_for('project.index') }}">
-                <i class="caret left icon"></i>
-                Back to Project Dashboard
-            </a>
             <h2 class="ui header">
-                Service Order Details 
-                <div class="sub header">Please indicate the following details and proceed to make payment</div>
+                Steps to take to ensure we get your final order.We'll take the questions and conduct the research.
+                <div class="sub header">Please kindly try to follow these steps when creating your order.</div>
             </h2>
-      <div class="jumbotron">
-        <h1 class="display-3">The Product</h1>
-        <p class="lead">Purchase The Product for only $99.</p>
-        <a href="#" id="buy_now_btn" class="btn btn-primary">Buy Now</a>
-      </div>
-
+			<div class="ui steps">
+			  <div class="active step">
+				<i class="industry icon"></i>
+				<div class="content">
+				  <div class="title" href="{{ url_for('organisations.org_home') }}"><a href="{{ url_for('organisations.org_home') }}">Org Details</a></div> 
+				  <div class="description" href="{{ url_for('organisations.org_home') }}"><a href="{{ url_for('organisations.org_home') }}"> Add org details</a></div> 
+				</div>
+			  </div>
+			  <div class="step">
+				<i class="pen square icon"></i>
+				<div class="content">
+				  <div class="title"><a href="{{ url_for('project.index') }}">Project Details</a></div>
+				  <div class="description"><a href="{{ url_for('project.index') }}">Create a project.</a></div>
+				</div>
+			  </div>
+			  <div class="step">
+				<i class="list alternate outline icon"></i>
+				<div class="content">
+				  <div class="title"><a href="{{ url_for('project.index') }}">Add Questions</a></div>
+				  <div class="description"><a href="{{ url_for('project.index') }}">You'll need to create 10 questions.</a></div>
+				</div>
+			  </div>
+			  <div class="step">
+				<i class="payment icon"></i>
+				<div class="content">
+				  <div class="title">Pay</div>
+				  <div class="description">Card payment</div>
+				</div>
+			  </div>
+			  <div class="disabled step">
+				<i class="file alternate icon"></i>
+				<div class="content">
+				  <div class="title">Research Starts</div>
+				</div>
+			  </div>
+			</div>
         </div>
     </div>
       <script src="https://js.stripe.com/v3/"></script>

@@ -6,6 +6,29 @@
         {% include 'partials/_head.html' %}
         {# Any templates that extend this template can set custom_head_tags to add scripts to their page #}
         {% block custom_head_tags %}{% endblock %}
+		<script type="text/css">
+		.ui.inverted.menu {
+			border: 0 solid transparent;
+			background: #007bff;
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+
+		.ui.menu {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			margin: 1rem 0;
+			font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+			background: #dc0f0f;
+			font-weight: 400;
+			border: 1px solid rgba(34,36,38,.15);
+			-webkit-box-shadow: 0 1px 2px 0 rgb(34 36 38 / 15%);
+			box-shadow: 0 1px 2px 0 rgb(34 36 38 / 15%);
+			border-radius: .28571429rem;
+			min-height: 2.85714286em;
+		}
+		</script>
     </head>
     <body>
       {# Example dropdown menu setup. Uncomment lines to view

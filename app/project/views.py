@@ -108,11 +108,11 @@ def project_details(org_id, project_id, name):
     ## calculate currency
     currency = project_item.currency
     if currency == "NGN" and project_item.service_type == "Silver":
-        unit_amount = 66000
+        unit_amount = 6600
     elif currency == "NGN" and project_item.service_type == "Gold":
-        unit_amount = 90000
+        unit_amount = 9000
     elif currency == "NGN" and project_item.service_type == "Platinum":
-        unit_amount = 120000
+        unit_amount = 12000
     elif currency == "USD" and project_item.service_type == "Silver":
         unit_amount = 200
     elif currency == "USD" and project_item.service_type == "Gold":
@@ -134,8 +134,7 @@ def project_details(org_id, project_id, name):
         question_item = db.session.query(Question).filter_by(user_id=current_user.id).filter(project_id == project_id).first()
         scale_question_item = db.session.query(ScaleQuestion).filter_by(user_id=current_user.id).filter(project_id == project_id).first()
         multiple_choice_question_item = db.session.query(MultipleChoiceQuestion).filter_by(user_id=current_user.id).filter(project_id ==project_id).first()
-        lineitems_1 = LineItem(project_id=project_item.id, quantity=project_item.order_quantity, question_id=question_item.id, scale_questions_id=scale_question_item.id,
-                               multiple_choice_questions_id = multiple_choice_question_item.id, currency=project_item.currency, service_type=project_item.service_type,
+        lineitems_1 = LineItem(project_id=project_item.id, quantity=project_item.order_quantity, question_id=question_item.id, currency=project_item.currency, service_type=project_item.service_type,
                                unit_amount=unit_amount, name=project_item.name)
         ##setting up orders
         order_item = Order()

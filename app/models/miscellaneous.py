@@ -14,3 +14,11 @@ class EditableHTML(db.Model):
         if editable_html_obj is None:
             editable_html_obj = EditableHTML(editor_name=editor_name, value='')
         return editable_html_obj
+    
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'editor_name': self.editor_name,
+            'value': self.value
+        }
