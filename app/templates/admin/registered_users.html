@@ -45,6 +45,7 @@
                             <th class="sorted ascending">Last name</th>
                             <th>Email address</th>
                             <th>Account type</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,6 +56,14 @@
                             <td>{{ u.last_name }}</td>
                             <td>{{ u.email }}</td>
                             <td class="user role">{{ u.role.name }}</td>
+							<td>
+                                {% if u.is_respondent %}
+                                <a class="ui red button" href="{{ url_for('admin.toggle_user_respondent', user_id=u.id) }}">Remove Respondent</a>
+                                {% else %}
+                                <a class="ui green button" href="{{ url_for('admin.toggle_user_respondent', user_id=u.id) }}">Make Respondent</a>
+                                {% endif %}
+                                <a href="{{ url_for('admin.delete_user_request', user_id=u.id) }}">Delete</a>
+							</td>
                         </tr>
                     {% endfor %}
                     </tbody>

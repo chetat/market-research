@@ -20,6 +20,17 @@ def permission_required(permission):
 
     return decorator
 
+def respondent_required(f):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_respondent:
+                abort(403)
+            return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator(f)
 
 def admin_required(f):
     return permission_required(Permission.ADMINISTER)(f)

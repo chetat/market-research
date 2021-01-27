@@ -17,6 +17,7 @@ from app.main.forms import AddOrderForm
 import stripe
 import os
 from sqlalchemy import func, desc
+from app.decorators import admin_required, respondent_required
 
 main = Blueprint('main', __name__)
 
@@ -34,6 +35,7 @@ stripe.api_key = 'sk_test_hqoFMPptGIiQJSuk6Yg6B2Fr'
 #@main.route('/order/<int:org_id>/<int:project_id>/')
 #def index(org_id, project_id):
 @main.route('/index')
+@login_required
 def index():
     if current_user.is_authenticated:
         return render_template('main/index.html')

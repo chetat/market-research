@@ -236,6 +236,7 @@ def delete_question(question_id):
     flash('Successfully deleted question.', 'success')
     return redirect(url_for('admin.questions'))
 
+
 @admin.route('/projects', defaults={'page': 1}, methods=['GET'])
 @admin.route('/projects/<int:page>', methods=['GET'])
 @login_required
@@ -255,62 +256,6 @@ def delete_project(project_id):
     flash('Successfully deleted project.', 'success')
     return redirect(url_for('admin.projects'))
 
-# Add TrackingScript 
-@admin.route('/trackingscript/add', methods=['POST', 'GET'])
-@admin_required
-def add_trackingscript():
-    form = TrackingScriptForm()
-    if form.validate_on_submit():
-        data = TrackingScript(
-            name=form.name.data,
-            script=form.script.data
-            )
-        db.session.add(data)
-        db.session.commit()
-        flash("Tracking Script Added Successfully.", "success")
-        return redirect(url_for('admin.added_trackingscript'))
-    return render_template('admin/trackingscript/add_trackingscript.html', form=form)
-
-
-@admin.route('/trackingscript-list')
-@login_required
-@admin_required
-def added_trackingscript():
-    """View added tracking script."""
-    data = TrackingScript.query.all()
-    if data is None:
-        return redirect(url_for('admin.add_trackingscript'))
-    return render_template(
-        'admin/trackingscript/added_trackingscript.html', data=data)
-
-
-# Edit Tracking 
-@admin.route('/trackingscript/<int:id>/edit', methods=['POST', 'GET'])
-@login_required
-@admin_required
-def edit_trackingscript(id):
-    data = TrackingScript.query.filter_by(id=id).first()
-    form = TrackingScriptForm(obj=data)
-    if form.validate_on_submit():
-        data.name=form.name.data
-        data.script=form.script.data
-        db.session.add(data)
-        db.session.commit()
-        flash("Edit successfully.", "success")
-        return redirect(url_for('admin.added_trackingscript'))
-    else:
-        flash('ERROR! Text was not edited.', 'error')
-    return render_template('admin/trackingscript/add_trackingscript.html', form=form)
-
-@admin.route('/trackingscript/<int:id>/_delete', methods=['GET', 'POST'])
-@admin_required
-def delete_trackingscript(id):
-    """Delete the item """
-    data = TrackingScript.query.filter_by(id=id).first()
-    db.session.commit()
-    db.session.delete(data)
-    flash('Successfully deleted ' , 'success')
-    return redirect(url_for('admin.added_trackingscript'))
 
 
 @admin.route('/user/<int:user_id>/_delete')
@@ -380,3 +325,72 @@ def update_editor_contents():
     db.session.commit()
 
     return 'OK', 200
+
+
+@admin.route('/trackingscript-list')
+@login_required
+@admin_required
+def added_trackingscript():
+    """View added tracking script."""
+    data = TrackingScript.query.all()
+    if data is None:
+        return redirect(url_for('admin.add_trackingscript'))
+    return render_template(
+        'admin/trackingscript/added_trackingscript.html', data=data)
+
+# Add TrackingScript 
+@admin.route('/trackingscript/add', methods=['POST', 'GET'])
+@admin_required
+def add_trackingscript():
+    form = TrackingScriptForm()
+    if form.validate_on_submit():
+        data = TrackingScript(
+            name=form.name.data,
+            script=form.script.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Tracking Script Added Successfully.", "success")
+        return redirect(url_for('admin.added_trackingscript'))
+    return render_template('admin/trackingscript/add_trackingscript.html', form=form)
+
+
+# Edit SEO 
+@admin.route('/trackingscript/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+@admin_required
+def edit_trackingscript(id):
+    data = TrackingScript.query.filter_by(id=id).first()
+    form = TrackingScriptForm(obj=data)
+    if form.validate_on_submit():
+        data.name=form.name.data
+        data.script=form.script.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edit successfully.", "success")
+        return redirect(url_for('admin.added_trackingscript'))
+    else:
+        flash('ERROR! Text was not edited.', 'error')
+    return render_template('admin/trackingscript/add_trackingscript.html', form=form)
+
+@admin.route('/trackingscript/<int:id>/_delete', methods=['GET', 'POST'])
+@admin_required
+def delete_trackingscript(id):
+    """Delete the item """
+    data = TrackingScript.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('admin.added_trackingscript'))
+
+
+@admin.route('/user/<int:user_id>/_respondent')
+@login_required
+@admin_required
+def toggle_user_respondent(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    user.is_respondent = not user.is_respondent
+    db.session.add(user)
+    db.session.commit()
+    flash('Successfully Changes user %s Seller Status.' % user.full_name(), 'success')
+    return redirect(url_for('admin.registered_users'))
