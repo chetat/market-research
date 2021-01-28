@@ -1,25 +1,4 @@
 {% extends 'layouts/base.html' %}
-
-{% macro dashboard_option(title, endpoint, description=None, icon=None) %}
-    <a class="column" href="{{ url_for(endpoint) }}">
-        <div class="ui padded segment">
-            <h3 class="ui header">
-                {% if icon is not none %}
-                    <i class="{{ icon }}"></i>
-                {% endif %}
-                <div class="content">
-                    {{ title }}
-                    {% if description is not none %}
-                        <div class="sub header">
-                            {{ description }}
-                        </div>
-                    {% endif %}
-                </div>
-            </h3>
-        </div>
-    </a>
-{% endmacro %}
-
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
@@ -40,35 +19,18 @@
                 <table class="ui searchable sortable unstackable selectable celled table">
                     <thead>
                     <tr>
-
-                        <th>Project Id.</th>
-                        <th>Question No.</th>
-                        <th>Question Title</th>
-                        <th>Description</th>
-                        <th>Option One</th>
-                        <th>Option Two</th>
-                        <th>Option Three</th>
-                        <th>Option Four</th>
-                        <th>Option Five</th>
-                        <th>Edit</th>
+                        <th>No.</th>
+                        <th>Project Name</th>
+                        <th>View Questions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for u in question %}
+                    {% for u in question.items %}
                         <tr>
-                            <td>{{ u.project_id }}</td>
-                            <td>{{ u.id }}</td>
-                            <td>{{ u.question }}</td>
-                            <td>{{ u.description }}</td>
-                            <td>{{ u.option_one }}</td>
-                            <td>{{ u.option_two }}</td>
-                            <td>{{ u.option_three }}</td>
-                            <td>{{ u.option_four }}</td>
-                            <td>{{ u.option_five}}</td>
+                            <td>{{ u.line_item_id }}</td>
+                            <td>{{ u.project.name }}</td>
                             <td>
-                                <a class="ui blue left floated button" href="{{ url_for('question.edit_scale_question', question_id=u.id, question=u.question) }}">Edit</a>
-                                <!---<a class="ui red left floated button" style="margin-top: 1px"
-                                   href="{# url_for('question.delete_question', question_id=u.id) #}" onclick="return confirmDeleteQuestion('{{ question.id }}');" data-content="{{ question.id }}">Delete</a>--->						
+                                <a class="ui blue left floated button" href="{{ url_for('question.question_details', project_id=u.project_id, name=u.project.name) }}">View Questions</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -80,8 +42,30 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
     </div>
-{% endblock %}
-{% block scripts %}
+    <div class="ui centered grid ">
+        {% if question.pages > 0 %}
+            <div class="ui pagination menu">
+                {% for page in question.iter_pages() %}
+                    {% if page %}
+                        {% if page != question.page %}
+                            <a class="item"
+                               href="{{ url_for(request.endpoint,  page=page) }}">
+                                {{ page }}
+                            </a>
+                        {% else %}
+                            <a class="item active">
+                                {{ page }}
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <div class="disabled item">
+                            ...
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script>
         function confirmDeleteQuestion(question_id){
@@ -103,6 +87,9 @@
                 });
             return false;
         }
-    </script>
+    </script>	
+{% endblock %}
+{% block scripts %}
+
 
 {% endblock %}

@@ -23,17 +23,18 @@ from sqlalchemy import func
 question = Blueprint('question', __name__)
 
 
-
-@question.route('/')
+@question.route('/projects', defaults={'page': 1}, methods=['GET'])
+@question.route('/projects/<int:page>', methods=['GET'])
 @login_required
-def index():
+def index(page):
     """Question dashboard page."""
-    return redirect(url_for('project.index'))
+    #return redirect(url_for('project.index'))
    
     org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=Organisation.id).first_or_404()
     orgs = current_user.organisations + Organisation.query.join(OrgStaff, Organisation.id == OrgStaff.org_id). \
         filter(OrgStaff.user_id == current_user.id).all()
-    question = db.session.query(Question).filter_by(user_id=current_user.id).all() 
+    #question = db.session.query(Question).filter_by(user_id=current_user.id).all()
+    question = LineItem.query.paginate(page, per_page=10)
     count = db.session.query(func.count(Question.id)).filter_by(user_id=current_user.id).scalar()
     return render_template('question/question_dashboard.html', orgs=orgs, question=question, org=org, count=count)
 
@@ -243,14 +244,13 @@ def new_multiple_choice_question(org_id, project_id):
     return render_template('question/create_multiple_choice_question.html', form=form)
 
 
-@question.route('/view/<org_id>/<int:project_id>/<name>/')
-def question_details(org_id, project_id, name):
+@question.route('/<int:project_id>/<name>/')
+def question_details(project_id, name):
     screener_question = ScreenerQuestion.query.filter(ScreenerQuestion.project_id == project_id).first()
     scale_question = ScaleQuestion.query.filter(ScaleQuestion.project_id == project_id).all()
     multiple_choice_question = MultipleChoiceQuestion.query.filter(MultipleChoiceQuestion.project_id == project_id).all()
-    org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first_or_404()
-    project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).all()
-    question = Question.query.filter(Question.project_id == project_id).all()
+    project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
+    question = LineItem.query.filter(LineItem.project_id == project_id).all()
     count_questions = db.session.query(func.count(Question.id)).filter(Question.project_id == project_id).scalar()
 
 
@@ -269,7 +269,7 @@ def question_details(org_id, project_id, name):
         
 
     return render_template('question/question_details.html', screener_question_form=screener_question_form,
-                           org=org, project=project,
+                           project=project,
                            scale_question_form=scale_question_form,
                            multiple_choice_question_form=multiple_choice_question_form, question=question,
                            screener_question=screener_question, scale_question=scale_question, multiple_choice_question=multiple_choice_question )

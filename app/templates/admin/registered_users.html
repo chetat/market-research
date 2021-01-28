@@ -8,7 +8,7 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Registered Users
+                Registered Users ({{ users_count }})
                 <div class="sub header">
                     View and manage currently registered users.
                 </div>
@@ -49,7 +49,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for u in users | sort(attribute='last_name') %}
+                    {% for u in users.items | sort(attribute='last_name') %}
                         <tr onclick="window.location.href = '{{ url_for('admin.user_info', user_id=u.id) }}';">
 
                             <td>{{ u.first_name }}</td>
@@ -71,7 +71,30 @@
             </div>
         </div>
     </div>
-
+    <div class="ui centered grid ">
+        {% if users.pages > 0 %}
+            <div class="ui pagination menu">
+                {% for page in users.iter_pages() %}
+                    {% if page %}
+                        {% if page != users.page %}
+                            <a class="item"
+                               href="{{ url_for(request.endpoint,  page=page) }}">
+                                {{ page }}
+                            </a>
+                        {% else %}
+                            <a class="item active">
+                                {{ page }}
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <div class="disabled item">
+                            ...
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#search-users').keyup(function () {

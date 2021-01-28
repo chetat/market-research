@@ -85,15 +85,17 @@ def invite_user():
     return render_template('admin/new_user.html', form=form)
 
 
-@admin.route('/users')
+@admin.route('/users', defaults={'page': 1})
+@admin.route('/users/<int:page>')
 @login_required
 @admin_required
-def registered_users():
+def registered_users(page):
     """View all registered users."""
-    users = User.query.all()
+    users = User.query.paginate(page, per_page=50)
+    users_count = User.query.count()
     roles = Role.query.all()
     return render_template(
-        'admin/registered_users.html', users=users, roles=roles)
+        'admin/registered_users.html', users=users, roles=roles, users_count=users_count)
 
 
 @admin.route('/user/<int:user_id>')
