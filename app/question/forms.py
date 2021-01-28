@@ -109,7 +109,15 @@ class AddScreenerQuestionForm(FlaskForm):
                                   Length(1, 90)])
     required_answer = SelectField(u'What is the required screener answer option? I.e if a respondent choses that option, we should or should not proceed with the rest of the questions. If you choose e.g "yes", we will only ask the rest of the question to respondents who answered yes to this screener question.',
                                   choices=[('Yes', 'Yes'), ('No', 'No'), ('Maybe', 'Maybe')])
-    #options = SelectField(u'Please choose either Yes or No options', choices=[('Yes', 'Yes'), ('No', 'No')])
+    answer_option_one = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
+    answer_option_two = SelectField(u'Please choose either Yes or or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
+    answer_option_three = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
+    submit = SubmitField('Submit')
+
+class AddScreenerAnswerForm(FlaskForm):
+    answer_option_one = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
+    answer_option_two = SelectField(u'Please choose either Yes or or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
+    answer_option_three = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
     submit = SubmitField('Submit')
 
 
@@ -179,4 +187,13 @@ class AddScaleQuestionForm(FlaskForm):
                                                                      ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
                                                                      ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
     option_five_scale = SelectField(u'Please choose the scale for this answer option', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    submit = SubmitField('Submit')
+
+class AddScaleAnswerForm(FlaskForm):
+    options = SelectField(u'Please choose your answer options', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
+                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
+                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
+                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
+                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
+                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
     submit = SubmitField('Submit')

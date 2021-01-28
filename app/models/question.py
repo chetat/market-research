@@ -33,8 +33,7 @@ class Question(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
-
-    answers = db.relationship('Answer', backref='question', lazy='dynamic')
+    
     screener_question = db.relationship("ScreenerQuestion", backref=db.backref('questions'))
     scale_question = db.relationship("ScaleQuestion", backref=db.backref('questions'))
     multiple_choice_question = db.relationship("MultipleChoiceQuestion", backref=db.backref('questions'))
@@ -58,10 +57,25 @@ class Question(db.Model):
 class Answer(db.Model):
     __tablename__ = 'answers'
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String, index=True)
-    timestamp = db.Column(db.DateTime, index=True, default=db.func.now())
+    location_city = db.Column(db.String, index=True)
+    location_state = db.Column(db.String, index=True)
+    location_ip_address = db.Column(db.String, index=True)
+    
+    multiple_choice_answer_one = db.Column(db.String(64), index=True)
+    multiple_choice_answer_two = db.Column(db.String(64), index=True)
+    multiple_choice_answer_three = db.Column(db.String(64), index=True)
+    multiple_choice_answer_four = db.Column(db.String(64), index=True)
+    multiple_choice_answer_five = db.Column(db.String(64), index=True)
+
+    option_one_answer = db.Column(db.String(64), index=True)
+    option_two_answer = db.Column(db.String(64), index=True)
+    option_three_answer = db.Column(db.String(64), index=True)
+    option_four_answer = db.Column(db.String(64), index=True)
+    option_five_answer = db.Column(db.String(64), index=True)
+    
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.id', ondelete="CASCADE"))
+    scale_questions_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
+    multiple_choice_questions_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
     respondent = db.relationship('User')
     
     created_at = db.Column(db.DateTime, default=db.func.now())

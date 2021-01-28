@@ -1,6 +1,30 @@
 from .. import db
 
 
+class Association(db.Model):
+    __tablename__ = 'association'
+    id = db.Column(db.Integer, primary_key=True)
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    line_items_id = db.Column(db.Integer, db.ForeignKey('line_items.line_item_id'))
+    
+    screener_question_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id'))
+    scale_question_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
+    multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
+    
+    screener_answer_id = db.Column(db.Integer, db.ForeignKey('screener_answers.id'))
+    scale_answer_id = db.Column(db.Integer, db.ForeignKey('scale_answers.id'))
+    multiple_choice_answer_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_answers.id'))
+    
+    screener_question = db.relationship("ScreenerQuestion", uselist=False, order_by=id)
+    multiple_choice_question = db.relationship("MultipleChoiceQuestion", uselist=False, order_by=id)
+    scale_question = db.relationship("ScaleQuestion", uselist=False, order_by=id)
+    
+    multiple_choice_answer = db.relationship("MultipleChoiceAnswer", uselist=False, order_by=id)
+    scale_answer = db.relationship("ScaleAnswer", uselist=False, order_by=id)
+    screener_answer = db.relationship("ScaleAnswer", uselist=False, order_by=id)
+    line_items = db.relationship("LineItem", uselist=False, order_by=id)
+
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True)
@@ -64,11 +88,26 @@ class ScreenerQuestion(db.Model):
     question = db.Column(db.String(90), index=True)
     description = db.Column(db.String)
     required_answer = db.Column(db.String(64), index=True)
+    answer_option_one = db.Column(db.String(64), index=True)
+    answer_option_two = db.Column(db.String(64), index=True)
+    answer_option_three = db.Column(db.String(64), index=True)
     
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
-    question_id = db.Column(db.Integer, db.ForeignKey('questions.id', ondelete="CASCADE"))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
+    screener_answers = db.relationship('Answer', backref='screenerquestion', lazy='dynamic')
 
+class ScreenerAnswer(db.Model):
+    __tablename__ = 'screener_answers'
+    id = db.Column(db.Integer, primary_key=True)
+    required_answer = db.Column(db.String(64), index=True)
+    answer_option_one = db.Column(db.String(64), index=True)
+    answer_option_two = db.Column(db.String(64), index=True)
+    answer_option_three = db.Column(db.String(64), index=True)
+    
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
+    screener_questions_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id', ondelete="CASCADE"))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
+    
 
 class MultipleChoiceQuestion(db.Model):
     __tablename__ = 'multiple_choice_questions'
@@ -82,10 +121,23 @@ class MultipleChoiceQuestion(db.Model):
     multiple_choice_option_five = db.Column(db.String(64), index=True)
     
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
-    option = db.relationship('Option', backref='options')
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
 
     question_id = db.Column(db.Integer, db.ForeignKey('questions.id', ondelete="CASCADE"))
+    multiple_choice_answers = db.relationship('MultipleChoiceAnswer', backref='multiplechoicequestion', lazy='dynamic')
+
+class MultipleChoiceAnswer(db.Model):
+    __tablename__ = 'multiple_choice_answers'
+    id = db.Column(db.Integer, primary_key=True)
+    multiple_choice_answer_one = db.Column(db.String(64), index=True)
+    multiple_choice_answer_two = db.Column(db.String(64), index=True)
+    multiple_choice_answer_three = db.Column(db.String(64), index=True)
+    multiple_choice_answer_four = db.Column(db.String(64), index=True)
+    multiple_choice_answer_five = db.Column(db.String(64), index=True)
+    
+    multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id', ondelete="CASCADE"))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
 
 
 class ScaleQuestion(db.Model):
@@ -109,25 +161,21 @@ class ScaleQuestion(db.Model):
     #project = db.relationship('Project', backref='scale')
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
-
     question_id = db.Column(db.Integer, db.ForeignKey('questions.id', ondelete="CASCADE"))
+    scale_answers = db.relationship('ScaleAnswer', backref='scalequestion', lazy='dynamic')
 
-class Option(db.Model):
-    __tablename__ = 'options'
+class ScaleAnswer(db.Model):
+    __tablename__ = 'scale_answers'
     id = db.Column(db.Integer, primary_key=True)
-    multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
-    option_one = db.Column(db.String(64), index=True)
-    option_two = db.Column(db.String(64), index=True)
-    option_three = db.Column(db.String(64), index=True)
-    option_four = db.Column(db.String(64), index=True)
-    option_five = db.Column(db.String(64), index=True)
-    multichoice = db.relationship('MultipleChoiceQuestion', backref='options')
+    scale_question_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id', ondelete="CASCADE"))
+    
+    option_one_answer = db.Column(db.String(64), index=True)
+    option_two_answer = db.Column(db.String(64), index=True)
+    option_three_answer = db.Column(db.String(64), index=True)
+    option_four_answer = db.Column(db.String(64), index=True)
+    option_five_answer = db.Column(db.String(64), index=True)
+    
+    #project = db.relationship('Project', backref='scale')
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
 
-
-class ScaleOption(db.Model):
-    __tablename__ = 'scale_options'
-    id = db.Column(db.Integer, primary_key=True)
-    scale_questions_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
-    option = db.Column(db.String(64), index=True)
-    scale = db.Column(db.Integer, index=True)
-    scale_question = db.relationship('ScaleQuestion', backref='scale_options')

@@ -15,9 +15,19 @@
             </a>
             <h2 class="ui header">
                 Create a screener question
-                <div class="sub header">Add a question</div>
+       
             </h2>
-
+			<div class="ui segment">
+				<div class="sub header">How to fill this section</div>
+				<div class="ui ordered list">
+				  <div class="item">Add the question in the box provided e.g "Do you eat ice vanilla ice creams?</div>
+				  <div class="item">Add a description E.g "This question is for those who like vanilla ice cream"</div>
+				  <div class="item">Add a required answer. This helps us know who should continue to answer the rest of the questions</div>
+				  <div class="item">Add answer options which will appear to the respondents e.g "Yes"</div>
+				  <div class="item">Add another answer option which will appear to the respondents e.g "No"</div>
+				  <div class="item">Add another answer option which will appear to the respondents e.g "Maybe"</div>
+				</div>
+			</div>
             {% set flashes = {
                 'error':   get_flashed_messages(category_filter=['form-error']),
                 'warning': get_flashed_messages(category_filter=['form-check-email']),
@@ -36,7 +46,11 @@
             <div class="field">
                 {{ f.render_form_field(form.required_answer) }}
             </div>
-
+            <div class="three fields">
+                {{ f.render_form_field(form.answer_option_one) }}
+                {{ f.render_form_field(form.answer_option_two) }}
+                {{ f.render_form_field(form.answer_option_three) }}
+            </div>
             {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
             {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
             {{ f.form_message(flashes['info'], header='Information', class='info') }}
