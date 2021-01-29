@@ -132,6 +132,7 @@ def project_details(org_id, project_id, name):
     if count_questions >= 10:
          # Organisations are restricted to ask only 10 questions then they proceed to make paymemt. This calculates line items required for payment
         question_item = db.session.query(Question).filter_by(user_id=current_user.id).filter(project_id == project_id).first()
+        screener_question_item = db.session.query(ScreenerQuestion).filter_by(user_id=current_user.id).filter(project_id == project_id).first()
         scale_question_item = db.session.query(ScaleQuestion).filter_by(user_id=current_user.id).filter(project_id == project_id).first()
         multiple_choice_question_item = db.session.query(MultipleChoiceQuestion).filter_by(user_id=current_user.id).filter(project_id ==project_id).first()
         lineitems_1 = LineItem(project_id=project_item.id, quantity=project_item.order_quantity, question_id=question_item.id, currency=project_item.currency, service_type=project_item.service_type,

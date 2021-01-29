@@ -185,6 +185,74 @@ def new_scale_question(org_id, project_id):
         flash('ERROR! Data was not added.', 'error')
     return render_template('question/create_scale_question.html', form=form)
 
+@question.route('/<project_id>/<question_id>/scl/create/', methods=['Get', 'POST'])
+@login_required
+def new_scale_option(org_id, project_id):
+    org = Organisation.query.filter_by(user_id=current_user.id).filter_by(id=org_id).first()
+    question = ScreenerQuestion.query.filter_by(user_id=current_user.id).filter(project_id==project_id).first()
+    if question is None :
+        flash('Not allowed! You can have to start with a sceener question.', 'error')
+        return redirect(url_for('question.new_screener_question', org_id=org.id, project_id=project_id))
+
+
+    #count_questions = db.session.query(func.count(Question.id)).filter(Question.project_id == project_id).scalar()
+    #if count_questions >= 10 :
+        #flash('Not allowed! You can only add a total of 10 questions.', 'error')
+        #return redirect(url_for('project.index'))
+    
+    form = AddScaleQuestionForm()
+    if form.validate_on_submit():
+        appt = ScaleQuestion(
+            project_id = project_id,
+            title=form.title.data,
+            description=form.description.data,
+
+            option_one = form.option_one.data,
+            option_two = form.option_two.data,
+            option_three = form.option_three.data,
+            option_four = form.option_four.data,
+            option_five = form.option_five.data,
+
+            option_one_scale = form.option_one_scale.data,
+            option_two_scale = form.option_two_scale.data,
+            option_three_scale = form.option_three_scale.data,
+            option_four_scale = form.option_four_scale.data,
+            option_five_scale = form.option_five_scale.data,
+            
+            user_id=current_user.id
+            )
+        db.session.add(appt)
+
+        appts = Question(
+            project_id = project_id,
+            organisation_id = org_id,
+            title=form.title.data,
+            description=form.description.data,
+            question_type="Scale questions",
+            option_one = form.option_one.data,
+            option_two = form.option_two.data,
+            option_three = form.option_three.data,
+            option_four = form.option_four.data,
+            option_five = form.option_five.data,
+
+            option_one_scale = form.option_one_scale.data,
+            option_two_scale = form.option_two_scale.data,
+            option_three_scale = form.option_three_scale.data,
+            option_four_scale = form.option_four_scale.data,
+            option_five_scale = form.option_five_scale.data,
+            
+            user_id=current_user.id
+            )
+        db.session.add(appts)
+        project = Project.query.filter(Project.id == project_id).first()
+        db.session.commit()
+        flash('Successfully created'.format(appt.title), 'form-success')
+        return redirect(url_for('project.project_details', org_id=org_id, project_id=project_id, name=project.name))
+        #return redirect(url_for('question.question_details',
+                                #question_id=appt.id, name=appt.name))
+    else:
+        flash('ERROR! Data was not added.', 'error')
+    return render_template('question/create_scale_option.html', form=form)
 
 @question.route('/<org_id>/<project_id>/mcq/create/', methods=['Get', 'POST'])
 @login_required
@@ -246,35 +314,12 @@ def new_multiple_choice_question(org_id, project_id):
 
 @question.route('/<int:project_id>/<name>/')
 def question_details(project_id, name):
-    screener_question = ScreenerQuestion.query.filter(ScreenerQuestion.project_id == project_id).first()
-    scale_question = ScaleQuestion.query.filter(ScaleQuestion.project_id == project_id).all()
-    multiple_choice_question = MultipleChoiceQuestion.query.filter(MultipleChoiceQuestion.project_id == project_id).all()
+    
     project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
     question = LineItem.query.filter(LineItem.project_id == project_id).all()
-    count_questions = db.session.query(func.count(Question.id)).filter(Question.project_id == project_id).scalar()
-
-
-    screener_question_form = AddScreenerQuestionForm(obj=screener_question)
-    if screener_question_form.validate_on_submit():
-        screener_question_form.populate_obj(question)
-           
-    scale_question_form = AddScaleQuestionForm(obj=scale_question)
-    if scale_question_form.validate_on_submit():
-        scale_question_form.populate_obj(question)
-
-    multiple_choice_question_form = AddMultipleChoiceQuestionForm(obj=multiple_choice_question)
-    if multiple_choice_question_form.validate_on_submit():
-        multiple_choice_question_form.populate_obj(question)
-        db.session.commit()
-        
-
-    return render_template('question/question_details.html', screener_question_form=screener_question_form,
-                           project=project,
-                           scale_question_form=scale_question_form,
-                           multiple_choice_question_form=multiple_choice_question_form, question=question,
-                           screener_question=screener_question, scale_question=scale_question, multiple_choice_question=multiple_choice_question )
-
-
+    screener_question = ScreenerQuestion.query.filter_by(user_id=current_user.id).filter(ScreenerQuestion.project_id==project_id).first_or_404()
+    return render_template('question/question_details.html',
+                           project=project, question=question, screener_question=screener_question)
 
 
 @question.route('/<org_id>/<project_id>/<int:question_id>/<question>/scr/edit/', methods=['Get', 'POST'])
@@ -376,3 +421,32 @@ def delete_screener_question(question_id):
     db.session.commit()
     flash("Delete.", 'success')
     return redirect(url_for('question.index'))
+
+
+@question.route('/<int:project_id>/<int:question_id>/<question>/add/', methods=['Get', 'POST'])
+@login_required
+def add_screener_answer(project_id, question_id, question):
+    
+    project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
+    question = LineItem.query.filter(LineItem.project_id == project_id).first()
+
+    #question = MultipleChoiceQuestion.query.filter_by(user_id=current_user.id).filter_by(id=question_id).first_or_404()
+    #if not question:
+        #abort(404)
+    #if current_user.id != question.user_id:
+        #abort(404)
+    screener_question = ScreenerQuestion.query.filter_by(user_id=current_user.id).filter_by(id=question_id).first_or_404()
+
+    form = AddScreenerAnswerForm()
+    if form.validate_on_submit():
+        appt = ScreenerAnswer(
+
+            screener_questions_id=screener_question.id,
+            answer_option_one=form.answer_option_one.data,
+            user_id=current_user.id
+            )
+        db.session.add(appt)
+        db.session.commit()
+        flash("Answer submitted.", 'success')
+        return redirect(url_for('question.question_details', project_id=project.id, name=project.name))
+    return render_template('question/add_screener_answer.html', screener_question=screener_question, form=form)

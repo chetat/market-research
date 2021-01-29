@@ -1,0 +1,74 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+                <a class="ui basic compact button" href="{{ url_for('question.index') }}">
+                <i class="caret left icon"></i>
+                Back to Questions' List
+            </a>
+            <h2 class="ui header">
+                Add a screener answer
+       
+            </h2>
+			<div class="ui segment">
+				<div class="sub header">How to fill this section</div>
+				<div class="ui ordered list">
+				  <div class="item">Add the question in the box provided e.g "Do you eat ice vanilla ice creams?</div>
+				  <div class="item">Add a description E.g "This question is for those who like vanilla ice cream"</div>
+				  <div class="item">Add a required answer. This helps us know who should continue to answer the rest of the questions</div>
+				  <div class="item">Add answer options which will appear to the respondents e.g "Yes"</div>
+				  <div class="item">Add another answer option which will appear to the respondents e.g "No"</div>
+				  <div class="item">Add another answer option which will appear to the respondents e.g "Maybe"</div>
+				</div>
+			</div>
+            {% set flashes = {
+                'error':   get_flashed_messages(category_filter=['form-error']),
+                'warning': get_flashed_messages(category_filter=['form-check-email']),
+                'info':    get_flashed_messages(category_filter=['form-info']),
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } %}
+
+            {{ f.begin_form(form, flashes) }}
+
+			{% if screener_question %}
+
+			<div class="ui segment">
+				<div class="ui right floated horizontal list"> 
+				</div>
+			  <h3 class="ui left floated header">Screener Question : {{screener_question.question }}</h3>
+			  <div class="ui clearing divider"></div>
+			  <h5 class="ui header">{{screener_question.description }}</h5>
+			  <p></p>
+				<div class="three fields">
+					{{ f.render_form_field(form.answer_option_one) }}
+				</div>
+				{{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+				{{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+				{{ f.form_message(flashes['info'], header='Information', class='info') }}
+				{{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+				{% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+					{{ f.render_form_field(field) }}
+				{% endfor %}
+
+				{{ f.end_form() }}
+
+			</div>
+			{% endif %}
+            <div class="field">
+            </div>
+            <div class="field">
+            </div>
+            <div class="field">
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}

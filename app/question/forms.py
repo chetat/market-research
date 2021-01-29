@@ -5,7 +5,8 @@ from wtforms.fields import (
     PasswordField,
     StringField,
     SubmitField,
-    SelectField
+    SelectField,
+    RadioField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -112,12 +113,10 @@ class AddScreenerQuestionForm(FlaskForm):
     answer_option_one = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
     answer_option_two = SelectField(u'Please choose either Yes or or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
     answer_option_three = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Submit') 
 
 class AddScreenerAnswerForm(FlaskForm):
-    answer_option_one = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
-    answer_option_two = SelectField(u'Please choose either Yes or or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
-    answer_option_three = SelectField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
+    answer_option_one = RadioField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
     submit = SubmitField('Submit')
 
 

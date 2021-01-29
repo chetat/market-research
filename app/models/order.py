@@ -67,6 +67,7 @@ class LineItem(db.Model):
      project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
      question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
      scale_questions_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
+     screener_questions_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id'))
      multiple_choice_questions_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
      quantity = db.Column(db.Integer)
      currency = db.Column(db.String(3))
@@ -78,6 +79,7 @@ class LineItem(db.Model):
      project = db.relationship("Project", backref=db.backref('line_items',
                          order_by=line_item_id))
      question = db.relationship("Question", uselist=False, order_by=line_item_id)
+     screener_question = db.relationship("ScreenerQuestion", uselist=False, order_by=line_item_id)
      scale_question = db.relationship("ScaleQuestion", uselist=False, order_by=line_item_id)
      multiple_choice_question = db.relationship("MultipleChoiceQuestion", uselist=False, order_by=line_item_id)
 
@@ -91,19 +93,16 @@ class ScreenerQuestion(db.Model):
     answer_option_one = db.Column(db.String(64), index=True)
     answer_option_two = db.Column(db.String(64), index=True)
     answer_option_three = db.Column(db.String(64), index=True)
-    
+
+    question_id = db.Column(db.Integer, db.ForeignKey('questions.id', ondelete="CASCADE"))    
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
-    screener_answers = db.relationship('Answer', backref='screenerquestion', lazy='dynamic')
+    screener_answers = db.relationship('ScreenerAnswer', backref='screenerquestion', lazy='dynamic')
 
 class ScreenerAnswer(db.Model):
     __tablename__ = 'screener_answers'
     id = db.Column(db.Integer, primary_key=True)
-    required_answer = db.Column(db.String(64), index=True)
     answer_option_one = db.Column(db.String(64), index=True)
-    answer_option_two = db.Column(db.String(64), index=True)
-    answer_option_three = db.Column(db.String(64), index=True)
-    
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
     screener_questions_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id', ondelete="CASCADE"))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
