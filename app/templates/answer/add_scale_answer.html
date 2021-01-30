@@ -46,19 +46,25 @@
 			  <div class="ui clearing divider"></div>
 			  <h5 class="ui header">{{screener_question.description }}</h5>
 			  <p></p>
-				<div class="three fields">
+				<div class="field">
+				</div>
+			  <div class="fields">
+				<div class="field">
 					{{ f.render_form_field(form.answer_option_one) }}
 				</div>
-				{{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-				{{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-				{{ f.form_message(flashes['info'], header='Information', class='info') }}
-				{{ f.form_message(flashes['success'], header='Success!', class='success') }}
+				<div class="field">
+					{{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+					{{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+					{{ f.form_message(flashes['info'], header='Information', class='info') }}
+					{{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
-				{% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-					{{ f.render_form_field(field) }}
-				{% endfor %}
+					{% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+						{{ f.render_form_field(field) }}
+					{% endfor %}
 
-				{{ f.end_form() }}
+					{{ f.end_form() }}
+				</div>
+			  </div>
 
 			</div>
 			{% endif %}

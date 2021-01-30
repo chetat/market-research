@@ -96,6 +96,9 @@ def create_app(config):
     from .question import question as question_blueprint
     app.register_blueprint(question_blueprint, url_prefix='/question')
 
+    from .answer import answer as answer_blueprint
+    app.register_blueprint(answer_blueprint, url_prefix='/answer')
+
     from .project import project as project_blueprint
     app.register_blueprint(project_blueprint, url_prefix='/project')
     
