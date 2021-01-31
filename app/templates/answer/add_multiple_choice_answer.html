@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% import 'macros/form_macros.html' as f %}
-
+{% import 'macros/check_password.html' as check %}
 
 
 {% block scripts %}
@@ -14,18 +14,15 @@
                 Back to Questions' List
             </a>
             <h2 class="ui header">
-                Add an answer
+                Add a screener answer
        
             </h2>
 			<div class="ui segment">
 				<div class="sub header">How to fill this section</div>
 				<div class="ui ordered list">
-				  <div class="item">Indicate your answer in the field provided. </div>
-				  <div class="item"> Please type into the box only when your answer fits the description of the box. E.g if your answer is "Undecided", type in "Undecided" into the box, without including "".</div>
-				  <div class="item">Type only one answer. Leave the rest of the answer boxes empty if you have written only one answer.</div>
+				  <div class="item">Type in your answer in the box field which corresponds with your answer. E.g if your response is yes and the box field has a "yes", you type in your response in the box provided.</div>
 				</div>
 			</div>
-
             {% set flashes = {
                 'error':   get_flashed_messages(category_filter=['form-error']),
                 'warning': get_flashed_messages(category_filter=['form-check-email']),
@@ -34,44 +31,52 @@
             } %}
 
             {{ f.begin_form(form, flashes) }}
-			{% if scale_question %}
+
+			{% if multiple_choice_question %}
 
 			<div class="ui segment">
-				<div class="ui right floated horizontal list"> 
-				</div>
-			  <h3 class="ui left floated header">{{scale_question.title }}</h3>
+			  <h3 class="ui left floated header">{{ multiple_choice_question.title }}</h3>
 			  <div class="ui clearing divider"></div>
-			  <h5 class="ui header">{{scale_question.description }}</h5>
+			  <h5 class="ui header">{{ multiple_choice_question.description }}</h5>
 			  <p></p>
-			  <div class="ui clearing divider"></div>
+			  {% if multiple_choice_question.multiple_choice_option_one %}
 				<div class="field">
-					{{scale_question.option_one }} {{ form.option_one_answer  }}
+				{{ multiple_choice_question.multiple_choice_option_one }}{{ form.multiple_choice_option_one }}
 				</div>
+				{% endif %}
+			  {% if multiple_choice_question.multiple_choice_option_two %}
 				<div class="field">
-					{{ scale_question.option_two }} {{ form.option_one_answer }}
-				</div>	
+				{{ multiple_choice_question.multiple_choice_option_two }}{{ form.multiple_choice_option_two }}
+				</div>
+				{% endif %}
+			  {% if multiple_choice_question.multiple_choice_option_three %}
 				<div class="field">
-					{{ scale_question.option_three }} {{ form.option_one_answer }}
-				</div>	
+				{{ multiple_choice_question.multiple_choice_option_three }}{{ form.multiple_choice_option_three }}
+				</div>
+				{% endif %}
+			  {% if multiple_choice_question.multiple_choice_option_four %}
 				<div class="field">
-					{{ scale_question.option_four }} {{ form.option_one_answer }}
-				</div>	
+				{{ multiple_choice_question.multiple_choice_option_four }}{{ form.multiple_choice_option_four }}
+				</div>
+				{% endif %}
+			  {% if multiple_choice_question.multiple_choice_option_five %}
 				<div class="field">
-					{{scale_question.option_five }} {{ form.option_one_answer  }}
-				</div>					
+				{{ multiple_choice_question.multiple_choice_option_five }}{{ form.multiple_choice_option_five }}
+				</div>
+				{% endif %}
 				{{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
 				{{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
 				{{ f.form_message(flashes['info'], header='Information', class='info') }}
 				{{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
 				{% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-				<div class="field">
-					{{ form.submit }}
+					{{ f.render_form_field(field) }}
 				{% endfor %}
-				</div>
+
 				{{ f.end_form() }}
 
+			</div>
+			{% endif %}
         </div>
-					  			{% endif %}
     </div>
 {% endblock %}

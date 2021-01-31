@@ -102,6 +102,10 @@ def project_details(org_id, project_id, name):
 
     count_questions = Question.query.filter_by(user_id=current_user.id).filter(project_id == project_id).count()
 
+    check_point = LineItem.query.filter(project_id==project_id).count()
+    if check_point >=1 :
+        return redirect(url_for('project.index'))
+
     
     ## prepare line items
     project_item = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()

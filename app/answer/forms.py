@@ -17,7 +17,7 @@ from wtforms.validators import (
 )
 
 from app import db
-from app.models import Role, User
+from app.models import Role, User, ScaleQuestion
 
 
 
@@ -26,52 +26,38 @@ class AddScreenerAnswerForm(FlaskForm):
     answer_option_one = RadioField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
     submit = SubmitField('Submit')
 
-
-class AddMultipleChoiceQuestionForm(FlaskForm):
-    title = StringField(
-        'Question', validators=[InputRequired(),
-                                  Length(1, 90)])
-    description = StringField(
-        'Description', validators=[InputRequired(),
-                                  Length(1, 90)])
-    multiple_choice_option_one = StringField(
-        'Required answer option e.g "Yes" ', validators=[InputRequired(),
-                                  Length(1, 64)])
-
-    multiple_choice_option_two = StringField(
-        'Required answer option e.g "No" ', validators=[InputRequired(),
-                                  Length(1, 64)])
-    multiple_choice_option_three = StringField(
-        'Optional answer option. You can leave it empty if you selected "Yes" or "No" in the previous ones ')
-    multiple_choice_option_four = StringField(
-        'Optional answer option. You can leave it empty if you selected "Yes" or "No" in the previous ones')
-    multiple_choice_option_five = StringField(
-        'Optional answer option. You can leave it empty if you selected "Yes" or "No" in the previous ones')
-    submit = SubmitField('Submit')
-
-
 class AddMultipleChoiceAnswerForm(FlaskForm):
     multiple_choice_option_one = StringField(
-        'Required answer option e.g "Yes" ', validators=[InputRequired(),
-                                  Length(1, 64)])
+        'Required answer option e.g "Yes" ')
 
     multiple_choice_option_two = StringField(
-        'Required answer option e.g "No" ', validators=[InputRequired(),
-                                  Length(1, 64)])
+        'Required answer option e.g "No" ')
     multiple_choice_option_three = StringField(
-        'Optional answer option. You can leave it empty if you selected "Yes" or "No" in the previous ones ')
+        'Optional answer option. ')
     multiple_choice_option_four = StringField(
-        'Optional answer option. You can leave it empty if you selected "Yes" or "No" in the previous ones')
+        'Optional answer option. ')
     multiple_choice_option_five = StringField(
-        'Optional answer option. You can leave it empty if you selected "Yes" or "No" in the previous ones')
+        'Optional answer option. ')
     submit = SubmitField('Submit')
+
 
 
 class AddScaleAnswerForm(FlaskForm):
-    options = RadioField(u'Please choose your answer options', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
-                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
-                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
-                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
-                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
-                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
+    option_one_answer = StringField()
+    submit = SubmitField('Submit')
+
+
+class ReuseForm(FlaskForm):
+    option_one_answer = StringField()
+    option_two_answer = RadioField(u'Please choose your answer options', choices=[('Agree', 'Agree')])
+    option_three_answer = RadioField(u'Please choose your answer options', choices=[('Undecided', 'Undecided')])
+    option_four_answer = RadioField(u'Please choose your answer options', choices=[('Disagree', 'Disagree')])
+    option_five_answer = RadioField(u'Please choose your answer options', choices=[('Strongly Disagree', 'Strongly Disagree')])
+    option_six_answer = SelectField(u'Please choose your answer options', choices=[ ('Not at all useful', 'Not at all useful')])
+    option_seven_answer = SelectField(u'Please choose your answer options', choices=[('Slightly useful', 'Slightly useful')])
+    option_eight_answer = SelectField(u'Please choose your answer options', choices=[('Moderately useful', 'Moderately useful')])
+    option_nine_answer = SelectField(u'Please choose your answer options', choices=[('Very useful', 'Very useful')])
+    option_ten_answer = SelectField(u'Please choose your answer options', choices=[('Extremely useful', 'Extremely useful')])
+    option_eleven_answer = SelectField(u'Please choose your answer options', choices=[('Most useful', 'Most useful')])
+    option_twelve_answer = SelectField(u'Please choose your answer options', choices=[('Least useful', 'Least useful')])
     submit = SubmitField('Submit')

@@ -315,11 +315,31 @@ def new_multiple_choice_question(org_id, project_id):
 @question.route('/<int:project_id>/<name>/')
 def question_details(project_id, name):
     
-    project = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
-    question = LineItem.query.filter(LineItem.project_id == project_id).all()
-    screener_question = ScreenerQuestion.query.filter_by(user_id=current_user.id).filter(ScreenerQuestion.project_id==project_id).first_or_404()
-    return render_template('question/question_details.html',
-                           project=project, question=question, screener_question=screener_question)
+    project = db.session.query(Project).filter_by(id=project_id).first()
+    question = LineItem.query.filter_by(project_id = project_id).all()
+    screener_question = ScreenerQuestion.query.filter_by(project_id=project_id).first()
+    scale_question = ScaleQuestion.query.filter_by(project_id=project_id).all()
+    multiple_choice_question = MultipleChoiceQuestion.query.filter_by(project_id=project_id).all()
+
+    answer = db.session.query(ScreenerAnswer).filter_by(user_id=current_user.id).filter(ScreenerAnswer.screener_questions_id==screener_question.id).first()
+    scale_answer = db.session.query(ScaleAnswer).filter_by(user_id=current_user.id).all()
+    multiple_choice_answer = db.session.query(MultipleChoiceAnswer).filter_by(user_id=current_user.id).all()
+    if answer is None:
+        return render_template('question/question_details.html',
+                               project=project, question=question, screener_question=screener_question,
+                               multiple_choice_question =multiple_choice_question,
+                               scale_question = scale_question, screener_answer=answer,
+                               multiple_choice_answer = multiple_choice_answer, scale_answer = scale_answer)
+    
+    elif not answer.answer_option_one == screener_question.required_answer:
+        flash("Sorry, you cannot proceed with answers project on this project. Choose another project", 'success')
+        return redirect(url_for('question.index'))
+    else:
+        return render_template('question/question_details.html',
+                           project=project, question=question, screener_question=screener_question,
+                           multiple_choice_question =multiple_choice_question,
+                           scale_question = scale_question, screener_answer=answer,
+                           multiple_choice_answer = multiple_choice_answer, scale_answer = scale_answer)
 
 
 @question.route('/<org_id>/<project_id>/<int:question_id>/<question>/scr/edit/', methods=['Get', 'POST'])
@@ -342,7 +362,7 @@ def edit_screener_question(org_id, project_id, question_id, question):
         db.session.commit()
         flash("Edited.", 'success')
         return redirect(url_for('project.project_details', org_id=org_id, project_id=project.id, name=project.name))
-    return render_template('question/edit_screener_question.html', question=question, form=form )
+    return render_template('question/edit_screener_question.html', question=question, form=form , org=org, project=project)
 
 
 
