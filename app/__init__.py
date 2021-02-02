@@ -28,7 +28,6 @@ images = UploadSet('images', IMAGES)
 docs = UploadSet('docs', ('rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'pdf'))
 share = Share()
 #bootstrap = Boostrap()
-#ckeditor = CKEditor()
 
 # Set up Flask-Login
 login_manager = LoginManager()

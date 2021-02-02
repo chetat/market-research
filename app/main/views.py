@@ -10,6 +10,10 @@ from flask import (
     current_app,
     send_from_directory
 )
+from datetime import datetime
+from logging import log
+from time import time
+
 from flask_login import current_user, login_required
 from app import db
 from app.models import EditableHTML, Project, Organisation, Order, User, Question, ScaleQuestion, LineItem
@@ -51,36 +55,12 @@ def cancel():
 
 @main.route('/stripe_pay')
 def stripe_pay():
-    projects = Project.query.filter_by(user_id=current_user.id).all()
-    for project in projects:
-        project_id = project.id
-    lineitem = LineItem.query.filter_by(project_id = project_id).first()
-
-    quantity = lineitem.quantity
-    service_type = lineitem.service_type 
-    currency = lineitem.currency
-    if currency == "NGN" and service_type == "Silver":
-        unit_amount = 66000
-    elif currency == "NGN" and service_type == "Gold":
-        unit_amount = 90000
-    elif currency == "NGN" and service_type == "Platinum":
-        unit_amount = 120000
-    elif currency == "USD" and service_type == "Silver":
-        unit_amount = 200
-    elif currency == "USD" and service_type == "Gold":
-        unit_amount = 250
-    elif currency == "USD" and service_type == "Platinum":
-        unit_amount = 300
-    elif currency == "GBP" and service_type == "Silver":
-        unit_amount = 200
-    elif currency == "GBP" and service_type == "Gold":
-        unit_amount = 250
-    elif currency == "GBP" and service_type == "Platinum":
-        unit_amount = 300
-    else:
-        unit_amount = 2500
-        
-    name = lineitem.name
+    order = Order.query.filter_by(user_id=current_user.id).first()
+    #if order.created_at == Order.created_at
+    quantity = order.quantity
+    currency = order.currency
+    name = order.project.name
+    unit_amount = order.unit_amount
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         line_items=[{

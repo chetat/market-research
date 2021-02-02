@@ -13,9 +13,24 @@
                 <i class="caret left icon"></i>
                 Back to Project' List
             </a>
-			<div class="ui segment">
-			  <p>A scaled question is a question that asks you to measure your opinion on a product, service, etc. by choosing a number from a lowest possible number to a highest possible number.</p>
-			</div>
+			    <div class="ui segment">
+				<div class="sub header">Take a moment to understand scale based questions. They are based on 5 point likert scale and Semantic Differential Scale</div>
+				<p>5 point likert scale as follows:</p>
+				<div class="ui ordered list">
+				  <div class="item">Strongly Agree = 5</div>
+				  <div class="item"> Agree = 4</div>
+				  <div class="item">Undecided = 3</div>
+				  <div class="item">Disagree = 2</div>
+				  <div class="item">Strongly Disagree = 1</div>
+				</div>
+				<p>Semantic differential scale as follows:</p>
+				<div class="ui ordered list">
+				  <div class="item">Very Pleasant = 5</div>
+				  <div class="item"> Somewhat Pleasant = 4</div>
+				  <div class="item">Neither Pleasant or Unpleasant = 3</div>
+				  <div class="item">Somewhat Unpleasant = 2</div>
+				  <div class="item">Very Unpleasant = 1</div>
+				</div>
             <h2 class="ui header">
                 Create a scale based question
                 <div class="sub header">Add a scale based question</div>
@@ -36,25 +51,8 @@
             <div class="field">
                 {{ f.render_form_field(form.description) }}
             </div>
-            <div class="two fields">
-                {{ f.render_form_field(form.option_one) }}
-                {{ f.render_form_field(form.option_one_scale) }}
-            </div>
-            <div class="two fields">
-                {{ f.render_form_field(form.option_two) }}
-                {{ f.render_form_field(form.option_two_scale) }}
-            </div>
-            <div class="two fields">
-                {{ f.render_form_field(form.option_three) }}
-                {{ f.render_form_field(form.option_three_scale) }}
-            </div>
-            <div class="two fields">
-                {{ f.render_form_field(form.option_four) }}
-                {{ f.render_form_field(form.option_four_scale) }}
-            </div>
-            <div class="two fields">
-                {{ f.render_form_field(form.option_five) }}
-                {{ f.render_form_field(form.option_five_scale) }}
+            <div class="field">
+                {{ f.render_form_field(form.options) }}
             </div>
             {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
             {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}

@@ -75,12 +75,18 @@ def add_scale_answer(project_id, question_id, question):
         flash("This question has already been answered by you.", 'success')
         return redirect(url_for('question.question_details', project_id=project.id, name=project.name))
 
-    form = AddScaleAnswerForm()
+    select_answer_form = ScaleQuestion.query.filter_by(id=question_id, options='5 Point Likert Scale').first()
+    
+    if select_answer_form == '5 Point Likert Scale':
+        form = AddScaleAnswerForm()
+    else:
+        AddSemanticAnswerForm()
+    
     if form.validate_on_submit():
         appt = ScaleAnswer(
             scale_question_id=scale_question.id,
             user_id=current_user.id,
-            option_one_answer=form.option_one_answer.data
+            option=form.option.data
             )
         db.session.add(appt)
         db.session.commit()

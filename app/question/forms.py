@@ -142,8 +142,6 @@ class AddMultipleChoiceQuestionForm(FlaskForm):
         'Optional answer option. You can leave it empty if you selected "Yes" or "No" in the previous ones')
     submit = SubmitField('Submit')
       
-
-
 class AddScaleQuestionForm(FlaskForm):
     title = StringField(
         'Scale-based Question Title . 60 words max, keep it short please.', validators=[InputRequired(),
@@ -151,48 +149,6 @@ class AddScaleQuestionForm(FlaskForm):
     description = StringField(
         'Description', validators=[InputRequired(),
                                   Length(1, 90)])
-    option_one = SelectField(u'Please choose which answer options should be available to the respondents', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
-                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
-                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
-                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
-                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
-                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
-    option_one_scale = SelectField(u'Please choose the scale for this answer option', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
-    option_two = SelectField(u'Please choose which answer options should be available to the respondents', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
-                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
-                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
-                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
-                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
-                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
-    option_two_scale = SelectField(u'Please choose the scale for this answer option', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
-    option_three = SelectField(u'Please choose which answer options should be available to the respondents', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
-                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
-                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
-                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
-                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
-                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
-    option_three_scale = SelectField(u'Please choose the scale for this answer option', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
-    option_four = SelectField(u'Please choose which answer options should be available to the respondents', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
-                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
-                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
-                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
-                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
-                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
-    option_four_scale = SelectField(u'Please choose the scale for this answer option', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
-    option_five = SelectField(u'Please choose which answer options should be available to the respondents', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
-                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
-                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
-                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
-                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
-                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
-    option_five_scale = SelectField(u'Please choose the scale for this answer option', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    options = SelectField(u'Please choose the question scales. Is it 5 Point Likert Scale or Semantic Differential Scale', choices=[('5 Point Likert Scale', '5 Point Likert Scale'), ('Semantic Differential Scale', 'Semantic Differential Scale')])
     submit = SubmitField('Submit')
 
-class AddScaleAnswerForm(FlaskForm):
-    options = SelectField(u'Please choose your answer options', choices=[('Strongly Agree', 'Strongly Agree'), ('Agree', 'Agree'),
-                                                                     ('Undecided', 'Undecided'), ('Disagree', 'Disagree'),
-                                                                     ('Strongly Disagree', 'Strongly Disagree'), ('Not at all useful', 'Not at all useful'),
-                                                                     ('Slightly useful', 'Slightly useful'), ('Moderately useful', 'Moderately useful'),
-                                                                     ('Very useful', 'Very useful'), ('Extremely useful', 'Extremely useful'),
-                                                                     ('Most useful', 'Most useful'), ('Least useful', 'Least useful')])
-    submit = SubmitField('Submit')

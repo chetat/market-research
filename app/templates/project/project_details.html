@@ -29,6 +29,26 @@
             </a>
             <h2 class="ui header">
                 Projects
+			    <div class="ui segment">
+				<div class="sub header">Take a moment to understand scale based questions. They are based on "5 point likert" scale and "semantic differential" scale</div>
+				<p>5 point likert scale as follows:</p>
+				<div class="ui ordered list">
+				  <div class="item">Strongly Agree = 5</div>
+				  <div class="item"> Agree = 4</div>
+				  <div class="item">Undecided = 3</div>
+				  <div class="item">Disagree = 2</div>
+				  <div class="item">Strongly Disagree = 1</div>
+				</div>
+				<p>Semantic differential scale as follows:</p>
+				<div class="ui ordered list">
+				  <div class="item">Very Pleasant = 5</div>
+				  <div class="item"> Somewhat Pleasant = 4</div>
+				  <div class="item">Neither Pleasant or Unpleasant = 3</div>
+				  <div class="item">Somewhat Unpleasant = 2</div>
+				  <div class="item">Very Unpleasant = 1</div>
+				</div>
+				<p>Add your question, description and choose either the 5 Point Likert Scale or the Semantic Differential Scale and the right answer options will be made available to your respondents.</p>
+			</div>
                 <div class="sub header">
                     View and manage your questions for this project.  
 					{% if count_questions >= 10 %} Note you can only add {{ count_questions }} questions per project {% endif %}
@@ -41,7 +61,7 @@
 				<a class="ui teal right floated button" href="{{ url_for('question.new_screener_question', project_id=project_id, org_id=org.id) }}">Create Screener Question</a>
 				{% endif %}
 		       {% if count_questions >= 10 %}
-				        <a href="#" id="buy_now_btn" class="ui teal right floated button">Pay & Submit Questions</a>
+				        <a href="#" id="buy_now_btn" class="ui teal right floated button">Submit Questions</a>
 			   {% else %}
 				<a class="ui teal right floated button" href="{{ url_for('question.new_scale_question', project_id=project_id, org_id=org.id) }}">Create Scale Question</a>
 				

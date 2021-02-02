@@ -137,19 +137,7 @@ def new_scale_question(org_id, project_id):
             project_id = project_id,
             title=form.title.data,
             description=form.description.data,
-
-            option_one = form.option_one.data,
-            option_two = form.option_two.data,
-            option_three = form.option_three.data,
-            option_four = form.option_four.data,
-            option_five = form.option_five.data,
-
-            option_one_scale = form.option_one_scale.data,
-            option_two_scale = form.option_two_scale.data,
-            option_three_scale = form.option_three_scale.data,
-            option_four_scale = form.option_four_scale.data,
-            option_five_scale = form.option_five_scale.data,
-            
+            options = form.options.data,
             user_id=current_user.id
             )
         db.session.add(appt)
@@ -160,17 +148,6 @@ def new_scale_question(org_id, project_id):
             title=form.title.data,
             description=form.description.data,
             question_type="Scale questions",
-            option_one = form.option_one.data,
-            option_two = form.option_two.data,
-            option_three = form.option_three.data,
-            option_four = form.option_four.data,
-            option_five = form.option_five.data,
-
-            option_one_scale = form.option_one_scale.data,
-            option_two_scale = form.option_two_scale.data,
-            option_three_scale = form.option_three_scale.data,
-            option_four_scale = form.option_four_scale.data,
-            option_five_scale = form.option_five_scale.data,
             
             user_id=current_user.id
             )
@@ -206,19 +183,7 @@ def new_scale_option(org_id, project_id):
             project_id = project_id,
             title=form.title.data,
             description=form.description.data,
-
-            option_one = form.option_one.data,
-            option_two = form.option_two.data,
-            option_three = form.option_three.data,
-            option_four = form.option_four.data,
-            option_five = form.option_five.data,
-
-            option_one_scale = form.option_one_scale.data,
-            option_two_scale = form.option_two_scale.data,
-            option_three_scale = form.option_three_scale.data,
-            option_four_scale = form.option_four_scale.data,
-            option_five_scale = form.option_five_scale.data,
-            
+            options = form.options.data, 
             user_id=current_user.id
             )
         db.session.add(appt)

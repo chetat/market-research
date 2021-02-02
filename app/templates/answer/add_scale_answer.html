@@ -45,19 +45,7 @@
 			  <p></p>
 			  <div class="ui clearing divider"></div>
 				<div class="field">
-					{{scale_question.option_one }} {{ form.option_one_answer  }}
-				</div>
-				<div class="field">
-					{{ scale_question.option_two }} {{ form.option_one_answer }}
-				</div>	
-				<div class="field">
-					{{ scale_question.option_three }} {{ form.option_one_answer }}
-				</div>	
-				<div class="field">
-					{{ scale_question.option_four }} {{ form.option_one_answer }}
-				</div>	
-				<div class="field">
-					{{scale_question.option_five }} {{ form.option_one_answer  }}
+					{{ form.option  }}
 				</div>					
 				{{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
 				{{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
@@ -66,12 +54,12 @@
 
 				{% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
 				<div class="field">
-					{{ form.submit }}
+					{{ form.submit(class="ui button") }}
 				{% endfor %}
 				</div>
 				{{ f.end_form() }}
 
         </div>
-					  			{% endif %}
+		{% endif %}
     </div>
 {% endblock %}

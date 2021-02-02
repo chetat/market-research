@@ -1,0 +1,119 @@
+{% extends 'layouts/base.html' %}
+{# import 'macros/form_macros.html' as f #}
+
+
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+                <a class="ui basic compact button" href="{{ url_for('project.index') }}">
+                <i class="caret left icon"></i>
+                Back to Questions' List
+            </a>
+
+            {# set flashes = {
+                'error':   get_flashed_messages(category_filter=['form-error']),
+                'warning': get_flashed_messages(category_filter=['form-check-email']),
+                'info':    get_flashed_messages(category_filter=['form-info']),
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } #}
+
+            {# f.begin_form(form, flashes) #}
+			{% if order %}
+
+			<div class="ui clearing segment">
+				<h2 class="ui header">
+					Order Details
+				</h2>
+			<div class="ui form">
+			  <div class="fields">
+				<div class="six wide field">
+				  <label>Project Name</label>
+					<div class="ui compact segment">
+					  <p>{{ order.project.name }}</p>
+					</div>
+				</div>
+				<div class="four wide field">
+				  <label>Quantity</label>
+					<div class="ui segment">
+					  <p>{{ order.quantity }}</p>
+					</div>
+				</div>
+				<div class="four wide field">
+				  <label>Currency </label>
+					<div class="ui segment">
+					  <p>{{ order.currency }}</p>
+					</div>
+				</div>
+				<div class="two wide field">
+				  <label>Service Type</label>
+					<div class="ui segment">
+					  <p>{{ order.service_type }}</p>
+					</div>
+				</div>
+			  </div>
+			  <div class="fields">
+				<div class="six wide field">
+				  <label>Organization Name</label>
+					<div class="ui segment">
+					  <p>{{ order.org.org_name }}</p>
+					</div>
+				</div>
+				<div class="six wide field">
+				  <label>Project Owner</label>
+					<div class="ui segment">
+					  <p>{{ order.user.first_name }} {{ order.user.last_name }}</p>
+					</div>
+				</div>
+				<div class="six wide field">
+				  <label>Order Date</label>
+					<div class="ui segment">
+					  <p>{{ date }} </p>
+					</div>
+				</div>
+			  </div>
+			</div>			 
+			  <div class="field">
+					  <a href="#" id="buy_now_btn" class="ui teal right floated button">Pay</a>
+			  </div>
+        </div>
+		{% endif %}
+    </div>
+      <script src="https://js.stripe.com/v3/"></script>
+      {#
+      <script type="text/javascript">
+        const checkout_public_key = '{{checkout_public_key}}';
+        const checkout_session_id = '{{checkout_session_id}}';
+      </script>
+      #}
+	  <script>
+		$('select.dropdown')
+			.dropdown()
+		;
+	  </script>
+	  <script>
+			const button = document.querySelector('#buy_now_btn');
+
+			button.addEventListener('click', event => {
+				fetch('/stripe_pay')
+				.then((result) => { return result.json(); })
+				.then((data) => {
+					var stripe = Stripe(data.checkout_public_key);
+					stripe.redirectToCheckout({
+						// Make the id field from the Checkout Session creation API response
+						// available to this file, so you can provide it as parameter here
+						// instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+						sessionId: data.checkout_session_id
+					}).then(function (result) {
+						// If `redirectToCheckout` fails due to a browser or network
+						// error, display the localized error message to your customer
+						// using `result.error.message`.
+					});
+				})
+			});
+	  </script>
+      <!---<script src="{{ url_for('static', filename='script-ajax.js') }}"></script>--->
+{% endblock %}

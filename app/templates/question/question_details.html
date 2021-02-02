@@ -46,9 +46,9 @@
 			  <div class="ui clearing divider"></div>
 			  <h5 class="ui header"></h5>
 			  <p>{{ item.description }}</p>
-			  {% if scale_answer.scale_question_id == scale_question.id %}
+			  {% if item.scale_answer %}
 			  <div class="ui divider"></div>
-			  	<p> Answer: {{ scale_answer.option_one_answer }}</p>
+			  	<p> Answer: {{ scale_answer.option }}</p>
 				{% endif %}
 			</div>
 			 		{% endif %}	
