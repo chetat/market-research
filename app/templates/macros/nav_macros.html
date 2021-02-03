@@ -26,11 +26,15 @@
     {% set user = [] %}
     {% if current_user.is_authenticated and current_user.role.is_admin %}
             {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
+			
+    {% elif current_user.is_authenticated and current_user.is_respondent %}
+      {% set user = ([
+		  ('question.index', 'Questions', 'tasks')
+	  ]) %}
     {% elif current_user.is_authenticated %}
       {% set user = ([
 		  ('organisations.org_home', 'Organizations', 'building'),
-		  ('project.index', 'Projects', 'folder open'),
-		  ('question.index', 'Questions', 'tasks')
+		  ('project.index', 'Projects', 'folder open')
 	  ]) %}
     {% endif %} 
     {{ render_menu_items( endpoints +  user ) }}

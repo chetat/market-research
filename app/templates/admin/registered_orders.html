@@ -1,0 +1,111 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui stackable grid container">
+        <div class="sixteen wide tablet twelve wide computer centered column">
+            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>
+            <h2 class="ui header">
+                Registered Users ({{ orders_count }})
+                <div class="sub header">
+                    View and manage currently registered orders.
+                </div>
+            </h2>
+
+            <div class="ui menu">
+                <div class="ui right search item">
+                    <div class="ui transparent icon input">
+                        <input id="search-orders" type="text" placeholder="Search orders…">
+                        <i class="search icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            {# Use overflow-x: scroll so that mobile views don't freak out
+             # when the table is too wide #}
+            <div style="overflow-x: scroll;">
+                <table class="ui searchable sortable unstackable selectable celled table">
+                    <thead>
+                        <tr>
+                            <th>Org Id</th>
+                            <th>Project ID</th>
+                            <th>line Item ID</th>
+                            <th>User ID</th>
+                            <th>Currency</th>
+                            <th>Payment Method</th>
+                            <th>Amount</th>
+                            <th>Start Date</th>
+                            <th>Delivered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for u in orders.items  %}
+                        <tr>
+
+                            <td>{{ u.organisation_id}}</td>
+                            <td>{{ u.project_id }}</td>
+                            <td>{{ u.line_item_id }}</td>
+                            <td>{{ u.user_id }}</td>
+                            <td>{{ u.currency }}</td>
+                            <td>{{ u.payment_method }}</td>
+                            <td>{{ u.total_amount }}</td>
+                            <td>{{ u.start_date }}</td>
+							<td>
+                                {% if u.delivered %}
+                                <a class="ui red button" href="{{ url_for('admin.toggle_user_respondent', user_id=u.id) }}">Delivered</a>
+                                {% else %}
+                                <a class="ui green button" href="{{ url_for('admin.toggle_user_respondent', user_id=u.id) }}">Make Respondent</a>
+                                {% endif %}
+
+							</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="ui centered grid ">
+        {% if orders.pages > 0 %}
+            <div class="ui pagination menu">
+                {% for page in orders.iter_pages() %}
+                    {% if page %}
+                        {% if page != orders.page %}
+                            <a class="item"
+                               href="{{ url_for(request.endpoint,  page=page) }}">
+                                {{ page }}
+                            </a>
+                        {% else %}
+                            <a class="item active">
+                                {{ page }}
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <div class="disabled item">
+                            ...
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-orders').keyup(function () {
+                var searchText = $(this).val();
+                if (searchText.length > 0) {
+                    $('tbody td:icontains(' + searchText + ')').addClass('positive');
+                    $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+                    $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
+                    $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
+                } else {
+                    $('td.positive').removeClass('positive');
+                    $('tr.hidden').removeClass('hidden').show();
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

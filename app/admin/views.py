@@ -98,6 +98,17 @@ def registered_users(page):
         'admin/registered_users.html', users=users, roles=roles, users_count=users_count)
 
 
+@admin.route('/orders', defaults={'page': 1})
+@admin.route('/orders/<int:page>')
+@login_required
+@admin_required
+def orders(page):
+    """View all orders."""
+    orders = Order.query.paginate(page, per_page=50)
+    orders_count = Order.query.count()
+    return render_template(
+        'admin/registered_orders.html', orders=orders, orders_count=orders_count)
+
 @admin.route('/user/<int:user_id>')
 @admin.route('/user/<int:user_id>/info')
 @login_required

@@ -4,29 +4,39 @@ from datetime import datetime
 from logging import log
 from time import time
 
-class Association(db.Model):
-    __tablename__ = 'association'
+class StripeData(db.Model):
+    __tablename__ = 'stripe_data'
     id = db.Column(db.Integer, primary_key=True)
-    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-    line_items_id = db.Column(db.Integer, db.ForeignKey('line_items.line_item_id'))
-    
-    screener_question_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id'))
-    scale_question_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
-    multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
-    
-    screener_answer_id = db.Column(db.Integer, db.ForeignKey('screener_answers.id'))
-    scale_answer_id = db.Column(db.Integer, db.ForeignKey('scale_answers.id'))
-    multiple_choice_answer_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_answers.id'))
-    
-    screener_question = db.relationship("ScreenerQuestion", uselist=False, order_by=id)
-    multiple_choice_question = db.relationship("MultipleChoiceQuestion", uselist=False, order_by=id)
-    scale_question = db.relationship("ScaleQuestion", uselist=False, order_by=id)
-    
-    multiple_choice_answer = db.relationship("MultipleChoiceAnswer", uselist=False, order_by=id)
-    scale_answer = db.relationship("ScaleAnswer", uselist=False, order_by=id)
-    screener_answer = db.relationship("ScaleAnswer", uselist=False, order_by=id)
-    line_items = db.relationship("LineItem", uselist=False, order_by=id)
+    currency = db.Column(db.String)
+    payment_intent = db.Column(db.String(180))
+    customer_email = db.Column(db.String(64))
+    customer = db.Column(db.String(64))
+    customer_details = db.Column(db.String(64))
+    client_reference_id = db.Column(db.String(64))
+    payment_method = db.Column(db.String(10))
+    payment_status = db.Column(db.String(10))
+    amount_total = db.Column(db.Integer)
+    session_id = db.Column(db.String(90))
+
+
+class StripeEvent(db.Model):
+    __tablename__ = 'stripe_events'
+    id = db.Column(db.Integer, primary_key=True)
+   #currency = db.Column(db.String)
+    payment_intent = db.Column(db.String(180))
+    outcome = db.Column(db.String(64))
+    customer = db.Column(db.String(64))
+    payment_method = db.Column(db.String(10))
+    payment_method_details = db.Column(db.String(10))
+    billing_details = db.Column(db.String(10))
+    disputed = db.Column(db.String(10))
+    status = db.Column(db.String(10))
+    amount = db.Column(db.Integer)
+    application_fee_amount=db.Column(db.Integer)
+    receipt_url = db.Column(db.String(64))
+    type = db.Column(db.String(10))
+
+
 
 class Order(db.Model):
     __tablename__ = 'order'
@@ -34,21 +44,67 @@ class Order(db.Model):
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id', ondelete="CASCADE"), nullable=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    line_item_id = db.Column(db.Integer, db.ForeignKey('line_items.line_item_id'))
     quantity = db.Column(db.Integer)
     currency = db.Column(db.String(3))
-    service_type = db.Column(db.String(10))
-    unit_amount = db.Column(db.Integer)
+    payment_intent = db.Column(db.String(180))
+    customer_email = db.Column(db.String(64))
+    payment_method = db.Column(db.String(10))
+    payment_status = db.Column(db.String(10))
+    total_amount = db.Column(db.Integer)
+    session_id = db.Column(db.String(90))
     delivered = db.Column(db.Boolean(), default=False)
     created_at = db.Column(db.DateTime, default=db.func.now())
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
     org = db.relationship("Organisation", backref=db.backref('orders', order_by=id))
     user = db.relationship("User", backref=db.backref('orders', order_by=id))
     project = db.relationship("Project", backref=db.backref('orders', order_by=id))
+    line_item = db.relationship("LineItem", backref=db.backref('orders', order_by=id))
     
     def __repr__(self):
         return "Order(project_id={self.project_id}, " \
                       "delivered={self.delivered})".format(self=self)
 
+
+
+class PaidProject(db.Model):
+     __tablename__= 'paid_projects'
+     id = db.Column(db.Integer, primary_key=True)
+     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
+
+     screener_question_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id'))
+     scale_question_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
+     multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
+     
+     screener_answer_id = db.Column(db.Integer, db.ForeignKey('screener_answers.id'))
+     scale_answer_id = db.Column(db.Integer, db.ForeignKey('scale_answers.id'))
+     multiple_choice_answer_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_answers.id'))
+
+
+     question = db.Column(db.String)
+     answer = db.Column(db.String)
+
+     project_name = db.Column(db.String(64), index=True)
+     order = db.relationship("Order", backref=db.backref('paid_projects',
+                         order_by=id))
+     project = db.relationship("Project", backref=db.backref('paid_projects',
+                         order_by=id))
+     screener_answers = db.relationship("ScreenerAnswer", backref=db.backref('paid_projects',
+                         order_by=id))
+     scale_answers = db.relationship("ScaleAnswer", backref=db.backref('paid_projects',
+                         order_by=id))
+     multiple_choice_answers = db.relationship("MultipleChoiceAnswer", backref=db.backref('paid_projects',
+                         order_by=id))
+     scale_questions = db.relationship("ScaleQuestion", backref=db.backref('paid_projects',
+                         order_by=id))
+     multiple_choice_questions = db.relationship("MultipleChoiceQuestion", backref=db.backref('paid_projects',
+                         order_by=id))
+     screener_questions = db.relationship("ScreenerQuestion", backref=db.backref('paid_projects',
+                         order_by=id))
 
 class Project(db.Model):
     __tablename__ = 'project'
@@ -75,18 +131,17 @@ class Project(db.Model):
 class LineItem(db.Model):
      __tablename__= 'line_items'
      line_item_id = db.Column(db.Integer, primary_key=True)
-     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
      project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
      quantity = db.Column(db.Integer)
      currency = db.Column(db.String(3))
      service_type = db.Column(db.String(10))
-     unit_amount = db.Column(db.Float(12, 2))
+     unit_amount = db.Column(db.Integer)
      name = db.Column(db.String(64), index=True)
-     order = db.relationship("Order", backref=db.backref('line_items',
-                         order_by=line_item_id))
      project = db.relationship("Project", backref=db.backref('line_items',
                          order_by=line_item_id))
-
+     user = db.relationship("User", backref=db.backref('line_items',
+                         order_by=line_item_id))
 
 
 class ScreenerQuestion(db.Model):

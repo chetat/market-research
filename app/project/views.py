@@ -17,6 +17,7 @@ from app.decorators import admin_required
 from app.email import send_email
 from app.models import *
 from sqlalchemy import func
+import stripe
 
 from datetime import date
 
@@ -138,15 +139,12 @@ def project_details(org_id, project_id, name):
         multiple_choice_question_item = db.session.query(MultipleChoiceQuestion).filter_by(user_id=current_user.id).filter(project_id ==project_id).first()
         lineitems_1 = LineItem(project_id=project_item.id, quantity=project_item.order_quantity,
                                currency=project_item.currency, service_type=project_item.service_type,
-                               unit_amount=unit_amount, name=project_item.name)
-        order = Order(project_id=project_item.id, quantity=project_item.order_quantity, currency=project_item.currency, service_type=project_item.service_type,
-                               unit_amount=unit_amount)
-        db.session.add(lineitems_1, order)
-        order = Order(project_id=project_item.id, quantity=project_item.order_quantity, currency=project_item.currency, service_type=project_item.service_type,
-                               unit_amount=unit_amount, user_id=current_user.id, organisation_id=org.id)
-        db.session.add(order)        
+                               unit_amount=unit_amount, name=project_item.name, user_id=current_user.id)
+        db.session.add(lineitems_1)       
         db.session.commit()
+
         return redirect(url_for('project.order_details', org_id=org.id, project_id=project_id, name=project.name))
+    
     
     return render_template('project/project_details.html', screener_question=screener_question, project_id=project_id,
                            org=org, project=project,
@@ -176,20 +174,19 @@ def order_details(org_id, project_id, name):
     
     ## prepare line items
     project_item = db.session.query(Project).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
-    order = db.session.query(Order).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
+    order = db.session.query(LineItem).filter_by(user_id=current_user.id).filter(Project.id==project_id).first()
     count_order = Order.query.filter_by(user_id=current_user.id).filter(project_id == project_id).count()
     #if count_order <= 0:
         #flash("You need to submit enough questions first.", 'error')
         #return redirect(url_for('project.project_details', org_id=org.id, project_id=project_id, name=project.name))
     #today = date.today()
-    date = order.created_at.strftime("%B %d, %Y")
     
     return render_template('project/order_details.html', screener_question=screener_question, project_id=project_id,
                            org=org, project=project,
                            scale_question=scale_question,
                            multiple_choice_question=multiple_choice_question,
                            count_screener_questions=count_screener_questions,
-                           count_questions=count_questions, order=order, date=date)
+                           count_questions=count_questions, order=order)
 
 @project.route('/<org_id>/<int:project_id>/<name>/edit', methods=['Get', 'POST'])
 @login_required

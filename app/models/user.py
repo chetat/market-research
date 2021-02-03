@@ -54,6 +54,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     is_respondent = db.Column(db.Boolean, default=False)
+    is_organisation = db.Column(db.Boolean, default=False)
     questions = db.relationship('Question', backref='user', lazy='dynamic')
     multiple_choice_questions = db.relationship('MultipleChoiceQuestion', backref='user', lazy='dynamic')
     scale_questions = db.relationship('ScaleQuestion', backref='user', lazy='dynamic')

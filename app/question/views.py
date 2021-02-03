@@ -279,12 +279,9 @@ def new_multiple_choice_question(org_id, project_id):
 
 @question.route('/<int:project_id>/<name>/')
 def question_details(project_id, name):
-    
+    ''' display all the questions for a project which has been paid for '''
     project = db.session.query(Project).filter_by(id=project_id).first()
     question = LineItem.query.filter_by(project_id = project_id).all()
-    screener_question = ScreenerQuestion.query.filter_by(project_id=project_id).first()
-    scale_question = ScaleQuestion.query.filter_by(project_id=project_id).all()
-    multiple_choice_question = MultipleChoiceQuestion.query.filter_by(project_id=project_id).all()
 
     answer = db.session.query(ScreenerAnswer).filter_by(user_id=current_user.id).filter(ScreenerAnswer.screener_questions_id==screener_question.id).first()
     scale_answer = db.session.query(ScaleAnswer).filter_by(user_id=current_user.id).all()

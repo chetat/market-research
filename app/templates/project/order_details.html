@@ -26,7 +26,7 @@
 
 			<div class="ui clearing segment">
 				<h2 class="ui header">
-					Order Details
+					Order Details . {{order.payment_status}}
 				</h2>
 			<div class="ui form">
 			  <div class="fields">
@@ -52,26 +52,6 @@
 				  <label>Service Type</label>
 					<div class="ui segment">
 					  <p>{{ order.service_type }}</p>
-					</div>
-				</div>
-			  </div>
-			  <div class="fields">
-				<div class="six wide field">
-				  <label>Organization Name</label>
-					<div class="ui segment">
-					  <p>{{ order.org.org_name }}</p>
-					</div>
-				</div>
-				<div class="six wide field">
-				  <label>Project Owner</label>
-					<div class="ui segment">
-					  <p>{{ order.user.first_name }} {{ order.user.last_name }}</p>
-					</div>
-				</div>
-				<div class="six wide field">
-				  <label>Order Date</label>
-					<div class="ui segment">
-					  <p>{{ date }} </p>
 					</div>
 				</div>
 			  </div>
