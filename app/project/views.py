@@ -179,14 +179,14 @@ def order_details(org_id, project_id, name):
     #if count_order <= 0:
         #flash("You need to submit enough questions first.", 'error')
         #return redirect(url_for('project.project_details', org_id=org.id, project_id=project_id, name=project.name))
-    #today = date.today()
+    today = date.today()
     
     return render_template('project/order_details.html', screener_question=screener_question, project_id=project_id,
                            org=org, project=project,
                            scale_question=scale_question,
                            multiple_choice_question=multiple_choice_question,
                            count_screener_questions=count_screener_questions,
-                           count_questions=count_questions, order=order)
+                           count_questions=count_questions, order=order, today=today)
 
 @project.route('/<org_id>/<int:project_id>/<name>/edit', methods=['Get', 'POST'])
 @login_required

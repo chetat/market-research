@@ -137,6 +137,8 @@ class LineItem(db.Model):
      currency = db.Column(db.String(3))
      service_type = db.Column(db.String(10))
      unit_amount = db.Column(db.Integer)
+     tax_amount = db.Column(db.Integer)
+     tax_percentage = db.Column(db.Integer)
      name = db.Column(db.String(64), index=True)
      project = db.relationship("Project", backref=db.backref('line_items',
                          order_by=line_item_id))

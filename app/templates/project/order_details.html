@@ -25,41 +25,71 @@
 			{% if order %}
 
 			<div class="ui clearing segment">
-				<h2 class="ui header">
-					Order Details . {{order.payment_status}}
+				<h2 class="ui center aligned header">
+				  {{ org.org_name }}
 				</h2>
-			<div class="ui form">
-			  <div class="fields">
-				<div class="six wide field">
-				  <label>Project Name</label>
-					<div class="ui compact segment">
-					  <p>{{ order.project.name }}</p>
-					</div>
+				<p class="ui center aligned header">
+				  {{ org.org_description }}
+				</p>
+				<p class="ui center aligned header">
+				  {{ org.mobile_phone }}
+				</p>
+				<p class="ui center aligned header">
+				 {{ org.org_city}}, {{ org.org_state }}, {{ org.org_country }}
+				</p>
+				<div class="ui items">
+				  <div class="item">
+						<h3>Name: {{ current_user.full_name()}} </h3>
+					  <div class="description">
+						<p></p>
+					  </div>
+					  <div class="extra">
+						<h3 class="ui right floated header">Date: {{ today.strftime("%B %d, %Y") }} </h3>
+					  </div>
+				  </div>
 				</div>
-				<div class="four wide field">
-				  <label>Quantity</label>
-					<div class="ui segment">
-					  <p>{{ order.quantity }}</p>
-					</div>
-				</div>
-				<div class="four wide field">
-				  <label>Currency </label>
-					<div class="ui segment">
-					  <p>{{ order.currency }}</p>
-					</div>
-				</div>
-				<div class="two wide field">
-				  <label>Service Type</label>
-					<div class="ui segment">
-					  <p>{{ order.service_type }}</p>
-					</div>
-				</div>
-			  </div>
-			</div>			 
+			<table class="ui celled table">
+			  <thead>
+				<th>S/N</th>
+				<th>Item</th>
+				<th>Unit Price</th>
+				<th>Quantity</th>
+				<th>Tax %</th>
+				<th>Tax Amount</th>
+			  </tr></thead>
+			  <tbody>
+				<tr>
+				  <td>1</td>
+				  <td> {{ order.project.name }}</td>
+				  <td> {{ order.currency }} {{ order.unit_amount }}.00</td>
+				  <td> {{ order.quantity }} responses</td>
+				  <td>{{ order.tax_percentage }}</td> <!---enable when ready --->
+				  <td>{{ order.tax_amount }}</td> <!---enable when ready --->
+				</tr>
+				<tr>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				</tr>
+				<tr>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				  <td><p></p></td>
+				</tr>
+			  </tbody>
+			</table>
+			<div class="ui divider"></div>
+			  <h3 class="ui right floated">Total Amount: {{ order.currency }} {{ order.unit_amount }}</h3>		
+			<div class="ui divider"></div>
 			  <div class="field">
 					  <a href="#" id="buy_now_btn" class="ui teal right floated button">Pay</a>
 			  </div>
-        </div>
 		{% endif %}
     </div>
       <script src="https://js.stripe.com/v3/"></script>
