@@ -74,37 +74,33 @@ class PaidProject(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
      project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
-
-     screener_question_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id'))
-     scale_question_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
-     multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
+     #screener_question_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id'))
+     #scale_question_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
+     #multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
      
-     screener_answer_id = db.Column(db.Integer, db.ForeignKey('screener_answers.id'))
-     scale_answer_id = db.Column(db.Integer, db.ForeignKey('scale_answers.id'))
-     multiple_choice_answer_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_answers.id'))
+     #screener_answer_id = db.Column(db.Integer, db.ForeignKey('screener_answers.id'))
+     #scale_answer_id = db.Column(db.Integer, db.ForeignKey('scale_answers.id'))
+     #multiple_choice_answer_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_answers.id'))
 
 
      question = db.Column(db.String)
+     description = db.Column(db.String)
      answer = db.Column(db.String)
+     answer_option_one = db.Column(db.String)
+     answer_option_two = db.Column(db.String)
+     answer_option_three = db.Column(db.String)
+     answer_option_four = db.Column(db.String)
+     answer_option_five = db.Column(db.String)
 
      project_name = db.Column(db.String(64), index=True)
-     order = db.relationship("Order", backref=db.backref('paid_projects',
-                         order_by=id))
-     project = db.relationship("Project", backref=db.backref('paid_projects',
-                         order_by=id))
-     screener_answers = db.relationship("ScreenerAnswer", backref=db.backref('paid_projects',
-                         order_by=id))
-     scale_answers = db.relationship("ScaleAnswer", backref=db.backref('paid_projects',
-                         order_by=id))
-     multiple_choice_answers = db.relationship("MultipleChoiceAnswer", backref=db.backref('paid_projects',
-                         order_by=id))
-     scale_questions = db.relationship("ScaleQuestion", backref=db.backref('paid_projects',
-                         order_by=id))
-     multiple_choice_questions = db.relationship("MultipleChoiceQuestion", backref=db.backref('paid_projects',
-                         order_by=id))
-     screener_questions = db.relationship("ScreenerQuestion", backref=db.backref('paid_projects',
-                         order_by=id))
+     #order = db.relationship("Order", backref=db.backref('paid_projects', order_by=id))
+     #project = db.relationship("Project", backref=db.backref('paid_projects', order_by=id))
+     #screener_answers = db.relationship("ScreenerAnswer", backref=db.backref('paid_projects', order_by=id))
+     #scale_answers = db.relationship("ScaleAnswer", backref=db.backref('paid_projects', order_by=id))
+     #multiple_choice_answers = db.relationship("MultipleChoiceAnswer", backref=db.backref('paid_projects', order_by=id))
+     #scale_questions = db.relationship("ScaleQuestion", backref=db.backref('paid_projects', order_by=id))
+     #multiple_choice_questions = db.relationship("MultipleChoiceQuestion", backref=db.backref('paid_projects', order_by=id))
+     #screener_questions = db.relationship("ScreenerQuestion", backref=db.backref('paid_projects', order_by=id))
 
 class Project(db.Model):
     __tablename__ = 'project'

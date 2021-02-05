@@ -16,7 +16,7 @@ from time import time
 
 from flask_login import current_user, login_required
 from app import db
-from app.models import EditableHTML, Project, Organisation, Order, User, Question, ScaleQuestion, LineItem
+from app.models import EditableHTML, Project, Organisation, Order, User, Question, ScaleQuestion, LineItem, PaidProject, MultipleChoiceQuestion, ScreenerQuestion
 from app.main.forms import AddOrderForm
 import stripe
 import os
@@ -75,7 +75,7 @@ def stripe_pay():
           'quantity': quantity,
         }],
         mode='payment',
-        success_url=url_for('main.thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+        success_url=url_for('main.thanks', line_item_id=line_item.line_item_id, project_id=project.id, _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
         cancel_url=url_for('main.cancel', _external=True),
     )
     
@@ -94,9 +94,45 @@ def stripe_pay():
         'checkout_public_key': "pk_test_oqKtiHQipsUaIuR81LYSiDW2"
     }
 
-@main.route('/thanks')
-def thanks():
-    return render_template('main/thanks.html')
+@main.route('/thanks/<line_item_id>/<project_id>')
+def thanks(line_item_id, project_id ):
+    order = Order.query.filter_by(user_id=current_user.id).first()
+    project = Project.query.filter_by(user_id=current_user.id, id=project_id).first()
+    screener_question = ScreenerQuestion.query.filter_by(user_id=current_user.id, project_id=project_id).all()
+    for question in screener_question:
+        if question:
+            screener = PaidProject(
+                project_id=project_id, order_id=order.id, project_name=project.name,
+                question = question.question, description=question.description
+                )
+            db.session.add(screener)
+        
+    scale_question = ScaleQuestion.query.filter_by(user_id=current_user.id, project_id=project_id).all()
+    for question in scale_question:
+        if question:
+            scale = PaidProject(
+                project_id=project_id, order_id=order.id, project_name=project.name,
+                question = question.title,
+                description=question.description, answer_option_one=question.answer_option_one
+                )
+            db.session.add(scale)
+
+    multiple_choice_question = MultipleChoiceQuestion.query.filter_by(user_id=current_user.id, project_id=project_id).all()
+    for question in multiple_choice_question:
+        if question:               
+            multi = PaidProject(
+                project_id=project_id, order_id=order.id, project_name=project.name,
+                question = question.title, description=question.description,
+                answer_option_one=question.multiple_choice_option_one,
+                answer_option_two=question.multiple_choice_option_two,
+                answer_option_three=question.multiple_choice_option_three,
+                answer_option_four=question.multiple_choice_option_four,
+                answer_option_five=question.multiple_choice_option_five, 
+                )
+            db.session.add(multi)
+            db.session.commit()            
+
+    return render_template('main/thanks.html', question=question)
 
 @main.route('/webhook/endpoint')
 def order():
@@ -115,50 +151,6 @@ def order():
     return render_template('main/thanks.html')
 
 
-
-@main.route('/webhook')
-def webhook():
-    endpoint = stripe.WebhookEndpoint.create(
-        url='https://marketresearch.com.ng/webhook/endpoint',
-        enabled_events=[
-            'charge.failed',
-            'charge.succeeded',
-          ],
-        )
-    return ok
-@main.route('/stripe_webhook', methods=['POST'])
-def stripe_webhook():
-    print('WEBHOOK CALLED')
-
-    if request.content_length > 1024 * 1024:
-        print('REQUEST TOO BIG')
-        abort(400)
-    payload = request.get_data()
-    sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
-    endpoint_secret = 'whsec_5f2hfXMOWGDSMUsFPeyio08wtUMiQffo'
-    event = None
-
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except ValueError as e:
-        # Invalid payload
-        print('INVALID PAYLOAD')
-        return {}, 400
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        print('INVALID SIGNATURE')
-        return {}, 400
-
-    # Handle the checkout.session.completed event
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-        print(session)
-        line_items = stripe.checkout.Session.list_line_items(session['id'], limit=1)
-        print(line_items['data'][0]['description'])
-
-    return {}
     
 
 @main.route('/upload', methods=['POST'])
