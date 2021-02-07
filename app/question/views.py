@@ -281,28 +281,33 @@ def new_multiple_choice_question(org_id, project_id):
 def question_details(project_id, name):
     ''' display all the questions for a project which has been paid for '''
     project = db.session.query(Project).filter_by(id=project_id).first()
-    question = LineItem.query.filter_by(project_id = project_id).all()
+    questions = PaidProject.query.filter_by(project_id = project_id).all()
+    for question in questions:
+        question=question
+        
 
-    answer = db.session.query(ScreenerAnswer).filter_by(user_id=current_user.id).filter(ScreenerAnswer.screener_questions_id==screener_question.id).first()
-    scale_answer = db.session.query(ScaleAnswer).filter_by(user_id=current_user.id).all()
-    multiple_choice_answer = db.session.query(MultipleChoiceAnswer).filter_by(user_id=current_user.id).all()
-    if answer is None:
-        return render_template('question/question_details.html',
-                               project=project, question=question, screener_question=screener_question,
-                               multiple_choice_question =multiple_choice_question,
-                               scale_question = scale_question, screener_answer=answer,
-                               multiple_choice_answer = multiple_choice_answer, scale_answer = scale_answer)
-    
-    elif not answer.answer_option_one == screener_question.required_answer:
-        flash("Sorry, you cannot proceed with answers project on this project. Choose another project", 'success')
-        return redirect(url_for('question.index'))
-    else:
-        return render_template('question/question_details.html',
-                           project=project, question=question, screener_question=screener_question,
-                           multiple_choice_question =multiple_choice_question,
-                           scale_question = scale_question, screener_answer=answer,
-                           multiple_choice_answer = multiple_choice_answer, scale_answer = scale_answer)
+    return render_template('question/question_details.html', question=question, project=project)
 
+##    answer = db.session.query(ScreenerAnswer).filter_by(user_id=current_user.id).filter(ScreenerAnswer.screener_questions_id==screener_question.id).first()
+##    scale_answer = db.session.query(ScaleAnswer).filter_by(user_id=current_user.id).all()
+##    multiple_choice_answer = db.session.query(MultipleChoiceAnswer).filter_by(user_id=current_user.id).all()
+##    if answer is None:
+##        return render_template('question/question_details.html',
+##                               project=project, question=question, screener_question=screener_question,
+##                               multiple_choice_question =multiple_choice_question,
+##                               scale_question = scale_question, screener_answer=answer,
+##                               multiple_choice_answer = multiple_choice_answer, scale_answer = scale_answer)
+##    
+##    elif not answer.answer_option_one == screener_question.required_answer:
+##        flash("Sorry, you cannot proceed with answers project on this project. Choose another project", 'success')
+##        return redirect(url_for('question.index'))
+##    else:
+##        return render_template('question/question_details.html',
+##                           project=project, question=question, screener_question=screener_question,
+##                           multiple_choice_question =multiple_choice_question,
+##                           scale_question = scale_question, screener_answer=answer,
+##                           multiple_choice_answer = multiple_choice_answer, scale_answer = scale_answer)
+##
 
 @question.route('/<org_id>/<project_id>/<int:question_id>/<question>/scr/edit/', methods=['Get', 'POST'])
 @login_required

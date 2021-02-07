@@ -17,13 +17,27 @@ from wtforms.validators import (
 )
 
 from app import db
-from app.models import Role, User, ScaleQuestion
+from app.models import Role, User, ScaleQuestion, ScreenerQuestion
 
 
 
 
 class AddScreenerAnswerForm(FlaskForm):
     answer_option_one = RadioField(u'Please choose either Yes or No or Maybe options', choices=[('Yes', 'Yes'), ('No', 'No') , ('Maybe', 'Maybe')])
+    submit = SubmitField('Submit')
+
+
+def screener_query():
+    return ScreenerQuestion.query
+
+class TestAnswerForm(FlaskForm):
+    answer_option_one = QuerySelectField(
+        'Answer Options',
+        get_label='answer_option_one',
+        allow_blank=False,
+        #query_factory=screener_query,
+        query_factory=lambda: db.session.query(ScreenerQuestion).order_by('id')
+        )
     submit = SubmitField('Submit')
 
 class AddMultipleChoiceAnswerForm(FlaskForm):

@@ -24,42 +24,36 @@ answer = Blueprint('answer', __name__)
 
 
 
-@answer.route('/<int:project_id>/<int:question_id>/<question>/add/', methods=['Get', 'POST'])
+@answer.route('/<int:project_id>/<int:id>/<question>/add/', methods=['Get', 'POST'])
 @login_required
-def add_screener_answer(project_id, question_id, question):
-    
+def add_screener_answer(project_id, id, question):
     project = db.session.query(Project).filter_by(id=project_id).first()
-    question = LineItem.query.filter_by(project_id = project_id).all()
+    screener_question = db.session.query(ScreenerQuestion).filter_by(project_id=project_id).first()
+    questions = PaidProject.query.filter_by(project_id = project_id).all()
 
-    #question = MultipleChoiceQuestion.query.filter_by(user_id=current_user.id).filter_by(id=question_id).first_or_404()
-    #if not question:
-        #abort(404)
-    #if current_user.id != question.user_id:
-        #abort(404)
-    screener_question = ScreenerQuestion.query.filter_by(id=question_id).first_or_404()
-    answered = db.session.query(ScreenerAnswer).filter_by(user_id=current_user.id).filter(ScreenerAnswer.screener_questions_id==question_id).count()
-
-    if answered >= 1:
-        flash("This question has already been answered by you.", 'success')
-        return redirect(url_for('question.question_details', project_id=project.id, name=project.name))
-
+    for question in questions:
+        question = question
+        
     form = AddScreenerAnswerForm()
     if form.validate_on_submit():
         appt = ScreenerAnswer(
-            screener_questions_id=screener_question.id,
-            answer_option_one=form.answer_option_one.data,
-            user_id=current_user.id
+            answer_option_one = form.answer_option_one.data,
+            screener_questions_id = screener_question.id,
+            required_answer= screener_question.required_answer,
+            project_id = project_id,
+            user_id = current_user.id
             )
         db.session.add(appt)
         db.session.commit()
         flash("Answer submitted.", 'success')
-        answer = db.session.query(ScreenerAnswer).filter_by(user_id=current_user.id).filter(ScreenerAnswer.screener_questions_id==question_id).first()
-        if answer.answer_option_one == screener_question.required_answer:
-            return redirect(url_for('question.question_details', project_id=project.id, name=project.name))
-        else:
-            flash("Sorry, you cannot proceed with answers project on this project. Choose another project", 'success')
-            return redirect(url_for('question.index'))
-    return render_template('answer/add_screener_answer.html', screener_question=screener_question, form=form)
+    answer = db.session.query(ScreenerAnswer).filter_by(user_id=current_user.id).filter(ScreenerAnswer.id==id).first()
+    if answer.answer_option_one is screener_question.required_answer:
+        return redirect(url_for('question.question_details', project_id=project.id, name=project.name))
+    else:
+        flash("Sorry, you cannot proceed with answers project on this project. Choose another project", 'success')
+        return redirect(url_for('question.index'))
+
+    return render_template('answer/add_screener_answer.html', question=question, form=form, answer=answer, screener_question=screener_question)
 
 @answer.route('/<int:project_id>/<int:question_id>/<question>/scl/add/', methods=['Get', 'POST'])
 @login_required

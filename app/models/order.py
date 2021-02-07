@@ -74,16 +74,10 @@ class PaidProject(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
      project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-     #screener_question_id = db.Column(db.Integer, db.ForeignKey('screener_questions.id'))
-     #scale_question_id = db.Column(db.Integer, db.ForeignKey('scale_questions.id'))
-     #multiple_choice_question_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_questions.id'))
-     
-     #screener_answer_id = db.Column(db.Integer, db.ForeignKey('screener_answers.id'))
-     #scale_answer_id = db.Column(db.Integer, db.ForeignKey('scale_answers.id'))
-     #multiple_choice_answer_id = db.Column(db.Integer, db.ForeignKey('multiple_choice_answers.id'))
-
-
+     question_id = db.Column(db.Integer)
+     respondent_id = db.Column(db.Integer)
      question = db.Column(db.String)
+     question_type = db.Column(db.String)
      description = db.Column(db.String)
      answer = db.Column(db.String)
      answer_option_one = db.Column(db.String)
@@ -91,6 +85,7 @@ class PaidProject(db.Model):
      answer_option_three = db.Column(db.String)
      answer_option_four = db.Column(db.String)
      answer_option_five = db.Column(db.String)
+     respondent_location = db.Column(db.String)
 
      project_name = db.Column(db.String(64), index=True)
      #order = db.relationship("Order", backref=db.backref('paid_projects', order_by=id))
@@ -156,6 +151,18 @@ class ScreenerQuestion(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
     screener_answers = db.relationship('ScreenerAnswer', backref='screenerquestion', lazy='dynamic')
+
+    def __init__(self, question_id, user_id, required_answer, answer_option_one,
+                 answer_option_two, answer_option_three, question, description):
+        self.question_id = question_id
+        self.user_id = user_id
+        self.required_answer = required_answer
+        self.answer_option_one = answer_option_one
+        self.answer_option_two = answer_option_two
+        self.answer_option_three = answer_option_three
+
+    def __repr__(self):
+        return ' [ScreenerQuestion {}]'.format(self.answer_option_one)
 
 class ScreenerAnswer(db.Model):
     __tablename__ = 'screener_answers'

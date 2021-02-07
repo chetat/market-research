@@ -103,7 +103,8 @@ def thanks(line_item_id, project_id ):
         if question:
             screener = PaidProject(
                 project_id=project_id, order_id=order.id, project_name=project.name,
-                question = question.question, description=question.description
+                question = question.question, description=question.description,
+                question_type="Screener",
                 )
             db.session.add(screener)
         
@@ -112,7 +113,7 @@ def thanks(line_item_id, project_id ):
         if question:
             scale = PaidProject(
                 project_id=project_id, order_id=order.id, project_name=project.name,
-                question = question.title,
+                question = question.title, question_type="Scale",
                 description=question.description, answer_option_one=question.answer_option_one
                 )
             db.session.add(scale)
@@ -127,7 +128,8 @@ def thanks(line_item_id, project_id ):
                 answer_option_two=question.multiple_choice_option_two,
                 answer_option_three=question.multiple_choice_option_three,
                 answer_option_four=question.multiple_choice_option_four,
-                answer_option_five=question.multiple_choice_option_five, 
+                answer_option_five=question.multiple_choice_option_five,
+                question_type="MultipleChoice",
                 )
             db.session.add(multi)
             db.session.commit()            
